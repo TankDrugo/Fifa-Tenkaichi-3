@@ -1,0 +1,25 @@
+# Affermazioni su popolazioni o consuetudini che non posso osservare.
+# Bloccate SOLO se nella stessa frase non c'e' un'ancora: una cifra o un URL.
+# "Il 39% dei casi" passa; "la maggior parte dei casi" no.
+
+la maggior parte
+la maggioranza
+molti sviluppatori
+molti progetti
+tutti usano
+tutti fanno
+tutti sanno
+di solito si
+normalmente si
+e' lo standard
+è lo standard
+e' la prassi
+è la prassi
+in genere si
+si tende a
+migliore della media
+molto migliore
+il piu' usato
+il più usato
+il piu' diffuso
+il più diffuso

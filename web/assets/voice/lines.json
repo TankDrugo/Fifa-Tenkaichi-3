@@ -1,0 +1,117 @@
+{
+ "_doc": "Commentary in Italian (web/README.md, 'Telecronaca'). texts: one or more variants per moment; teams: the name read after a goal or at the end. 'audio' is written by tools/make_commentary.py (Chatterbox) with one file per text; without it the game reads the texts with the browser's Italian voice.",
+ "texts": {
+  "start": [
+   "Si parte!",
+   "Fischio d'inizio: comincia la partita.",
+   "Palla al centro, si comincia.",
+   "Ci siamo, si gioca!"
+  ],
+  "goal": [
+   "Gol!",
+   "Gooool! La palla è in fondo al sacco!",
+   "Rete! Il portiere non può niente.",
+   "Gol! Tiro imprendibile!"
+  ],
+  "goal_two": [
+   "Colpo della Cometa! Vale doppio!",
+   "Due gol in un colpo solo!"
+  ],
+  "goal_chip": [
+   "Pallonetto! Portiere scavalcato!",
+   "Che pallonetto! Gol!"
+  ],
+  "equalizer": [
+   "Pareggio!",
+   "Ed è di nuovo parità!",
+   "Rimessa in equilibrio la partita!"
+  ],
+  "lead": [
+   "Passano in vantaggio!",
+   "Vantaggio!"
+  ],
+  "save": [
+   "Parata!",
+   "Il portiere dice di no!",
+   "La blocca il portiere.",
+   "Intervento decisivo del portiere!"
+  ],
+  "reserve_low": [
+   "Il portiere è stanco: la riserva di parate è quasi finita.",
+   "Attenzione, il portiere non ha più energie!"
+  ],
+  "post": [
+   "Palo!",
+   "Colpisce il palo!",
+   "Legno pieno!"
+  ],
+  "hit": [
+   "Spallata!",
+   "Che contrasto!",
+   "Palla rubata con una spallata!",
+   "Duro l'intervento, ma regolare!"
+  ],
+  "tackle": [
+   "Scivolata vinta!",
+   "Entra in scivolata e prende il pallone!",
+   "Recupero in scivolata!"
+  ],
+  "intercept": [
+   "Intercettato!",
+   "Passaggio letto in anticipo!",
+   "Palla persa a centrocampo."
+  ],
+  "claim": [
+   "Esce il portiere e la prende.",
+   "Uscita del portiere!"
+  ],
+  "passes": [
+   "Giro palla, tanti passaggi di fila.",
+   "Si tengono il pallone con calma.",
+   "Fraseggio fitto a centrocampo."
+  ],
+  "special": [
+   "Attenzione: Colpo della Cometa!",
+   "Sta caricando la mossa speciale!"
+  ],
+  "special_miss": [
+   "Niente da fare, finestre mancate.",
+   "Mossa speciale sprecata!"
+  ],
+  "golden": [
+   "Gol d'oro! Chi segna vince!",
+   "Si va al gol d'oro!"
+  ],
+  "last_minute": [
+   "Ultimo minuto!",
+   "Siamo agli sgoccioli!"
+  ],
+  "end_win": [
+   "Finisce qui! Vince",
+   "Triplice fischio: la partita la porta a casa"
+  ],
+  "end_draw": [
+   "Finisce in parità.",
+   "Triplice fischio: nessun vincitore."
+  ]
+ },
+ "teams": {
+  "fulmini": "Fulmini Rossi",
+  "marea": "Marea Blu",
+  "vulcano": "Vulcano FC",
+  "lupi": "Lupi Verdi",
+  "corvi": "Corvi Neri",
+  "aurora": "Aurora Gialla",
+  "ghiaccio": "Ghiaccio Bianco",
+  "tempesta": "Viola Tempesta",
+  "cometa": "Cometa Verde",
+  "nottefonda": "Conti di Nottefonda",
+  "marestorto": "Ciurma del Mare Storto",
+  "brace": "Draghi di Brace",
+  "volt": "Unità Volt",
+  "passogelato": "Yeti del Passo Gelato",
+  "home": "la squadra di casa",
+  "away": "la squadra ospite"
+ },
+ "audio": null
+}

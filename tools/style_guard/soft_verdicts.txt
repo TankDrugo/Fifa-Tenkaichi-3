@@ -1,0 +1,16 @@
+# Verdetti attenuati (regola R3): aggettivi che giudicano quando il soggetto e'
+# una scelta di progetto, e descrivono quando il soggetto e' una grandezza del
+# gioco. "L'idea e' forte" giudica; "il tiro e' forte" misura.
+#
+# Un termine di questa lista viene bloccato SOLO se nelle 4 parole prima del
+# predicato non compare un soggetto di subject_exemptions.txt.
+
+@PREDfort[ei]
+@PREDscars[oaie]
+# "il codice e' pulito" giudica una scelta; "l'albero e' pulito" e' l'uscita di
+# git status. Stesso aggettivo, stessa finestra del soggetto di forte e scarso.
+@PREDpulit[oaie]
+
+# Gli stessi aggettivi in inglese: "the shot is strong" misura, "the idea is
+# strong" giudica; "the tree is clean" e' l'uscita di git.
+@PREDEN(strong|weak|clean)

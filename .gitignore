@@ -1,0 +1,3 @@
+# what tools/build_web_dist.sh makes when no folder is given
+dist-web/
+node_modules/
