@@ -129,11 +129,13 @@ pressioni finte durano 250-400 ms.
   B già scaricata; nel browser il gioco parte dalla copia scaricata. Test Go: zip che scriverebbe
   fuori dalla cartella o senza `index.html` rifiutati, la copia di prima resta.
 
-Caricare su itch.io a mano: Dashboard → «Create new project» → tipo HTML → carica lo zip e spunta
-«This file will be played in the browser» → dimensioni 1280 × 720 e pulsante a tutto schermo →
-visibilità → salva. Da una chat: servono i domini `itch.io` (con i sottodomini), `butler.itch.ovh` e
-`broth.itch.ovh` nella rete dell'ambiente e una chiave API di itch.io fra i segreti, come
-`BUTLER_API_KEY`; poi `butler push strikelegends-web.zip <utente>/<gioco>:html5`.
+Su itch.io il gioco è https://goleador0702.itch.io/fifa-tenkaichi-3 (progetto 5190226, canale
+`html5`; prima build 2162777 del 19/10/2026, versione `8a9596e`). Una versione nuova, da una chat:
+`bash tools/build_web_dist.sh`, poi
+`butler push strikelegends-web.zip goleador0702/fifa-tenkaichi-3:html5 --userversion <commit>`.
+butler si compila dai sorgenti e la chiave la mette il proxy: i passi sono in `docs/DETTAGLI.md`,
+sezione «Distribuzione». Un file caricato a mano dal sito resta accanto al canale `html5` e non lo
+sostituisce.
 
 ## Crediti e licenze
 
@@ -160,7 +162,8 @@ progetto IA vista dall'alto (`ai_topdown/`), i documenti di progetto (`GDD.md`, 
 
 ## Cose aperte
 
-- Caricare su itch.io da una chat: mancano domini e chiave (sezione «Distribuzione»).
+- itch.io: sul file `html5` va spuntato a mano «This file will be played in the browser», con
+  1280 × 720 e il pulsante a tutto schermo; poi la prova del joypad nel riquadro di itch.io.
 - Il sito su GitHub Pages va acceso una volta: Settings → Pages → Source «GitHub Actions».
 - Telecronaca registrata: manca il dominio `us.aws.cdn.hf.co` per i pesi di Chatterbox.
 - Tunnel e colpo di tacco usano ancora la corsa: i fotogrammi del tiro, provati, sembravano un tiro

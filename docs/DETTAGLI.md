@@ -324,22 +324,33 @@ doctype andrebbe in modalità quirks.
     versione sul link e da quelli di itch.io.
   - Senza rete il gioco va lo stesso; solo i due caratteri di Google Fonts tornano a quelli di
     sistema (Arial Narrow, Segoe UI).
-- **Caricare su itch.io** (dal tuo account; da qui `itch.io` e `butler.itch.ovh` sono rifiutati
-  dal proxy):
-  1. itch.io → Dashboard → «Create new project».
-  2. «Kind of project»: **HTML**.
-  3. «Uploads»: carica `strikelegends-web.zip` e spunta «This file will be played in the
-     browser».
-  4. «Embed options»: dimensioni 1280 × 720, «Fullscreen button» acceso; con «Click to launch in
-     fullscreen» il gioco parte a tutto schermo e la tastiera arriva subito alla pagina.
-  5. «Visibility & access»: «Draft» per provarlo da solo, poi «Restricted» (con password) o
-     «Public».
-  6. «Save & view page», poi nel gioco Impostazioni → Comandi → Prova joypad: la riga «Permesso
-     della pagina» dice se il riquadro di itch.io lascia passare il joypad.
-  - Per caricarlo da qui con butler servono, nella rete dell'ambiente, i domini `itch.io` (con i sottodomini),
-    `butler.itch.ovh` e `broth.itch.ovh`, e una chiave API di itch.io (Settings → API keys) messa
-    fra i segreti dell'ambiente come `BUTLER_API_KEY`; poi
-    `butler push strikelegends-web.zip <utente>/strike-legends:html5`.
+- **itch.io**: https://goleador0702.itch.io/fifa-tenkaichi-3 (progetto 5190226, in bozza), canale
+  `html5`. Primo caricamento il 19/10/2026 da una chat: `butler push` dello zip (5,88 MiB, 208
+  file) in 3,4 s, build 2162777 elaborata da itch.io in 7 s, versione `8a9596e`. Un `push`
+  successivo aggiorna lo stesso file (19878189) e manda solo le differenze.
+  - Rete di questo ambiente: `itch.io` e `api.itch.io` rispondono; `broth.itch.ovh` (502),
+    `broth.itch.zone` (403), `butler.itch.ovh` (502), `html-classic.itch.zone` e
+    `tankdrugo.github.io` (403) sono rifiutati. Senza `broth` butler non si scarica e non controlla
+    gli aggiornamenti (lo scrive e va avanti); senza `html-classic.itch.zone` da qui non si vede il
+    gioco servito da itch.io.
+  - butler si compila dai sorgenti, che passano da `proxy.golang.org`:
+    `GOBIN=<cartella> GOTOOLCHAIN=auto go install github.com/itchio/butler@master` (vuole Go 1.25,
+    che `GOTOOLCHAIN=auto` scarica, e `gcc` per SQLite; 81 s, eseguibile da 36 MB). `@latest`
+    risolve alla v14.14.0 del 2018, che con le librerie di oggi non compila.
+  - Chiave: il proxy mette la chiave API di itch.io come `Authorization: Bearer` sulle richieste a
+    itch.io, al posto dell'intestazione che manda il programma (`/profile` risponde 200 anche con
+    un'intestazione finta). Con `BUTLER_API_KEY=x`, un valore qualsiasi, butler ha caricato.
+  - butler carica solo su un progetto che esiste: prima della creazione rispondeva
+    `invalid game`. Il progetto si crea dal sito (Dashboard → «Create new project», tipo HTML).
+  - Dopo il primo `push`, una volta, nella pagina di modifica del progetto:
+    1. sul file `fifa-tenkaichi-3-html5.zip` spuntare «This file will be played in the browser»
+       (finché non è spuntato l'API lo dà senza il tratto da browser);
+    2. «Embed options»: 1280 × 720, «Fullscreen button» acceso; con «Click to launch in
+       fullscreen» il gioco parte a tutto schermo e la tastiera arriva subito alla pagina;
+    3. «Visibility & access»: «Draft» per provarlo da solo, poi «Restricted» (con password) o
+       «Public»;
+    4. nel gioco Impostazioni → Comandi → Prova joypad: la riga «Permesso della pagina» dice se il
+       riquadro di itch.io lascia passare il joypad.
 
 ## Come si gioca in locale
 
