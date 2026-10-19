@@ -86,4 +86,7 @@ Resta: leggere la riga «Permesso della pagina» del joypad nel riquadro di itch
 - Joypad nel riquadro di itch.io: «permesso concesso» (prova di Tancredi). Nuova build su itch.io
   2163299 (versione `91d8b22`) con il PS5 e il titolo.
 
+- itch.io: build 2163481 (versione `a8ea6e8`) col logo sul campo, patch di 224,68 KiB; la pagina
+  pubblica la mostra (`html/19878189-2163481`). Link di lavoro: versione 20.
+
 Resta: caricare la copertina su itch.io a mano (Edit game → «Cover image»).
