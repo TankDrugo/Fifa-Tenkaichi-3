@@ -5,8 +5,11 @@ di 28 × 16 m, niente falli né rimesse, la palla si ruba di spallata o in scivo
 tastiera o con un joypad (Xbox, PS4 ufficiali e non), da soli contro l'IA o in due sulla stessa
 macchina.
 
-- **Da giocare subito:** https://claude.ai/artifact/P8PppHnpvqoj76uJorB6rE (privato: per farlo
-  aprire ad altri si condivide dal menu «Condividi» della pagina).
+- **Da giocare subito:** https://tankdrugo.github.io/Fifa-Tenkaichi-3/ , il sito che GitHub Pages
+  ricostruisce a ogni modifica su `main` (`.github/workflows/pages.yml`). Copia di lavoro delle
+  chat: https://claude.ai/artifact/P8PppHnpvqoj76uJorB6rE (privato).
+- **Su Windows:** `StrikeLegendsWeb.exe` si aggiorna da solo a ogni apertura (sezione
+  «Distribuzione»).
 - **In locale:** `cd web && python3 -m http.server 8000`, poi http://localhost:8000.
 - **Da dare in giro:** `bash tools/build_web_dist.sh` prepara lo zip per itch.io e l'exe per
   Windows (sezione «Distribuzione»).
@@ -33,7 +36,8 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `tools/web_checks.js` | situazioni di gioco senza browser, ognuna col numero che deve dare (11 prove) |
 | `tools/ai_bench.js`, `tools/tension_bench.js` | partite fra IA senza browser: ritmo, possesso, passaggi; barra della Tensione |
 | `tools/skill_frames.js` | foto di ogni skill dentro una partita, un fotogramma ogni 1/30 s |
-| `tools/build_web_dist.sh`, `tools/web_launcher/` | zip per itch.io ed exe per Windows (Go, gioco incorporato) |
+| `tools/build_web_dist.sh`, `tools/web_launcher/` | zip per itch.io ed exe per Windows (Go): `update.go` scarica l'ultima versione dal sito |
+| `.github/workflows/pages.yml` | a ogni push su `main`: il sito, lo zip per itch.io e `version.json` su GitHub Pages |
 | `tools/make_commentary.py` | registra la telecronaca con Chatterbox (serve il dominio `us.aws.cdn.hf.co`) |
 | `tools/style_guard/`, `.claude/settings.json` | il controllo della forma delle risposte delle chat (`CLAUDE.md`) |
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
@@ -109,9 +113,21 @@ pressioni finte durano 250-400 ms.
 
 - `strikelegends-web.zip`: `index.html` alla radice (col `<!doctype html>` davanti), `js/`,
   `assets/`; il formato che itch.io chiede per un gioco HTML.
-- `StrikeLegendsWeb.exe`: serve il gioco su 127.0.0.1:47820 e lo apre in una finestra di Edge o
-  Chrome senza barre; chiusa la finestra, si chiude da solo dopo circa 20 s. Non firmato: al primo
-  avvio Windows chiede «Ulteriori informazioni» → «Esegui comunque».
+- `StrikeLegendsWeb.exe`: a ogni apertura legge `version.json` dal sito; se la versione è cambiata
+  scarica `strikelegends-web.zip` (lo stesso che va su itch.io), lo controlla (`index.html` alla
+  radice, nessun file fuori dalla cartella) e lo tiene in `%LOCALAPPDATA%\StrikeLegends`; poi serve
+  il gioco su 127.0.0.1:47820 e lo apre in una finestra di Edge o Chrome senza barre. Senza rete usa
+  l'ultima copia scaricata, o quella che ha dentro. L'indirizzo resta lo stesso a ogni versione,
+  quindi i salvataggi restano. Chiusa la finestra, si chiude da solo dopo circa 20 s. Non firmato:
+  al primo avvio Windows chiede «Ulteriori informazioni» → «Esegui comunque». L'exe va rifatto solo
+  se cambia il launcher, non per una versione nuova del gioco.
+- Il giro: una modifica arriva su `main` → il flusso `Sito del gioco` ricostruisce il sito in circa
+  un minuto → al prossimo avvio l'exe la scarica, e itch.io la riceve quando si ricarica lo zip
+  (`https://tankdrugo.github.io/Fifa-Tenkaichi-3/strikelegends-web.zip`).
+- Prova del 20/10/2026 (versione Linux dello stesso programma, sito finto in locale): primo avvio →
+  scarica la versione A e la serve; nuova versione B sul sito → la scarica; sito spento → serve la
+  B già scaricata; nel browser il gioco parte dalla copia scaricata. Test Go: zip che scriverebbe
+  fuori dalla cartella o senza `index.html` rifiutati, la copia di prima resta.
 
 Caricare su itch.io a mano: Dashboard → «Create new project» → tipo HTML → carica lo zip e spunta
 «This file will be played in the browser» → dimensioni 1280 × 720 e pulsante a tutto schermo →
@@ -145,6 +161,7 @@ progetto IA vista dall'alto (`ai_topdown/`), i documenti di progetto (`GDD.md`, 
 ## Cose aperte
 
 - Caricare su itch.io da una chat: mancano domini e chiave (sezione «Distribuzione»).
+- Il sito su GitHub Pages va acceso una volta: Settings → Pages → Source «GitHub Actions».
 - Telecronaca registrata: manca il dominio `us.aws.cdn.hf.co` per i pesi di Chatterbox.
 - Tunnel e colpo di tacco usano ancora la corsa: i fotogrammi del tiro, provati, sembravano un tiro
   intero.

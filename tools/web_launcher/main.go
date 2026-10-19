@@ -1,6 +1,7 @@
-// Strike Legends (browser game) for Windows: one exe that carries web/ inside it, serves it on
-// this computer only (127.0.0.1) and opens it in a window of its own (Edge or Chrome in app mode,
-// else the default browser). The game's saves live in the browser's storage for the page's
+// Strike Legends (browser game) for Windows: one exe that fetches the newest game from the
+// project's site when it starts (update.go), serves it on this computer only (127.0.0.1) and opens
+// it in a window of its own (Edge or Chrome in app mode, else the default browser). Without the
+// network it plays the copy downloaded last, or the one it carries inside. The game's saves live in the browser's storage for the page's
 // address, so the address keeps the same port every time (basePort); a second launch while the
 // first is running opens the same address instead of a new server. The page pings the server
 // every few seconds; once the window is closed the pings stop and the server ends.
@@ -26,8 +27,8 @@ import (
 var site embed.FS
 
 const (
-	basePort = 47820           // the address the saves belong to
-	tries    = 10              // further ports if basePort is taken by something else
+	basePort = 47820            // the address the saves belong to
+	tries    = 10               // further ports if basePort is taken by something else
 	idleQuit = 20 * time.Second // no ping for this long after the first: the window is closed
 	marker   = "/__strikelegends"
 )
@@ -43,7 +44,7 @@ func init() {
 }
 
 func main() {
-	root, err := fs.Sub(site, "site")
+	embedded, err := fs.Sub(site, "site")
 	if err != nil {
 		fail(fmt.Errorf("il gioco dentro l'exe è danneggiato: %w", err))
 		return
@@ -59,6 +60,8 @@ func main() {
 			}
 			continue
 		}
+		// only the instance that serves updates, so a running game never has its files swapped
+		root, _ := gameFS(embedded)
 		var last atomic.Int64
 		srv := &http.Server{Handler: handler(root, &last), ReadHeaderTimeout: 10 * time.Second}
 		go func() { _ = srv.Serve(ln) }()

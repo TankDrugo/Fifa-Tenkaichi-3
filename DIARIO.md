@@ -22,3 +22,18 @@ di prima aveva 1.144 file e una storia git di 169 MB; resta come archivio (READM
 
 Resta: caricare su itch.io (domini e chiave), telecronaca registrata (dominio dei pesi), una posa
 propria per tunnel e colpo di tacco.
+
+## 2026-10-20 — exe che si aggiorna da solo, sito su GitHub Pages
+
+Tancredi ha scelto il repository pubblico con GitHub Pages, perché l'exe dei suoi amici deve
+scaricare l'ultima versione senza il suo login.
+
+- `.github/workflows/pages.yml`: a ogni push su `main` pubblica il gioco, lo zip per itch.io e
+  `version.json` (il commit) su https://tankdrugo.github.io/Fifa-Tenkaichi-3/ .
+- `tools/web_launcher/update.go`: l'exe legge `version.json`, scarica lo zip quando la versione
+  cambia, lo controlla e lo tiene in `%LOCALAPPDATA%\StrikeLegends`; senza rete usa la copia
+  scaricata o quella interna. Test Go (aggiornamento, zip fuori cartella o senza `index.html`
+  rifiutati, sito spento) e prova completa con un sito finto in locale: tutti passati.
+- `CLAUDE.md`: il lavoro finito e provato va su `main` (pull request e merge) e al link di lavoro.
+
+Resta da fare a mano, una volta: accendere Pages (Settings → Pages → Source «GitHub Actions»).

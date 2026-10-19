@@ -113,9 +113,13 @@ Exit 0 = clean, exit 1 = violations listed on stderr.
   `SL.debug` gives the match, the demo, the save, the mode and the session.
 - **Ship only what works**: a change whose pictures or numbers do not show what it promises stays
   out, and the reply says so.
-- **Publish** a change to the game at the same link, https://claude.ai/artifact/P8PppHnpvqoj76uJorB6rE:
-  `Artifact` with `action: "read"` on it first in a new chat, then `publish` with `url`, `file_path`
-  `web/index.html` and the map `files` of the changed `js/...` files.
+- **Publish** in two places once a task is done and its checks pass:
+  - `main`: the work goes there (a pull request from the session's branch, merged), because
+    GitHub Pages rebuilds the site from `main` (`.github/workflows/pages.yml`) and the Windows
+    exe downloads the newest game from that site at every start (`tools/web_launcher/update.go`);
+  - the working link, https://claude.ai/artifact/P8PppHnpvqoj76uJorB6rE: `Artifact` with
+    `action: "read"` on it first in a new chat, then `publish` with `url`, `file_path`
+    `web/index.html` and the map `files` of the changed `js/...` files.
 - **Ask before** deleting files, creating repositories or anything outside this repository; say at
   once when the network, an account or a licence blocks a step, with what is needed, and go on with
   the rest.
