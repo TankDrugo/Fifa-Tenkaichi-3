@@ -20,6 +20,9 @@
 
   let gl, prog, buf, loc = {}, W = 1, H = 1, dpr = 1;
   const sheets = {};             // name -> {meta, tex, w, h}
+  // The title painted on the pitch, drawn by tools/cover/render_cover.js: the stacked logo for the
+  // centre circle, the one-line wordmark for the boards; null until loaded or when missing.
+  const logos = { stack: null, line: null };
   let palette = null, palTex = null, palRows = 1, paletteJson = null;
   let groundTex = null, groundW = 0, groundH = 0, frontTex = null, frontH = 0;
   let tex = {};                  // small RGBA textures: ball, shadow, ring, arrow, spark
@@ -134,6 +137,8 @@
 
   async function load(base, onProgress) {
     const index = await (await fetch(base + "sheets.json")).json();
+    const logoLoads = [["stack", "ft3_logo.png"], ["line", "ft3_wordmark.png"]].map(([k, file]) =>
+      loadImage(base + "../logo/" + file).then((img) => { logos[k] = img; }, () => { logos[k] = null; }));
     paletteJson = await (await fetch(base + "palette.json")).json();
     const names = Object.keys(index);
     let done = 0;
@@ -145,6 +150,7 @@
       sheets[name] = { meta: index[name], tex: t, w: img.width, h: img.height, img };
       done++; if (onProgress) onProgress(done / names.length);
     }));
+    await Promise.all(logoLoads);
   }
 
   // ---- Palettes: one row per (kit colour, look), as sprite_sheets.gd palette_texture ----
@@ -266,9 +272,16 @@
       for (const zc of [-1, 1]) { g.beginPath(); g.ellipse(gx(s * L), gy(zc * Wd), 0.6 * P, 0.6 * P * SIN, 0, 0, 7); g.stroke(); }
     }
     g.restore();
-    // Centre logo on the surface
-    g.save(); g.globalAlpha = 0.16; g.fillStyle = "#ffffff"; g.font = `800 ${Math.round(1.2 * P)}px "Saira Extra Condensed", "Arial Narrow", sans-serif`;
-    g.textAlign = "center"; g.textBaseline = "middle"; g.translate(gx(0), gy(0)); g.scale(1, SIN); g.fillText(T.logo || "FT3", 0, 0); g.restore();
+    // Centre logo on the surface: the title, 4,6 m across, painted on the ground (the lines show through)
+    g.save(); g.translate(gx(0), gy(0)); g.scale(1, SIN);
+    if (logos.stack && !T.logo) {
+      const w = 4.6 * P, h = w * logos.stack.height / logos.stack.width;
+      g.globalAlpha = 0.62; g.drawImage(logos.stack, -w / 2, -h / 2, w, h);
+    } else {
+      g.globalAlpha = 0.16; g.fillStyle = "#ffffff"; g.font = `800 ${Math.round(1.2 * P)}px "Saira Extra Condensed", "Arial Narrow", sans-serif`;
+      g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(T.logo || "FT3", 0, 0);
+    }
+    g.restore();
 
     // Far boards (z = -Wd - 0.5): a 0,7 m wall with sponsor panels
     drawBoards(g, -Wd - 0.45, L + 0.6, home, away, true);
@@ -587,20 +600,29 @@
 
   function drawBoards(g, z, half, home, away, far) {
     const h = 0.7, panels = 10, w = (2 * half) / panels;
-    const texts = theme.boardTexts || ["FIFA TENKAICHI 3", home.short, (theme.name || "ARCADE CUP").toUpperCase(), away.short, "4 CONTRO 4"];
+    const TITLE = "FIFA TENKAICHI 3";
+    const texts = theme.boardTexts || [TITLE, home.short, (theme.name || "ARCADE CUP").toUpperCase(), away.short, "4 CONTRO 4"];
     for (let i = 0; i < panels; i++) {
       const x0 = -half + i * w;
       const col = i % 2 === 0 ? theme.boards[0] : (i % 4 === 1 ? home.kit : away.kit);
       const top = gy(z, h), bot = gy(z, 0);
-      g.fillStyle = col;
+      const text = texts[i % texts.length], title = text === TITLE && logos.line;
+      // the title's panel: the cover's purple to red, and its wordmark
+      if (title) { const gr = g.createLinearGradient(0, top, 0, bot); gr.addColorStop(0, "#5a1670"); gr.addColorStop(1, "#c4202e"); g.fillStyle = gr; }
+      else g.fillStyle = col;
       g.fillRect(gx(x0), top, w * P, bot - top);
       g.save();
       g.beginPath(); g.rect(gx(x0) + 4, top, w * P - 8, bot - top); g.clip();
-      const c = SL.hue(col);
-      g.fillStyle = c.v > 0.7 && c.s < 0.3 ? "#10161f" : "rgba(255,255,255,0.92)";
-      g.font = `700 ${Math.round(0.34 * P)}px "Saira Extra Condensed", "Arial Narrow", sans-serif`;
-      g.textAlign = "center"; g.textBaseline = "middle";
-      g.fillText(texts[i % texts.length], gx(x0 + w / 2), (top + bot) / 2, w * P - 10);
+      if (title) {
+        const ar = logos.line.width / logos.line.height, iw = Math.min(w * P - 10, (bot - top) * 0.86 * ar), ih = iw / ar;
+        g.drawImage(logos.line, gx(x0 + w / 2) - iw / 2, (top + bot) / 2 - ih / 2, iw, ih);
+      } else {
+        const c = SL.hue(col);
+        g.fillStyle = c.v > 0.7 && c.s < 0.3 ? "#10161f" : "rgba(255,255,255,0.92)";
+        g.font = `700 ${Math.round(0.34 * P)}px "Saira Extra Condensed", "Arial Narrow", sans-serif`;
+        g.textAlign = "center"; g.textBaseline = "middle";
+        g.fillText(text, gx(x0 + w / 2), (top + bot) / 2, w * P - 10);
+      }
       g.restore();
       g.fillStyle = "rgba(0,0,0,0.35)"; g.fillRect(gx(x0), top, 2, bot - top);
     }

@@ -71,3 +71,19 @@ Resta: leggere la riga «Permesso della pagina» del joypad nel riquadro di itch
 - `node tools/web_checks.js`: 11 prove su 11 prima e dopo, numeri uguali (passaggi 95%, 89,5%, 95%,
   83,5%, 80%, 74,5%; gesti 10 su 10; skill 9 su 9; ruoli 9 su 9). `ai_bench.js` non rifatto:
   nessuna riga della simulazione è cambiata.
+
+## 2026-10-19 — copertina da mercatino e titolo sul campo
+
+- Copertina per itch.io, `tools/cover/cover.jpg` (1260 × 1000, 459 KB): calciatore inventato in
+  rovesciata con l'aura, scritta cromata fuori registro, bollini, prezzo, pieghe. Goku no, per i
+  diritti di Toei e Shueisha (Tancredi ha scelto il calciatore inventato). Sorgente SVG in
+  `tools/cover/cover.html`, render con `node tools/cover/render_cover.js`: due render di fila danno
+  file identici.
+- Sul campo: logo della copertina nel cerchio di centrocampo (4,6 m, 62% di opacità) e scritta su
+  una riga nei due pannelli del titolo, da `web/assets/logo/` (`js/render.js`). Senza le immagini
+  torna «FT3»: provato bloccandole, gioco avviato senza errori. Visto su 4 campi e in una partita.
+  `node tools/web_checks.js`: 11 su 11, numeri uguali a prima; joypad finti 7 casi su 7.
+- Joypad nel riquadro di itch.io: «permesso concesso» (prova di Tancredi). Nuova build su itch.io
+  2163299 (versione `91d8b22`) con il PS5 e il titolo.
+
+Resta: caricare la copertina su itch.io a mano (Edit game → «Cover image»).
