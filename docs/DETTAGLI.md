@@ -10,6 +10,13 @@ Versione giocabile online del gioco: una pagina HTML con WebGL, senza installazi
 
 ## Cosa c'è
 
+- **Titolo** (19/10/2026): «Fifa Tenkaichi 3» nella scheda del browser e nella schermata
+  d'apertura (`index.html`), nell'intestazione dei menu (`js/ui.js`), sui cartelloni a bordo campo
+  (`js/render.js`, `drawBoards`), e «FT3» nel cerchio di centrocampo al posto di «SL». Codice,
+  commenti e chiavi di salvataggio (`strikelegends.*`) restano col nome di prima, perché una chiave
+  nuova lascerebbe indietro i salvataggi. «Strike Legends» resta nel messaggio d'errore dell'exe
+  (`tools/web_launcher/platform_windows.go:39`), che cambia solo rifacendo l'exe; «Strike FC» e
+  «Coppa Strike» sono nomi di club e di coppa.
 - **Menu principale** con una partita fra IA che gira dietro, su un campo a tema scelto a caso.
 - **Amichevole rapida** (`js/modes.js`): tu contro l'IA, due persone una contro l'altra, o due
   persone nella stessa squadra contro l'IA; qualunque squadra in casa e fuori, compresa la tua
@@ -77,6 +84,29 @@ primo tasto premuto anche se si sveglia a partita iniziata.
   speciale. Joypad generico sconosciuto registrato con Assegna i tasti (10 tasti, la croce
   sull'asse 6, levette sugli assi 0, 1, 3, 2): dopo, il tasto 2 vale ✕/A, l'asse della croce dà su
   e giù, l'asse 3 la levetta destra.
+
+### Joypad PS5 (19/10/2026)
+
+- Un DualSense (Sony 054c, prodotto 0ce6) o un DualSense Edge (0df2) ha la stessa disposizione del
+  DualShock 4 in ogni caso provato, quindi lo leggevano già i profili che c'erano: `standard` in
+  Chrome ed Edge; `ds4raw` dove il browser non lo riconosce, perché la riga «PS5 Controller» per
+  Windows del database SDL (https://github.com/mdqinc/SDL_GameControllerDB) ha ✕ b1, ○ b2, □ b0,
+  △ b3, levetta destra a2/a5, come il PS4; `ds4linux` in Firefox su Linux, perché la riga per il
+  driver `hid-playstation` ha ✕ b0, ○ b1, △ b2, □ b3, L2 a2, R2 a5, L3 b11, R3 b12, come
+  `hid-sony`.
+- Cambiato: il tasto a sinistra del touchpad, sul PS5, si chiama CREATE (prima il gioco scriveva
+  SHARE: `js/input.js`, `labels`); i due profili si chiamano «PlayStation non riconosciuto
+  (DirectInput)» e «PlayStation su Linux», il messaggio al collegamento «Joypad PlayStation
+  collegato» (`js/ui.js`); l'aiuto di Impostazioni → Prova joypad dice PS4 e PS5.
+- Prova (Chromium senza schermo, joypad finti, 7 casi): DualSense e DualSense Edge in Chrome;
+  DualSense senza disposizione su Windows, con l'id di Chromium e con quello di Firefox; DualSense
+  in Firefox su Linux; un clone con un id suo; per controprova un DualShock 4 in Chrome. In tutti
+  e 7: 16 comandi (✕ ○ □ △, L1, R1, L2, R2, CREATE, OPTIONS, L3, R3, croce) e 4 assi delle levette
+  letti giusti, nessun comando acceso a riposo; ✕ lascia la schermata d'apertura, croce giù sposta
+  il cursore, ✕ entra in Ultimate Team, ○ torna indietro. CREATE sui 5 DualSense, SHARE sul clone e
+  sul DualShock 4. Lo stesso giro prima della modifica: 16 comandi e menu uguali, SHARE ovunque.
+- Non provato: la vibrazione del DualSense. Il gioco la chiede con `vibrationActuator`
+  (`js/input.js`, `rumble`) solo dove il browser la offre per quel joypad.
 
 ### Menu col joypad (19/10/2026)
 

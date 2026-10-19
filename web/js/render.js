@@ -268,7 +268,7 @@
     g.restore();
     // Centre logo on the surface
     g.save(); g.globalAlpha = 0.16; g.fillStyle = "#ffffff"; g.font = `800 ${Math.round(1.2 * P)}px "Saira Extra Condensed", "Arial Narrow", sans-serif`;
-    g.textAlign = "center"; g.textBaseline = "middle"; g.translate(gx(0), gy(0)); g.scale(1, SIN); g.fillText(T.logo || "SL", 0, 0); g.restore();
+    g.textAlign = "center"; g.textBaseline = "middle"; g.translate(gx(0), gy(0)); g.scale(1, SIN); g.fillText(T.logo || "FT3", 0, 0); g.restore();
 
     // Far boards (z = -Wd - 0.5): a 0,7 m wall with sponsor panels
     drawBoards(g, -Wd - 0.45, L + 0.6, home, away, true);
@@ -587,7 +587,7 @@
 
   function drawBoards(g, z, half, home, away, far) {
     const h = 0.7, panels = 10, w = (2 * half) / panels;
-    const texts = theme.boardTexts || ["STRIKE LEGENDS", home.short, (theme.name || "ARCADE CUP").toUpperCase(), away.short, "4 CONTRO 4"];
+    const texts = theme.boardTexts || ["FIFA TENKAICHI 3", home.short, (theme.name || "ARCADE CUP").toUpperCase(), away.short, "4 CONTRO 4"];
     for (let i = 0; i < panels; i++) {
       const x0 = -half + i * w;
       const col = i % 2 === 0 ? theme.boards[0] : (i % 4 === 1 ? home.kit : away.kit);
