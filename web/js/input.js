@@ -6,12 +6,14 @@
 //     Series pad over USB or Bluetooth (https://w3c.github.io/gamepad/#remapping);
 //   - "xpad": the Linux driver's raw layout as Firefox reports it (mapping ""), triggers and
 //     cross on axes;
-//   - "ds4raw": a PlayStation 4 pad the browser does not recognise (clones with their own ids,
-//     Windows without the Sony driver): the DirectInput layout of SDL's controller database
+//   - "ds4raw": a PlayStation 4 or 5 pad the browser does not recognise (clones with their own
+//     ids, Windows without the Sony driver, Firefox on Windows): the DirectInput layout of SDL's
+//     controller database, the same for the DualShock 4 and the DualSense
 //     (cross b1, circle b2, square b0, triangle b3, right stick a2/a5, L2/R2 also on a3/a4) and
 //     the cross on a hat axis, a9 (Chromium's gamepad_standard_mappings_win.cc);
-//   - "ds4linux": a PlayStation 4 pad on Linux without the standard mapping (Firefox), the
-//     hid-sony driver's order: cross, circle, triangle, square (BTN_SOUTH, EAST, NORTH, WEST);
+//   - "ds4linux": a PlayStation 4 or 5 pad on Linux without the standard mapping (Firefox), the
+//     order of the hid-sony and hid-playstation drivers: cross, circle, triangle, square
+//     (BTN_SOUTH, EAST, NORTH, WEST);
 //   - a per-pad table the player records in Impostazioni > Prova joypad, saved by pad id.
 // A match reads a device {kb, pad}: the keyboard set and the n-th connected pad, merged, so a
 // pad that wakes up during a match is read from its first press.
@@ -26,8 +28,10 @@
     ds4raw: { buttons: { x: 0, a: 1, b: 2, y: 3, lb: 4, rb: 5, lt: 6, rt: 7, view: 8, menu: 9, ls: 10, rs: 11 }, axes: { lx: 0, ly: 1, rx: 2, ry: 5 }, hat: 9 },
     ds4linux: { buttons: { a: 0, b: 1, y: 2, x: 3, lb: 4, rb: 5, lt: 6, rt: 7, view: 8, menu: 9, ls: 11, rs: 12 }, axes: { lx: 0, ly: 1, rx: 3, ry: 4 }, triggerAxes: { lt: 2, rt: 5 }, crossAxes: [6, 7] },
   };
-  SL.PAD_PROFILE_NAMES = { standard: "standard", xpad: "Xbox su Linux (xpad)", ds4raw: "PS4 non riconosciuto (DirectInput)", ds4linux: "PS4 su Linux", custom: "tasti assegnati da te", guess: "non riconosciuto: provo la disposizione standard" };
+  SL.PAD_PROFILE_NAMES = { standard: "standard", xpad: "Xbox su Linux (xpad)", ds4raw: "PlayStation non riconosciuto (DirectInput)", ds4linux: "PlayStation su Linux", custom: "tasti assegnati da te", guess: "non riconosciuto: provo la disposizione standard" };
   const SONY = /054c|playstation|dualsense|dualshock|wireless controller|ps4|sony/i;
+  // A DualSense (0ce6) or DualSense Edge (0df2) calls SHARE "CREATE".
+  const PS5 = /054c.{0,12}0(ce6|df2)|dualsense|ps5/i;
   // A hat axis (one axis for the whole cross): -1 up, growing clockwise to 1 up-left, above 1 at
   // rest (9/7); Chromium's DpadFromAxis cuts it into the four directions with these bounds.
   function hatDirs(v) {
@@ -208,7 +212,7 @@
   function labels(p) {
     const sony = p && (SONY.test(p.id) || ["ds4raw", "ds4linux"].includes(profileName(p)));
     return sony
-      ? { a: "✕", b: "○", x: "□", y: "△", lb: "L1", rb: "R1", lt: "L2", rt: "R2", view: "SHARE", menu: "OPTIONS", ls: "L3", rs: "R3" }
+      ? { a: "✕", b: "○", x: "□", y: "△", lb: "L1", rb: "R1", lt: "L2", rt: "R2", view: PS5.test(p.id) ? "CREATE" : "SHARE", menu: "OPTIONS", ls: "L3", rs: "R3" }
       : { a: "A", b: "B", x: "X", y: "Y", lb: "LB", rb: "RB", lt: "LT", rt: "RT", view: "View", menu: "Menu", ls: "LS", rs: "RS" };
   }
 

@@ -2,8 +2,9 @@
 
 Calcio arcade 4 contro 4 nel browser: un portiere e quattro giocatori per parte su un campo chiuso
 di 28 × 16 m, niente falli né rimesse, la palla si ruba di spallata o in scivolata. Si gioca con la
-tastiera o con un joypad (Xbox, PS4 ufficiali e non), da soli contro l'IA o in due sulla stessa
-macchina.
+tastiera o con un joypad (Xbox, PS4 e PS5, ufficiali e non), da soli contro l'IA o in due sulla stessa
+macchina. A schermo si chiama «Fifa Tenkaichi 3»; nel codice e nei salvataggi resta
+`strikelegends`.
 
 - **Da giocare subito:** https://tankdrugo.github.io/Fifa-Tenkaichi-3/ , il sito che GitHub Pages
   ricostruisce a ogni modifica su `main` (`.github/workflows/pages.yml`). Copia di lavoro delle
@@ -24,7 +25,7 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 |---|---|
 | `web/index.html` | la pagina: stili, schermate, ordine degli script |
 | `web/js/data.js` | club, squadre leggendarie, carte, pacchetti, salvataggio (`localStorage`, chiave `strikelegends.save.v2`) |
-| `web/js/input.js` | tastiera e joypad: profili standard, Xbox su Linux, PS4 non riconosciuto, PS4 su Linux, tabelle registrate a mano; bordi per i menu |
+| `web/js/input.js` | tastiera e joypad: profili standard, Xbox su Linux, PlayStation (PS4 e PS5) non riconosciuto, PlayStation su Linux, tabelle registrate a mano; bordi per i menu |
 | `web/js/audio.js`, `web/js/voice.js` | effetti sonori; telecronaca (frasi in `web/assets/voice/lines.json`) |
 | `web/js/render.js` | disegno WebGL: fogli degli sprite a palette, 12 campi a tema (`THEMES`) |
 | `web/js/match.js` | la partita a 60 Hz: movimento, palla, passaggi, tiri, spallate, portiere, Tensione e Cometa |

@@ -55,3 +55,19 @@ Resta da fare a mano, una volta: accendere Pages (Settings → Pages → Source 
   (letto dall'API di itch.io).
 
 Resta: leggere la riga «Permesso della pagina» del joypad nel riquadro di itch.io.
+
+## 2026-10-19 — joypad PS5, titolo «Fifa Tenkaichi 3»
+
+- Joypad PS5: DualSense e DualSense Edge hanno la disposizione del DualShock 4 in ogni caso provato
+  (database SDL per Windows e per `hid-playstation`), quindi i profili che c'erano li leggevano già.
+  Prova con joypad finti in Chromium, 7 casi (Chrome, Edge, Windows senza disposizione con gli id
+  di Chromium e di Firefox, Firefox su Linux, un clone, un DualShock 4 di controprova): 16 comandi e
+  4 assi giusti, menu percorso con ✕, croce e ○. Cambiati i nomi: CREATE al posto di SHARE sul PS5,
+  profili e messaggio «PlayStation» al posto di «PS4» (`js/input.js`, `js/ui.js`,
+  `js/settings.js`).
+- Titolo: «Fifa Tenkaichi 3» nella scheda, nella schermata d'apertura, nei menu e sui cartelloni;
+  «FT3» nel cerchio di centrocampo (`index.html`, `js/ui.js`, `js/render.js`). Chiavi di
+  salvataggio invariate (`strikelegends.*`).
+- `node tools/web_checks.js`: 11 prove su 11 prima e dopo, numeri uguali (passaggi 95%, 89,5%, 95%,
+  83,5%, 80%, 74,5%; gesti 10 su 10; skill 9 su 9; ruoli 9 su 9). `ai_bench.js` non rifatto:
+  nessuna riga della simulazione è cambiata.

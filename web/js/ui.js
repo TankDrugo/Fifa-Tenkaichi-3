@@ -131,7 +131,7 @@
     const prof = kind === "on" && p ? SL.input.profileName(p) : "";
     toast(kind !== "on" ? "Joypad scollegato: " + shortPad(p && p.id)
       : prof === "guess" ? "Joypad non riconosciuto: Impostazioni → Comandi → Prova joypad → Assegna i tasti"
-      : (prof === "ds4raw" || prof === "ds4linux" ? "Joypad PS4 collegato: " : "Joypad collegato: ") + shortPad(p.id));
+      : (prof === "ds4raw" || prof === "ds4linux" ? "Joypad PlayStation collegato: " : "Joypad collegato: ") + shortPad(p.id));
   });
   function shortPad(id) { return String(id || "").replace(/\(.*$/, "").trim().slice(0, 40) || "joypad"; }
 
@@ -181,7 +181,7 @@
   function frame(crumb, title, body, sidePanel, wide) {
     return `<div class="menu-wrap ${wide ? "wide" : ""}">
       <div class="col">
-        <div class="top"><div class="brand">Strike <b>Legends</b></div><div class="coins">${coin()}<span>${fmtN(game.ut.coins)}</span></div></div>
+        <div class="top"><div class="brand">Fifa <b>Tenkaichi 3</b></div><div class="coins">${coin()}<span>${fmtN(game.ut.coins)}</span></div></div>
         ${crumb ? `<div class="crumb">${esc(crumb)}</div>` : ""}
         ${title ? `<h2 class="title">${title}</h2>` : ""}
         ${body}

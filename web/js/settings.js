@@ -116,7 +116,7 @@
         1. Clicca una volta dentro il gioco: il browser manda tasti e joypad solo alla pagina selezionata.<br>
         2. Premi A sul joypad: Chrome, Edge e Firefox mostrano il joypad a una pagina solo dopo la prima pressione.<br>
         3. Se la riga «Permesso della pagina» dice NEGATA, il link che contiene il gioco blocca i joypad: va aperto il gioco fuori da quel riquadro.<br>
-        4. Joypad PS4, ufficiali e non: il gioco li riconosce e mostra ✕ ○ □ △. Se la riga «lettura» dice «non riconosciuto», o un tasto fa la cosa sbagliata, «Assegna i tasti» registra quel joypad: tasti, croce e levette, uno alla volta; vale per tutti i joypad con lo stesso nome.<br>
+        4. Joypad PS4 e PS5, ufficiali e non: il gioco li riconosce e mostra ✕ ○ □ △. Se la riga «lettura» dice «non riconosciuto», o un tasto fa la cosa sbagliata, «Assegna i tasti» registra quel joypad: tasti, croce e levette, uno alla volta; vale per tutti i joypad con lo stesso nome.<br>
         5. Con più joypad, «Assegna i tasti» registra quello che si muove per primo.</div>`, "", true));
     const statusLine = () => `<div><b>API Gamepad</b> ${st.api ? "presente" : "assente in questo browser"}</div>
       <div><b>Permesso della pagina</b> ${policy}</div>
@@ -165,7 +165,7 @@
     // Back at rest: no button down and every axis within 0,3 of its rest (a hat back out of range).
     const atRest = (p, r) => p.buttons.every((x, j) => !(x.pressed || x.value > 0.5) || r.b[j]) && p.axes.every((v, j) => outOfRange(r.a[j]) ? outOfRange(v) || Math.abs(v - r.a[j]) < 0.3 : Math.abs(v - r.a[j]) < 0.3);
     function build(list) {
-      if (!list.length) return `<div class="panel"><b>Nessun joypad visto.</b> Clicca nel gioco e premi A (✕ su un joypad PS4).</div>`;
+      if (!list.length) return `<div class="panel"><b>Nessun joypad visto.</b> Clicca nel gioco e premi A (✕ su un joypad PlayStation).</div>`;
       return list.map((p, i) => `<div class="panel pad" data-pad="${i}">
         <h3>Joypad ${i + 1} · ${esc(ui.shortPad(p.id))}</h3>
         <div class="padmeta">mapping «${esc(p.mapping || "")}» · lettura <b data-f="prof"></b> · ${p.buttons.length} tasti, ${p.axes.length} assi${p.vibrationActuator ? " · vibrazione" : ""}</div>
