@@ -12,7 +12,8 @@ Versione giocabile online del gioco: una pagina HTML con WebGL, senza installazi
 
 - **Titolo** (19/10/2026): «Fifa Tenkaichi 3» nella scheda del browser e nella schermata
   d'apertura (`index.html`), nell'intestazione dei menu (`js/ui.js`), sui cartelloni a bordo campo
-  (`js/render.js`, `drawBoards`), e «FT3» nel cerchio di centrocampo al posto di «SL». Codice,
+  (`js/render.js`, `drawBoards`), e il logo nel cerchio di centrocampo al posto di «SL» (sezione
+  «Campi», «Il titolo sul campo»). Codice,
   commenti e chiavi di salvataggio (`strikelegends.*`) restano col nome di prima, perché una chiave
   nuova lascerebbe indietro i salvataggi. «Strike Legends» resta nel messaggio d'errore dell'exe
   (`tools/web_launcher/platform_windows.go:39`), che cambia solo rifacendo l'exe; «Strike FC» e
@@ -372,6 +373,14 @@ doctype andrebbe in modalità quirks.
     un'intestazione finta). Con `BUTLER_API_KEY=x`, un valore qualsiasi, butler ha caricato.
   - butler carica solo su un progetto che esiste: prima della creazione rispondeva
     `invalid game`. Il progetto si crea dal sito (Dashboard → «Create new project», tipo HTML).
+  - **Copertina** (`tools/cover/cover.jpg`, 1260 × 1000, il doppio dei 630 × 500 che itch.io
+    consiglia): un calciatore inventato in rovesciata con l'aura, la scritta cromata stampata un
+    po' fuori registro, i bollini «SUPER 3 IN 1» e «NEW!», il prezzo da mercatino, pieghe e
+    angolo sbiadito. La rifà `node tools/cover/render_cover.js` da `tools/cover/cover.html`
+    (SVG, caratteri Bangers, Permanent Marker e Saira da Google Fonts). Si carica a mano: l'API di
+    itch.io non ha una chiamata per la copertina (Edit game → «Cover image»). Goku non c'è: è un
+    personaggio di Toei e Shueisha, e le regole di itch.io chiedono materiale proprio o concesso
+    (https://itch.io/docs/legal/terms).
   - Dopo il primo `push`, una volta, nella pagina di modifica del progetto:
     1. sul file `fifa-tenkaichi-3-html5.zip` spuntare «This file will be played in the browser»
        (finché non è spuntato l'API lo dà senza il tratto da browser);
@@ -382,8 +391,8 @@ doctype andrebbe in modalità quirks.
     4. nel gioco Impostazioni → Comandi → Prova joypad: la riga «Permesso della pagina» dice se il
        riquadro di itch.io lascia passare il joypad.
   - Stato al 19/10/2026: pagina pubblica (risponde 200) e gioco che parte nel riquadro (prova di
-    Tancredi). Il riquadro ha `allow="… gamepad …"`, quindi il permesso del joypad c'è; la riga
-    «Permesso della pagina» nel gioco non è ancora stata letta. Il riquadro salvato per primo era
+    Tancredi). Il riquadro ha `allow="… gamepad …"`; nel gioco la riga «Permesso della pagina» dice
+    «permesso concesso» e il joypad funziona (prova di Tancredi). Il riquadro salvato per primo era
     1080 × 720: il gioco tiene l'altezza e taglia la larghezza (`render.js:680`, la tela prende la
     misura della finestra), e nel menu la porta di destra finiva sul bordo; a 1280 × 720 il campo
     intero resta 95 px dentro.
@@ -501,6 +510,22 @@ il fondo, il colore delle righe, ciò che sta intorno, la luce sui giocatori e i
 Gli sfondi stanno entro 4,5 m d'altezza sopra la fila lontana: la visuale larga arriva a circa
 z = −13,7 m equivalenti (271 px dall'alto della texture del terreno), e la telecamera può salire
 2 m oltre il bordo lontano quando la palla è da quella parte (`setCamera`).
+
+### Il titolo sul campo (19/10/2026)
+
+- Nel cerchio di centrocampo, su tutti e 12 i campi, il logo della copertina: 4,6 m di larghezza
+  (il cerchio ne misura 5,2), schiacciato come il terreno, al 62% di opacità, così le righe ci
+  passano sotto (`js/render.js`, `buildGround`). Sui cartelloni, i due pannelli «FIFA TENKAICHI 3»
+  hanno il viola e il rosso della copertina e la scritta su una riga (`drawBoards`).
+- Sono due immagini, `assets/logo/ft3_logo.png` (585 × 302) e `assets/logo/ft3_wordmark.png`
+  (495 × 85), fatte da `tools/cover/render_cover.js` con lo stesso disegno della copertina: il
+  carattere Bangers arriva da Google Fonts solo quando si rifanno, quindi nell'exe senza rete il
+  campo resta uguale.
+- Se le immagini non arrivano, il campo torna alla scritta «FT3» e i cartelloni al testo semplice.
+  Prova con le due richieste bloccate: gioco avviato, menu raggiunto, nessun errore.
+- Provato nel browser su Stadio di notte, Campo innevato, Spiaggia, Officina Neon e in una partita
+  vera al calcio d'inizio: il logo si legge su erba, neve, sabbia e lamiera; i giocatori sopra
+  restano contornati.
 
 ## Squadre leggendarie
 

@@ -33,10 +33,11 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `web/js/skills.js` | le 9 skill: gesti della levetta destra, tasti 1-9, stelle, pose |
 | `web/js/ui.js` | schermate, cursore dei menu, HUD, pausa, risultati, ciclo principale |
 | `web/js/modes.js`, `ut.js`, `career.js`, `settings.js` | amichevole, sfide, squadre leggendarie, allenamento; Ultimate Team; carriera; impostazioni e Prova joypad |
-| `web/assets/` | fogli degli sprite (`sprites/` figura base e portiere, `bodies/` 10 corpi, `chars/` 11 personaggi) con l'indice `sprites/sheets.json` e la palette `sprites/palette.json`; frasi della telecronaca |
+| `web/assets/` | fogli degli sprite (`sprites/` figura base e portiere, `bodies/` 10 corpi, `chars/` 11 personaggi) con l'indice `sprites/sheets.json` e la palette `sprites/palette.json`; frasi della telecronaca; `logo/` il titolo dipinto sul campo |
 | `tools/web_checks.js` | situazioni di gioco senza browser, ognuna col numero che deve dare (11 prove) |
 | `tools/ai_bench.js`, `tools/tension_bench.js` | partite fra IA senza browser: ritmo, possesso, passaggi; barra della Tensione |
 | `tools/skill_frames.js` | foto di ogni skill dentro una partita, un fotogramma ogni 1/30 s |
+| `tools/cover/` | copertina per itch.io (`cover.jpg`) e logo del campo (`web/assets/logo/`), da un solo disegno SVG: `node tools/cover/render_cover.js` |
 | `tools/build_web_dist.sh`, `tools/web_launcher/` | zip per itch.io ed exe per Windows (Go): `update.go` scarica l'ultima versione dal sito |
 | `.github/workflows/pages.yml` | a ogni push su `main`: il sito, lo zip per itch.io e `version.json` su GitHub Pages |
 | `tools/make_commentary.py` | registra la telecronaca con Chatterbox (serve il dominio `us.aws.cdn.hf.co`) |
@@ -136,7 +137,8 @@ Su itch.io il gioco è https://goleador0702.itch.io/fifa-tenkaichi-3 (progetto 5
 `butler push strikelegends-web.zip goleador0702/fifa-tenkaichi-3:html5 --userversion <commit>`.
 butler si compila dai sorgenti e la chiave la mette il proxy: i passi sono in `docs/DETTAGLI.md`,
 sezione «Distribuzione». Un file caricato a mano dal sito resta accanto al canale `html5` e non lo
-sostituisce.
+sostituisce. La copertina è `tools/cover/cover.jpg` e si carica a mano (Edit game → «Cover
+image»), perché l'API di itch.io non ha una chiamata per farlo.
 
 ## Crediti e licenze
 
@@ -163,8 +165,7 @@ progetto IA vista dall'alto (`ai_topdown/`), i documenti di progetto (`GDD.md`, 
 
 ## Cose aperte
 
-- itch.io: la riga «Permesso della pagina» (Impostazioni → Comandi → Prova joypad) letta nel
-  riquadro di itch.io.
+- itch.io: la copertina `tools/cover/cover.jpg` da caricare a mano (Edit game → «Cover image»).
 - Il sito su GitHub Pages va acceso una volta: Settings → Pages → Source «GitHub Actions».
 - Telecronaca registrata: manca il dominio `us.aws.cdn.hf.co` per i pesi di Chatterbox.
 - Tunnel e colpo di tacco usano ancora la corsa: i fotogrammi del tiro, provati, sembravano un tiro
