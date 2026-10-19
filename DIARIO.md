@@ -49,5 +49,9 @@ Resta da fare a mano, una volta: accendere Pages (Settings → Pages → Source 
 - `README.md` e `docs/DETTAGLI.md` («Distribuzione»): indirizzo, comando per le versioni nuove,
   domini che passano e che no, come compilare butler.
 
-Resta, a mano su itch.io: spuntare «This file will be played in the browser» sul file `html5`,
-1280 × 720 col pulsante a tutto schermo, visibilità; poi la prova del joypad nel riquadro.
+- Tancredi ha spuntato «This file will be played in the browser» e pubblicato: la pagina risponde
+  200, il gioco parte nel riquadro, che ha `allow="… gamepad …"`. Il riquadro, salvato prima a
+  1080 × 720 (il gioco taglia la larghezza: la porta di destra del menu sul bordo), ora è 1280 × 720
+  (letto dall'API di itch.io).
+
+Resta: leggere la riga «Permesso della pagina» del joypad nel riquadro di itch.io.

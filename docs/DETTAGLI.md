@@ -351,6 +351,12 @@ doctype andrebbe in modalità quirks.
        «Public»;
     4. nel gioco Impostazioni → Comandi → Prova joypad: la riga «Permesso della pagina» dice se il
        riquadro di itch.io lascia passare il joypad.
+  - Stato al 19/10/2026: pagina pubblica (risponde 200) e gioco che parte nel riquadro (prova di
+    Tancredi). Il riquadro ha `allow="… gamepad …"`, quindi il permesso del joypad c'è; la riga
+    «Permesso della pagina» nel gioco non è ancora stata letta. Il riquadro salvato per primo era
+    1080 × 720: il gioco tiene l'altezza e taglia la larghezza (`render.js:680`, la tela prende la
+    misura della finestra), e nel menu la porta di destra finiva sul bordo; a 1280 × 720 il campo
+    intero resta 95 px dentro.
 
 ## Come si gioca in locale
 
