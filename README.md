@@ -162,8 +162,8 @@ progetto IA vista dall'alto (`ai_topdown/`), i documenti di progetto (`GDD.md`, 
 
 ## Cose aperte
 
-- itch.io: sul file `html5` va spuntato a mano «This file will be played in the browser», con
-  1280 × 720 e il pulsante a tutto schermo; poi la prova del joypad nel riquadro di itch.io.
+- itch.io: la riga «Permesso della pagina» (Impostazioni → Comandi → Prova joypad) letta nel
+  riquadro di itch.io.
 - Il sito su GitHub Pages va acceso una volta: Settings → Pages → Source «GitHub Actions».
 - Telecronaca registrata: manca il dominio `us.aws.cdn.hf.co` per i pesi di Chatterbox.
 - Tunnel e colpo di tacco usano ancora la corsa: i fotogrammi del tiro, provati, sembravano un tiro
