@@ -37,3 +37,17 @@ scaricare l'ultima versione senza il suo login.
 - `CLAUDE.md`: il lavoro finito e provato va su `main` (pull request e merge) e al link di lavoro.
 
 Resta da fare a mano, una volta: accendere Pages (Settings → Pages → Source «GitHub Actions»).
+
+## 2026-10-19 — gioco su itch.io con butler
+
+- Progetto https://goleador0702.itch.io/fifa-tenkaichi-3 (5190226, in bozza), creato da Tancredi
+  col nome scelto da lui; canale `html5`, build 2162777, versione `8a9596e` (lo zip di `main`: 235
+  voci, 5,4 MB; nel browser di prova `CSS1Compat`, schermata del titolo, nessun errore).
+- butler: `broth.itch.ovh` (502) e `broth.itch.zone` (403) rifiutati dal proxy, quindi compilato
+  dai sorgenti via `proxy.golang.org` (81 s). La chiave la mette il proxy come Bearer sulle
+  richieste a itch.io; `push` in 3,4 s, build elaborata in 7 s.
+- `README.md` e `docs/DETTAGLI.md` («Distribuzione»): indirizzo, comando per le versioni nuove,
+  domini che passano e che no, come compilare butler.
+
+Resta, a mano su itch.io: spuntare «This file will be played in the browser» sul file `html5`,
+1280 × 720 col pulsante a tutto schermo, visibilità; poi la prova del joypad nel riquadro.
