@@ -74,7 +74,7 @@ Resta: leggere la riga «Permesso della pagina» del joypad nel riquadro di itch
 
 ## 2026-10-19 — copertina da mercatino e titolo sul campo
 
-- Copertina per itch.io, `tools/cover/cover.jpg` (1260 × 1000, 459 KB): calciatore inventato in
+- Copertina per itch.io, `tools/cover/cover.jpg` (1260 × 1000, 467 KB): calciatore inventato in
   rovesciata con l'aura, scritta cromata fuori registro, bollini, prezzo, pieghe. Goku no, per i
   diritti di Toei e Shueisha (Tancredi ha scelto il calciatore inventato). Sorgente SVG in
   `tools/cover/cover.html`, render con `node tools/cover/render_cover.js`: due render di fila danno
@@ -88,5 +88,9 @@ Resta: leggere la riga «Permesso della pagina» del joypad nel riquadro di itch
 
 - itch.io: build 2163481 (versione `a8ea6e8`) col logo sul campo, patch di 224,68 KiB; la pagina
   pubblica la mostra (`html/19878189-2163481`). Link di lavoro: versione 20.
+- Copertina, su richiesta di Tancredi: capelli dorati a punte dritte e aura a fiamme d'oro col
+  bordo arancione, al posto dei capelli neri e del bagliore. L'aura si disegna dopo le forme del
+  logo, così `ft3_logo.png` e `ft3_wordmark.png` restano identici byte per byte (md5 uguale) e il
+  gioco non va ripubblicato.
 
 Resta: caricare la copertina su itch.io a mano (Edit game → «Cover image»).

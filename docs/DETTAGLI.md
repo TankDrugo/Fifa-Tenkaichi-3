@@ -374,7 +374,8 @@ doctype andrebbe in modalità quirks.
   - butler carica solo su un progetto che esiste: prima della creazione rispondeva
     `invalid game`. Il progetto si crea dal sito (Dashboard → «Create new project», tipo HTML).
   - **Copertina** (`tools/cover/cover.jpg`, 1260 × 1000, il doppio dei 630 × 500 che itch.io
-    consiglia): un calciatore inventato in rovesciata con l'aura, la scritta cromata stampata un
+    consiglia): un calciatore inventato in rovesciata, con capelli dorati a punte dritte e un'aura a
+    fiamme d'oro (chiesti da Tancredi), la scritta cromata stampata un
     po' fuori registro, i bollini «SUPER 3 IN 1» e «NEW!», il prezzo da mercatino, pieghe e
     angolo sbiadito. La rifà `node tools/cover/render_cover.js` da `tools/cover/cover.html`
     (SVG, caratteri Bangers, Permanent Marker e Saira da Google Fonts). Si carica a mano: l'API di

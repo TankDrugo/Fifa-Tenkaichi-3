@@ -27,6 +27,11 @@
       <stop offset="0" stop-color="#3fb34f"/>
       <stop offset="1" stop-color="#14632a"/>
     </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffbe0"/>
+      <stop offset="0.4" stop-color="#ffe23d"/>
+      <stop offset="1" stop-color="#f0a514"/>
+    </linearGradient>
     <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#fffbe2"/>
       <stop offset="0.34" stop-color="#ffe23d"/>
@@ -54,21 +59,17 @@
     <pattern id="dots" width="4" height="4" patternUnits="userSpaceOnUse">
       <circle cx="2" cy="2" r="0.75" fill="#000"/>
     </pattern>
-    <!-- the aura: the footballer's own outline, grown, shaken and blurred -->
-    <filter id="aura" x="-40%" y="-40%" width="180%" height="180%">
-      <feMorphology operator="dilate" radius="10" in="SourceAlpha" result="grown"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.03 0.06" numOctaves="2" seed="4" result="noise"/>
-      <feDisplacementMap in="grown" in2="noise" scale="34" xChannelSelector="R" yChannelSelector="G" result="shaken"/>
-      <feGaussianBlur in="shaken" stdDeviation="3" result="soft"/>
-      <feFlood flood-color="#fff36b"/>
-      <feComposite in2="soft" operator="in"/>
-    </filter>
-    <filter id="aura2" x="-50%" y="-50%" width="200%" height="200%">
-      <feMorphology operator="dilate" radius="20" in="SourceAlpha" result="grown"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.025 0.05" numOctaves="2" seed="9" result="noise"/>
-      <feDisplacementMap in="grown" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" result="shaken"/>
-      <feGaussianBlur in="shaken" stdDeviation="6" result="soft"/>
-      <feFlood flood-color="#ff8a1f" flood-opacity="0.85"/>
+    <!-- the aura's white core: the footballer's own outline, grown, stretched upwards and torn by
+         noise (the gold flames around it are drawn, #auraFlames) -->
+    <filter id="aura" x="-70%" y="-100%" width="240%" height="240%">
+      <feMorphology operator="dilate" radius="3" in="SourceAlpha" result="g0"/>
+      <feOffset in="g0" dy="-6" result="g1"/>
+      <feOffset in="g0" dy="-14" result="g2"/>
+      <feMerge result="tall"><feMergeNode in="g0"/><feMergeNode in="g1"/><feMergeNode in="g2"/></feMerge>
+      <feTurbulence type="fractalNoise" baseFrequency="0.07 0.02" numOctaves="2" seed="4" result="noise"/>
+      <feDisplacementMap in="tall" in2="noise" scale="24" xChannelSelector="R" yChannelSelector="G" result="flame"/>
+      <feGaussianBlur in="flame" stdDeviation="2" result="soft"/>
+      <feFlood flood-color="#fffbe0" flood-opacity="0.75"/>
       <feComposite in2="soft" operator="in"/>
     </filter>
     <filter id="paper" x="0" y="0" width="100%" height="100%">
@@ -96,8 +97,16 @@
     <ellipse cx="230" cy="452" rx="70" ry="9" fill="#000" opacity="0.28"/>
 
     <!-- the footballer: the aura first, then the figure -->
-    <use href="#figure" filter="url(#aura2)"/>
+    <g id="auraFlames" stroke-linejoin="round"></g>
     <use href="#figure" filter="url(#aura)"/>
+    <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M96 250 l10 -9 l-6 -3 l12 -13 l-5 -2 l9 -11" stroke="#14091f" stroke-width="5" opacity="0.35"/>
+      <path d="M96 250 l10 -9 l-6 -3 l12 -13 l-5 -2 l9 -11" stroke="#e6fbff" stroke-width="2.5"/>
+      <path d="M286 352 l-9 8 l6 3 l-11 11 l5 3 l-8 10" stroke="#14091f" stroke-width="5" opacity="0.35"/>
+      <path d="M286 352 l-9 8 l6 3 l-11 11 l5 3 l-8 10" stroke="#e6fbff" stroke-width="2.5"/>
+      <path d="M212 168 l7 -9 l-5 -2 l8 -10" stroke="#14091f" stroke-width="5" opacity="0.35"/>
+      <path d="M212 168 l7 -9 l-5 -2 l8 -10" stroke="#e6fbff" stroke-width="2.5"/>
+    </g>
     <g id="figure" stroke-linejoin="round" stroke-linecap="round">
       <!-- far arm -->
       <path d="M178 271 L132 293 L101 283" stroke="#14091f" stroke-width="21" fill="none"/>
@@ -138,9 +147,10 @@
       <path d="M172 266 L166 251" stroke="#e7a56b" stroke-width="12"/>
       <ellipse cx="161" cy="230" rx="23" ry="25" fill="#e7a56b" stroke="#14091f" stroke-width="4"/>
       <path d="M182 226 L188 236 L181 238" fill="#e7a56b" stroke="#14091f" stroke-width="3"/>
-      <!-- hair, swept back by the jump -->
-      <path d="M183 216 C181 200 165 192 150 197 L124 184 L140 203 L113 203 L135 216 L109 226 L135 230 L118 244 L141 240 C146 232 150 222 158 218 C166 214 176 214 183 216 Z" fill="#1b1230" stroke="#14091f" stroke-width="3.5"/>
-      <path d="M150 201 L132 192 M142 210 L124 207" stroke="#4a3a78" stroke-width="2.5"/>
+      <!-- hair: a golden mass with five wide spikes standing up with the power -->
+      <path d="M185 217 L198 212 L187 206 L195 164 L168 193 L154 150 L147 195 L114 168 L131 207 L95 204 L127 225 L105 243 L138 241 C146 226 160 212 185 217 Z" fill="url(#gold)" stroke="#14091f" stroke-width="3.5"/>
+      <path d="M178 199 L189 175 M158 194 L155 162 M140 201 L122 178 M129 216 L106 208" stroke="#fffbe0" stroke-width="3" opacity="0.85"/>
+      <path d="M168 196 L162 176 M147 199 L132 180 M133 211 L112 205 M128 230 L112 240" stroke="#c97a08" stroke-width="2.5" opacity="0.7"/>
       <!-- headband and its tails -->
       <path d="M140 225 C150 216 170 211 185 215" stroke="#14091f" stroke-width="11" fill="none"/>
       <path d="M140 225 C150 216 170 211 185 215" stroke="#f2f0e6" stroke-width="6" fill="none"/>
@@ -292,6 +302,29 @@
     c.setAttribute("points", star(3, s * 1.6, s * 0.8, 0.6));
     c.setAttribute("transform", `translate(${x} ${y}) rotate(${Math.round(rnd() * 360)})`);
     chips.appendChild(c);
+  }
+  // the aura: flame tongues around the footballer, longer and bent upwards on top, each side bowed
+  // inwards so the tips come to a point (drawn last, so the numbers above keep the logo unchanged)
+  const flames = (cx, cy, rx, ry, n, grow) => {
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2, up = Math.max(0, -Math.sin(a));
+      let x = cx + rx * Math.cos(a), y = cy + ry * Math.sin(a);
+      if (i % 2) { const L = (14 + 30 * up + rnd() * 10) * grow; x += Math.cos(a) * L * 0.45; y += Math.sin(a) * L * 0.45 - (12 + 40 * up + rnd() * 12) * grow; }
+      pts.push([x, y]);
+    }
+    let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+    for (let i = 1; i <= n; i++) {
+      const [px, py] = pts[i % n], [qx, qy] = pts[i - 1], mx = (px + qx) / 2, my = (py + qy) / 2;
+      d += ` Q${(mx + (cx - mx) * 0.16).toFixed(1)} ${(my + (cy - my) * 0.16).toFixed(1)} ${px.toFixed(1)} ${py.toFixed(1)}`;
+    }
+    return d + " Z";
+  };
+  const auraG = document.getElementById("auraFlames");
+  for (const [d, fill, stroke, w] of [[flames(212, 312, 132, 140, 30, 1), "#ffc81a", "#ff5a00", 5], [flames(212, 318, 84, 104, 22, 0.6), "#fff1a0", "none", 0]]) {
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d); p.setAttribute("fill", fill); p.setAttribute("stroke", stroke); p.setAttribute("stroke-width", w);
+    p.setAttribute("opacity", "0.92"); auraG.appendChild(p);
   }
   // ?only=logo or ?only=wordmark: that group alone, cropped to its box, on a transparent page
   const only = new URLSearchParams(location.search).get("only");
