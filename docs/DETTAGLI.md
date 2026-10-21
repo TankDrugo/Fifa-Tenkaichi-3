@@ -721,6 +721,7 @@ misure. `web/` non cambia: `git diff` contro `main` su `web/` dà 0 righe.
 | `apps/realtime` | server Node: `GET /health` (stato proprio e di Redis), WebSocket `/ws` con messaggi fino a 1.024 byte |
 | `apps/web` | Next.js: `/status` (i quattro servizi e un WebSocket aperto dal navigatore), `/api/status` in JSON, `/api/health` per Docker |
 | `infra/docker-compose.yml`, `infra/.env.example` | Postgres, Redis, realtime, web con controlli di salute, volumi `pgdata` e `redisdata` |
+| `infra/docker-compose.cloud.yml` | solo nelle chat cloud: passa ai build il certificato della rete (sezione «Docker nelle chat cloud») |
 | `infra/check-status.mjs` | verifica dall'esterno: `/api/status` e 20 ping WebSocket; codice 0 solo se tutto risponde |
 | `.github/workflows/ci.yml` | tre lavori: tipi, lint, prove, build; immagini amd64 e arm64 con l'avvio delle arm64 sotto QEMU; `docker compose up` con `check-status.mjs` |
 
@@ -761,7 +762,8 @@ abbia tutte e due (`https://hub.docker.com/v2/repositories/library/node/tags/<et
   installato da Tancredi sulla porta 5432 non blocca `docker compose up`.
 - **Postgres 18:** l'immagine tiene i dati in `/var/lib/postgresql/18/docker`, quindi il volume va
   su `/var/lib/postgresql` (`infra/docker-compose.yml`).
-- **Redis con `--appendonly yes`:** sessioni e code sopravvivono al riavvio del contenitore.
+- **Redis con `--appendonly yes`:** sessioni e code sopravvivono al riavvio del contenitore
+  (provato nella chat, sezione «Docker nelle chat cloud»).
 - **Controlli con scadenza:** ogni controllo della pagina di stato si ferma a 2 s
   (`packages/shared/src/status.ts`, `timed`); i client Redis hanno `disableOfflineQueue`, quindi
   con Redis spento la riga diventa rossa subito invece di aspettare.
@@ -786,14 +788,38 @@ abbia tutte e due (`https://hub.docker.com/v2/repositories/library/node/tags/<et
 | WebSocket dal navigatore (Chromium senza schermo, `/status`) | collegato, mediana 0,6 ms su 10 ping |
 | Redis spento | `/api/status` risponde 503, le righe Redis e realtime diventano rosse («acceso, ma non raggiunge Redis»), Postgres resta verde |
 
+### Docker nelle chat cloud
+
+Con la regola `Bash(dockerd)` in `.claude/settings.json` (approvata da Tancredi il 21/10/2026)
+`dockerd` parte: Docker 29.9.1, archiviazione di containerd. Prima della regola il controllo dei
+permessi della sessione aveva rifiutato l'avvio due volte.
+
+- **Il certificato della rete:** il primo `docker compose build` si è fermato su corepack con
+  «self-signed certificate in certificate chain» scaricando
+  `https://registry.npmjs.org/pnpm/-/pnpm-10.28.0.tgz`: la rete delle chat arriva fino a npm ma
+  firma di nuovo l'HTTPS con `/root/.ccr/ca-bundle.crt`. Il passo `pnpm install` dei due
+  Dockerfile legge quel certificato da un secret di BuildKit (`ca_bundle`) quando c'è;
+  `infra/docker-compose.cloud.yml` lo passa. Sul PC e in CI il file non si usa e il passo scarica
+  come prima.
+- **Il permesso di bake:** Compose 5.6.0 costruisce con `buildx bake`, che chiede un permesso
+  esplicito per leggere un file fuori dal progetto («pass --allow=fs.read=/root/.ccr/ca-bundle.crt»)
+  e `docker compose build` non ha un'opzione per darlo. La variabile `BUILDX_BAKE_ENTITLEMENTS_FS=0`
+  toglie quel controllo per il solo comando. Comando completo, da `infra/`:
+  `BUILDX_BAKE_ENTITLEMENTS_FS=0 docker compose -f docker-compose.yml -f docker-compose.cloud.yml up --build`.
+
+| Misura nella chat (Docker 29.9.1, 4 core) | Valore |
+|---|---|
+| scaricamento di `postgres:18.6`, `redis:8.10.2`, `node:24.22.0` | 14,4 s e 7,2 s |
+| `docker compose build`, due immagini in parallelo, basi già scaricate | 36,8 s |
+| `docker compose up --wait` fino ai quattro servizi sani | 17,2 s |
+| `check-status.mjs` | web 1,5 ms, realtime 6,2 ms, Postgres 18.6 1,9 ms, Redis 8.10.2 2,8 ms; WebSocket mediana 0,61 ms su 20 ping, massimo 6,51 ms |
+| WebSocket da Chromium su `/status` | mediana 0,8 ms su 10 ping |
+| memoria a riposo (`docker stats`) | web 89,0 MiB, realtime 52,8 MiB, Postgres 38,1 MiB, Redis 6,0 MiB |
+| dati dopo `docker compose down` e `up` | una chiave Redis e una riga Postgres scritte prima ci sono ancora (volumi `ft3_redisdata`, `ft3_pgdata`) |
+
 ### Cosa non è provato
 
-- **`docker compose up` in questa chat:** l'avvio di `dockerd` (piano, sezione 6) è stato rifiutato
-  due volte dal controllo dei permessi della sessione. Le prove con Docker sono quelle di GitHub
-  Actions; nella chat la pila è girata senza Docker, con le versioni del contenitore (Postgres 16 e
-  Redis 7 invece di 18 e 8). La strada per sbloccarlo è in `docs/PROPOSTA-FASE-0.md`.
-- **`docker compose up` sul PC di Tancredi** con Docker Desktop: lo fa Tancredi (`README` proposto
-  in `docs/PROPOSTA-FASE-0.md`).
-- **Proxy delle chat dentro `docker build`:** non provato, perché Docker non è partito.
+- **`docker compose up` sul PC di Tancredi** con Docker Desktop: lo fa Tancredi (`README.md`,
+  «Gioco nuovo (in costruzione)»).
 - **`/status` e `/api/status` sono pubblici** e mostrano le versioni di Node, Postgres e Redis: con
   il server raggiungibile da fuori (fase 7) vanno dietro l'accesso di amministrazione (fase 5).
