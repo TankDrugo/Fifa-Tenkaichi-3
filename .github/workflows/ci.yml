@@ -43,7 +43,9 @@ jobs:
   # same in Node and in Chromium (docs/DETTAGLI.md, "Gioco nuovo · fase 1").
   simulation:
     name: Simulazione in Node e in Chromium
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1, the version of the browsers in the cloud chats, refuses ubuntu-latest
+    # (26.04): "does not support chromium-headless-shell on ubuntu26.04-x64".
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

@@ -946,7 +946,7 @@ codice girerà nel navigatore, in Next.js e in `apps/realtime`. `web/` non cambi
 
 | Cosa | Versione | Perché |
 |---|---|---|
-| Playwright | 1.56.1 | gioca la simulazione in Chromium (`bench/browser.ts`). Le chat cloud hanno Chromium 1194 in `/opt/pw-browsers`, che è quello della 1.56: nessuno scaricamento nelle chat. In CI si installa solo la shell senza schermo (`--only-shell`) |
+| Playwright | 1.56.1 | gioca la simulazione in Chromium (`bench/browser.ts`). Le chat cloud hanno Chromium 1194 in `/opt/pw-browsers`, che è quello della 1.56: nessuno scaricamento nelle chat. In CI si installa solo la shell senza schermo (`--only-shell`), su `ubuntu-24.04`: su `ubuntu-latest`, che è la 26.04, la 1.56.1 si ferma con «Playwright does not support chromium-headless-shell on ubuntu26.04-x64» (primo giro della CI, 21/10/2026) |
 | esbuild | 0.28.2 | c'era già in `apps/realtime`; qui impacchetta `bench/runs.ts` per il navigatore |
 | @types/node | 24.19.2 | lo stesso di `apps/realtime`: i banchi usano `fs`, `vm`, `perf_hooks` |
 
