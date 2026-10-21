@@ -817,9 +817,13 @@ permessi della sessione aveva rifiutato l'avvio due volte.
 | memoria a riposo (`docker stats`) | web 89,0 MiB, realtime 52,8 MiB, Postgres 38,1 MiB, Redis 6,0 MiB |
 | dati dopo `docker compose down` e `up` | una chiave Redis e una riga Postgres scritte prima ci sono ancora (volumi `ft3_redisdata`, `ft3_pgdata`) |
 
+### Sul PC di Tancredi
+
+Il 21/10/2026 Tancredi ha avviato `docker compose up --build` da `infra/` con Docker Desktop:
+su http://localhost:3000/status le quattro righe sono verdi. Tempi e memoria sul suo PC non sono
+stati misurati.
+
 ### Cosa non è provato
 
-- **`docker compose up` sul PC di Tancredi** con Docker Desktop: lo fa Tancredi (`README.md`,
-  «Gioco nuovo (in costruzione)»).
 - **`/status` e `/api/status` sono pubblici** e mostrano le versioni di Node, Postgres e Redis: con
   il server raggiungibile da fuori (fase 7) vanno dietro l'accesso di amministrazione (fase 5).
