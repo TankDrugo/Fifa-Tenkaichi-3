@@ -175,3 +175,35 @@ chat successiva fa la fase 1.
   (filtro `paths` di `.github/workflows/pages.yml`).
 
 Fase chiusa: 0. Resta: la fase 1 (simulazione condivisa in `packages/sim`), in una chat nuova.
+
+## 2026-10-21 — fase 1 del rifacimento: simulazione condivisa
+
+- `packages/sim`: `web/js/match.js`, `ai.js`, `skills.js` e `data.js` in TypeScript, senza
+  disegno, suono né joypad (comandi da `Match.input`, suoni e vibrazioni da `Match.onCue`). `web/`
+  invariato (0 righe di differenza). Scelte e misure in `docs/DETTAGLI.md`, «Gioco nuovo · fase 1».
+- Le quattro condizioni della fase: `bench/checks.ts` dà le stesse 26 righe di
+  `tools/web_checks.js` (11 `ok` su 11); `bench/ai_bench.ts 48 4 1 --json` lo stesso JSON byte per
+  byte, e `tension_bench` 48 la stessa riga; `bench/browser.ts` 22 partite su 22 con la stessa
+  catena di impronte in Node 22.22 e Chromium 141, 362.741 fotogrammi; `bench/speed.ts 3` passo
+  medio 7,8 µs, 2.133 partite fra IA a 60 Hz per core (2.029 una contro una, 2.535 due contro due).
+- `bench/parity.ts`: gioco vecchio e simulazione nuova giocano 22 partite (IA, persone con comandi a
+  caso, Semi/Assistito/Manuale, due contro due, Carriera, Luna, 30-60-144 Hz) con impronte uguali
+  dopo ogni fotogramma. Controprove: 1e-9 sulla riserva del portiere le separa al fotogramma 0.
+- `Math.sin` e `Math.cos` differiscono nell'ultimo bit fra Node 22 e Chromium 141 (6.826 e 6.595
+  casi su 200.000): `src/fmath.ts` le riscrive da fdlibm, con `exp`, `atan2` e `hypot`, ed è
+  uguale bit per bit al `Math` di Node 22 su 1.000.196 argomenti per caso; il passo medio scende da
+  12,8 a 7,8 µs. ESLint vieta in `packages/sim/src` le funzioni trascendenti di `Math`,
+  `Math.random` e `**`. Crediti di fdlibm in `README.md`.
+- Due cose trovate nel gioco vecchio e lasciate come sono, perché il porting deve dare gli stessi
+  numeri: l'IA pensa ogni 8 passi (7,5 volte al secondo), non ogni 0,1 s come dice `ai.js`;
+  `tools/ai_bench.js:66` non passa a `Match.pass` il compagno scelto dall'IA (su 96 partite,
+  passandolo, gol 5,77 → 5,49, tiri 19,5 → 18,5).
+- CI: lavoro nuovo «Simulazione in Node e in Chromium» (`fmath` contro Node 24, 22 partite contro il
+  gioco vecchio, 22 partite in Chromium); `pnpm test` 21 prove su 21 (13 nuove). Playwright 1.56.1,
+  la versione dei browser già presenti nelle chat.
+- Commit: `fafbf00` (codice), il commit di questa voce; pull request TankDrugo/Fifa-tenkaichi-3#11.
+
+Fase chiusa: 1. Restano due scelte per Tancredi, nessuna blocca la fase 2: il banco dell'IA con il
+compagno scelto (`--real-pass`) come comportamento normale, e l'IA a 10 pensieri al secondo invece
+di 7,5 (cambia la partita, quindi in una fase che cambia l'IA). Dopo, la fase 2 (motore 3D) in una
+chat nuova.
