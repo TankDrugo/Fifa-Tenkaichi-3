@@ -48,8 +48,9 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status` |
 | `apps/realtime` | gioco nuovo, server delle partite: `/health` e WebSocket `/ws` |
 | `packages/shared` | gioco nuovo, schemi condivisi fra navigatore e server |
+| `packages/sim` | gioco nuovo, la simulazione in TypeScript (partita, IA, skill, carte), la stessa nel navigatore e sul server; `bench/` ha le prove e i banchi di `tools/` portati |
 | `infra/` | gioco nuovo, `docker-compose.yml` (Postgres, Redis, web, realtime), `check-status.mjs`; `docker-compose.cloud.yml` solo per le chat cloud |
-| `.github/workflows/ci.yml` | gioco nuovo, a ogni pull request: tipi, lint, prove, immagini amd64 e arm64, compose |
+| `.github/workflows/ci.yml` | gioco nuovo, a ogni pull request: tipi, lint, prove, simulazione in Node e in Chromium, immagini amd64 e arm64, compose |
 
 ## Comandi
 
@@ -158,6 +159,16 @@ Sul PC, con Docker Desktop avviato:
 poi http://localhost:3000/status mostra web, realtime, Postgres e Redis collegati. `Ctrl+C` ferma
 tutto; `docker compose down --volumes` cancella anche i dati di prova.
 
+La simulazione (`packages/sim`) si prova senza Docker, dalla radice del repository:
+
+| Comando | Cosa dà (21/10/2026) |
+|---|---|
+| `node packages/sim/bench/checks.ts` | le 11 prove di `tools/web_checks.js`, stesse righe |
+| `node packages/sim/bench/ai_bench.ts 48 4 1`, `tension_bench.ts 48` | gli stessi numeri dei banchi di `tools/` |
+| `node packages/sim/bench/parity.ts` | gioco vecchio e simulazione nuova, 22 partite uguali in ogni fotogramma |
+| `node packages/sim/bench/browser.ts` | le stesse 22 partite in Node e in Chromium, stessa impronta |
+| `node packages/sim/bench/speed.ts 3` | partite a 60 Hz che un core regge: circa 2.000 nella chat cloud |
+
 ## Crediti e licenze
 
 - **player01**, la figura base, il portiere e i 10 corpi che ne derivano: fatto da Tancredi in VRoid
@@ -172,6 +183,9 @@ tutto; `docker compose down --volumes` cancella anche i dati di prova.
   dalla rete.
 - **Contenuti originali:** club, giocatori, leggende, stemmi e squadre leggendarie sono inventati;
   nessun nome di club o calciatore reale.
+- **fdlibm** (Sun Microsystems, 1993): seno, coseno, esponenziale e arcotangente della simulazione
+  del gioco nuovo (`packages/sim/src/fmath.ts`), con l'avviso di copyright che la licenza chiede
+  di conservare, copiato nel file.
 
 ## Archivio
 

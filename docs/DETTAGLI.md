@@ -827,3 +827,145 @@ stati misurati.
 
 - **`/status` e `/api/status` sono pubblici** e mostrano le versioni di Node, Postgres e Redis: con
   il server raggiungibile da fuori (fase 7) vanno dietro l'accesso di amministrazione (fase 5).
+
+## Gioco nuovo · fase 1, simulazione condivisa (21/10/2026)
+
+`packages/sim` porta in TypeScript `web/js/match.js`, `ai.js`, `skills.js` e `data.js`; lo stesso
+codice girerà nel navigatore, in Next.js e in `apps/realtime`. `web/` non cambia: `git diff` contro
+`main` su `web/` dà 0 righe.
+
+### Cosa c'è
+
+| Percorso | Cosa |
+|---|---|
+| `packages/sim/src/match.ts` | la partita a 60 Hz di `match.js`: giocatori, palla, portiere, spallata, scivolata, Tensione, Cometa, comandi delle persone |
+| `packages/sim/src/ai.ts`, `skills.ts` | l'IA con i ruoli di `ai.js`; le 9 skill, i gesti della levetta destra e le skill dell'IA di `skills.js` |
+| `packages/sim/src/data.ts` | club, squadre leggendarie, le 150 carte, pacchetti, impostazioni di `data.js` |
+| `packages/sim/src/fmath.ts` | seno, coseno, esponenziale, arcotangente e `hypot` con gli stessi bit in ogni motore (sezione «Matematica uguale in ogni motore») |
+| `packages/sim/src/fingerprint.ts` | l'impronta dello stato: orologio, punteggio, barre, palla e, per ogni giocatore, posto, velocità, timer e memoria dell'IA, in 16 cifre esadecimali |
+| `packages/sim/src/sim.test.ts` | 13 prove vitest: quattro catene di impronte registrate, la stessa partita due volte, tre partite contro il gioco vecchio, i bit di `fmath`, le carte |
+| `packages/sim/bench/checks.ts`, `ai_bench.ts`, `tension_bench.ts` | `tools/web_checks.js`, `ai_bench.js`, `tension_bench.js` portati: stesse situazioni, stessi semi, stesse righe stampate |
+| `packages/sim/bench/parity.ts` | gioco vecchio (caricato come in `tools/`) e simulazione nuova giocano le stesse 22 partite; dopo ogni fotogramma le impronte devono coincidere |
+| `packages/sim/bench/browser.ts` | le stesse 22 partite in Node e in Chromium senza schermo (Playwright), confrontate fotogramma per fotogramma |
+| `packages/sim/bench/speed.ts`, `fmath_check.ts` | partite a 60 Hz per core; `fmath` contro il `Math` del motore |
+| `packages/sim/bench/scenarios.ts`, `script.ts` | le 22 partite: le 12 coppie di `ai_bench`, e persone guidate da comandi a caso con un seme (levetta, sette tasti, gesti, tasti delle skill) in Semi, Assistito e Manuale, una contro una, due contro due, giocatore bloccato della Carriera, gravità della Luna, avversari fermi, gol d'oro, una sfida che parte da 1-2 con la barra piena, schermi a 30, 60 e 144 Hz |
+
+### Cosa cambia rispetto a `web/js/`
+
+- **Nessun disegno, suono o joypad dentro la simulazione.** I comandi entrano da `Match.input`, un
+  oggetto per persona ogni 1/60 s con la forma che dava `input.js` (`x`, `z`, `rx`, `rz`, `skill`
+  e i sette tasti); suoni e vibrazioni escono come `Cue` da `Match.onCue`. `cellOf` e `draw` di
+  `match.js` restano al gioco vecchio: la posa del corpo la decide il motore 3D (fasi 2 e 3).
+- **I tempi dei fogli di sprite** che la partita leggeva da `web/assets/sprites/sheets.json`
+  (passo di camminata, corsa e scatto; durata di passaggio, tiro, rinvio e reazioni alla spallata)
+  sono costanti in `src/constants.ts` (`GAIT_STRIDE`, `CLIP_DURATION`). Decidono solo cosa mostra
+  il corpo; la fase 3 li sostituisce con le durate delle animazioni scritte nel codice.
+- **`openPack` riceve il caso come argomento**: `data.js:244` usava `Math.random`; la fase 5 gli
+  passerà il generatore del server (piano, sezione 3). Il salvataggio nel navigatore (`SL.load`,
+  `SL.save`) non è portato: il gioco nuovo salva sul server.
+- **I campi che `web/js/` lasciava `undefined`** partono da un valore: 0 dove il codice li leggeva
+  con `|| 0` (scudo, tempo palla al piede, riposo della scivolata), NaN per mira e forza del tiro
+  dell'IA (`aiAim`, `aiChargeTo`), che come `undefined` rendono falso ogni confronto.
+
+### Matematica uguale in ogni motore
+
+- **Osservazione:** su 200.000 argomenti, `Math.sin` e `Math.cos` danno un ultimo bit diverso fra
+  Node 22.22 (V8 12.4) e Chromium 141.0.7390.37 in 6.826 e 6.595 casi; `Math.hypot`, `Math.exp`,
+  `Math.atan2` e `Math.sqrt` danno gli stessi bit in tutti i 200.000. Al primo giro di
+  `browser.ts` 18 partite su 22 avevano una catena diversa: in Fulmini-Marea la prima differenza è
+  al fotogramma 1.394, `fz` del giocatore 4 vale -0,6478739659326544 in Node e
+  -0,6478739659326543 in Chromium.
+- **Conseguenza:** la prova della sezione 4.8 del piano (stessa impronta per client e server a
+  fine partita) richiede che il navigatore e il server facciano gli stessi conti. `src/fmath.ts`
+  riscrive `sin`, `cos`, `exp`, `atan2` da fdlibm (la libreria che V8 porta in
+  `src/base/ieee754.cc`) e `hypot` con l'algoritmo di `Math.hypot` di V8, usando solo somme,
+  prodotti, divisioni e radici, che IEEE 754 arrotonda allo stesso modo in ogni motore.
+  `bench/fmath_check.ts`: 0 differenze dal `Math` di Node 22 su 1.000.196 argomenti per ognuno
+  degli 11 casi (angoli fino a 10 rad e fino a 1e5, esponenziali da -745 a 709, arcotangenti e
+  distanze del campo e su 40 ordini di grandezza, NaN, infiniti, -0). Per questo il confronto col
+  gioco vecchio resta esatto in Node 22, e dopo il cambio `browser.ts` dà 22 partite su 22.
+- **Il generatore dei comandi finti** (`bench/script.ts`) usa anche lui `fmath`: con `Math.cos` le
+  9 partite con persone erano ancora diverse in Chromium, perché erano diversi i comandi.
+- **Guardia:** in `packages/sim/src` ESLint rifiuta `Math.sin`, `cos`, `exp`, `pow`, `hypot` e le
+  altre funzioni trascendenti, `Math.random` e l'operatore `**` (`eslint.config.mjs`).
+- **Costo:** sugli stessi 564.354 passi di `speed.ts 3`, il passo medio fra IA è 12,8 µs con il
+  `Math` del motore e 7,8 µs con `fmath`.
+
+### Misure
+
+| Misura | Valore |
+|---|---|
+| `tools/web_checks.js` → `bench/checks.ts` | 11 `ok` su 11 in tutti e due; le 26 righe stampate sono identiche (`diff` vuoto) |
+| `tools/ai_bench.js 48 4 1 --json` → `bench/ai_bench.ts 48 4 1 --json` | JSON identico byte per byte (`cmp`): 6,00 gol, 19,7 tiri, 10,9 cambi al minuto, 3,95 s di palla al piede, 91% di passaggi riusciti |
+| `tools/tension_bench.js 48` → `bench/tension_bench.ts 48` | riga identica: Comete 0,60 a partita, tiri caricati 1,60, prima barra piena al minuto 3,19 |
+| tempi dei banchi, vecchio → nuovo | prove 4 min 56 s → 22,6 s; `ai_bench` su 48 partite 1 min 14 s → 6,5 s. I banchi vecchi caricano `web/js/` in un contesto `node:vm` e quel giro girava insieme ad altri due banchi: il confronto non separa il costo del contesto da quello del codice |
+| `bench/parity.ts` | 22 partite su 22 uguali in ogni fotogramma, 362.741 fotogrammi, sia con il `Math` di Node 22 nel gioco vecchio (`--engine-math`) sia con `fmath` |
+| controprove del confronto | riserva del portiere +1e-9: le impronte si separano al fotogramma 0; un numero a caso in più all'inizio: al fotogramma 16, e il risultato passa da 0-2 a 4-5; `pickup` da 0,55 a 0,551 m: 5 prove vitest su 21 falliscono |
+| `bench/browser.ts` | Node 22.22.0 e HeadlessChrome 141.0.7390.37: 22 partite su 22 con la stessa catena di impronte, 362.741 fotogrammi; 9,8 s in Node, 22,5 s in Chromium; la simulazione impacchettata per il navigatore pesa 121,3 kB |
+| eventi nelle 22 partite | 7 skill su 9 (Elastico e Sombrero chiedono carte da 5 e 4 stelle: li prova `checks.ts`), 14 Comete (4 da 1 su 2, 1 da 2 su 2, 3 fermate), 890 spallate, 36 scivolate, 69 tiri caricati, 159 gol |
+| `pnpm test` | 21 prove su 21 in 13,1 s (8 della fase 0, 13 nuove) |
+| CI, lavoro «Simulazione in Node e in Chromium» (Node 24.22.0, `ubuntu-24.04`) | `fmath` uguale al `Math` di Node 24 in 11 casi su 11 (200.196 argomenti ciascuno); gioco vecchio e nuovo 22 partite su 22 uguali; in Chromium 141 22 partite su 22 con le stesse catene di impronte della chat (Fulmini-Marea `8044c70b`); 1 min 33 s in tutto |
+
+### Partite simultanee per core
+
+`node packages/sim/bench/speed.ts 3` nella chat (Node 22.22, Intel Xeon a 2,80 GHz, 4 core), ogni
+`Match.step` misurato a parte:
+
+| Partite | Passi | Passi al secondo | Passo medio | 99° percentile | Più lungo | Passi in cui l'IA pensa | Partite a 60 Hz per core |
+|---|---|---|---|---|---|---|---|
+| IA contro IA, 12 partite × 3 | 564.354 | 128.001 | 7,8 µs | 96,8 µs | 4.166,9 µs | 38,0 µs | 2.133 |
+| una contro una: 2 persone, 8 giocatori dell'IA | 47.388 | 121.719 | 8,2 µs | 80,2 µs | 1.847,1 µs | 31,3 µs | 2.029 |
+| due contro due: 4 persone, 6 giocatori dell'IA | 49.827 | 152.102 | 6,6 µs | 49,6 µs | 2.513,9 µs | 21,8 µs | 2.535 |
+
+- Le partite per core sono 1 s / (60 × passo medio): solo il calcolo, senza rete né l'invio dello
+  stato 30 volte al secondo, che la fase 6 misura a parte.
+- L'IA pensa una volta ogni 8 passi, non ogni 0,1 s come dice il commento di `web/js/ai.js`:
+  `aiTick` riparte da 0,1 e scende di 1/60 a passo (`match.js`, `step`), dopo 6 passi vale
+  2,08e-17, ancora sopra 0, e il pensiero arriva all'ottavo, 7,5 volte al secondo. Il porting tiene
+  questo ritmo, perché i numeri di questo file sono misurati con esso; portarlo a 10 al secondo
+  cambia la partita ed è una scelta per una fase che cambia l'IA.
+- Se tutte le partite di un core pensassero nello stesso passo, 16,7 ms / 38,0 µs = 438 partite:
+  la fase 6 fa partire le partite in passi diversi, così i pensieri si distribuiscono.
+- Il passo più lungo (4,2 ms) è un caso isolato su 564.354, con il 99° percentile a 96,8 µs; la
+  fase 6 misura il passo del server sotto carico.
+
+### Il banco dell'IA e il compagno scelto
+
+- **Osservazione:** `tools/ai_bench.js:66` conta i passaggi con un involucro che passa a
+  `Match.pass` solo i primi quattro argomenti; il quinto è il compagno che l'IA ha scelto
+  (`web/js/ai.js:281`). Nelle partite del banco il pallone va quindi al compagno che sceglie
+  `bestReceiver` dalla direzione, quasi sempre lo stesso ma non sempre.
+- **Misura:** `bench/ai_bench.ts` tiene lo stesso involucro, così i numeri si confrontano con quelli
+  di questo file; con `--real-pass` passa tutti gli argomenti. Su 96 partite: gol 5,77 → 5,49, tiri
+  19,5 → 18,5, cambi al minuto 10,7 → 10,3, palla al piede 4,04 → 4,17 s, passaggi riusciti 92% →
+  92%.
+- **Raccomandazione:** dalla prima fase che cambia l'IA, `--real-pass` come comportamento del banco,
+  perché misura la partita che si gioca; i numeri di prima si confrontano con la riga a 96 partite
+  qui sopra. Decide Tancredi.
+
+### Versioni e perché
+
+| Cosa | Versione | Perché |
+|---|---|---|
+| Playwright | 1.56.1 | gioca la simulazione in Chromium (`bench/browser.ts`). Le chat cloud hanno Chromium 1194 in `/opt/pw-browsers`, che è quello della 1.56: nessuno scaricamento nelle chat. In CI si installa solo la shell senza schermo (`--only-shell`), su `ubuntu-24.04`: su `ubuntu-latest`, che è la 26.04, la 1.56.1 si ferma con «Playwright does not support chromium-headless-shell on ubuntu26.04-x64» (primo giro della CI, 21/10/2026) |
+| esbuild | 0.28.2 | c'era già in `apps/realtime`; qui impacchetta `bench/runs.ts` per il navigatore |
+| @types/node | 24.19.2 | lo stesso di `apps/realtime`: i banchi usano `fs`, `vm`, `perf_hooks` |
+
+La CI ha un lavoro nuovo, «Simulazione in Node e in Chromium» (`.github/workflows/ci.yml`): `fmath`
+contro il `Math` di Node 24, il confronto col gioco vecchio sulle 22 partite e le 22 partite in
+Chromium. Le prove vitest confrontano quattro catene registrate qui con Node 22 e Chromium 141,
+quindi in CI provano anche Node 24.
+
+### Cosa non è provato
+
+- **Firefox e Safari:** `fmath` usa solo operazioni che IEEE 754 arrotonda allo stesso modo, ma qui
+  ci sono solo i browser di Playwright per Chromium. La fase 6 gioca le stesse partite in Firefox
+  e WebKit (`playwright install firefox webkit`).
+- **Il gioco vecchio nei navigatori** usa il `Math` del motore: le sue partite non sono identiche
+  fra Node e Chromium. Non cambia niente per chi gioca su `web/`; i numeri di questo file, misurati
+  in Node 22, sono quelli che dà anche `packages/sim`.
+- **`tools/skill_frames.js` non è portato:** fotografa i fogli di sprite; i fogli di contatto dei
+  movimenti in 3D sono della fase 3.
+- **`apps/realtime` non usa ancora la simulazione:** le partite sul server sono della fase 6.
+- **Processori di Oracle (Ampere A1, arm64):** le partite per core sono misurate solo sul Xeon della
+  chat; sulla macchina vera si misurano nella fase 7.
