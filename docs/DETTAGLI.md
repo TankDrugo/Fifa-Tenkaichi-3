@@ -904,6 +904,7 @@ codice girerà nel navigatore, in Next.js e in `apps/realtime`. `web/` non cambi
 | `bench/browser.ts` | Node 22.22.0 e HeadlessChrome 141.0.7390.37: 22 partite su 22 con la stessa catena di impronte, 362.741 fotogrammi; 9,8 s in Node, 22,5 s in Chromium; la simulazione impacchettata per il navigatore pesa 121,3 kB |
 | eventi nelle 22 partite | 7 skill su 9 (Elastico e Sombrero chiedono carte da 5 e 4 stelle: li prova `checks.ts`), 14 Comete (4 da 1 su 2, 1 da 2 su 2, 3 fermate), 890 spallate, 36 scivolate, 69 tiri caricati, 159 gol |
 | `pnpm test` | 21 prove su 21 in 13,1 s (8 della fase 0, 13 nuove) |
+| CI, lavoro «Simulazione in Node e in Chromium» (Node 24.22.0, `ubuntu-24.04`) | `fmath` uguale al `Math` di Node 24 in 11 casi su 11 (200.196 argomenti ciascuno); gioco vecchio e nuovo 22 partite su 22 uguali; in Chromium 141 22 partite su 22 con le stesse catene di impronte della chat (Fulmini-Marea `8044c70b`); 1 min 33 s in tutto |
 
 ### Partite simultanee per core
 

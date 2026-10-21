@@ -201,7 +201,11 @@ Fase chiusa: 0. Resta: la fase 1 (simulazione condivisa in `packages/sim`), in u
 - CI: lavoro nuovo «Simulazione in Node e in Chromium» (`fmath` contro Node 24, 22 partite contro il
   gioco vecchio, 22 partite in Chromium); `pnpm test` 21 prove su 21 (13 nuove). Playwright 1.56.1,
   la versione dei browser già presenti nelle chat.
-- Commit: `fafbf00` (codice), il commit di questa voce; pull request TankDrugo/Fifa-tenkaichi-3#11.
+- La CI su Node 24.22.0 ritrova le stesse catene di impronte della chat in Node e in Chromium 141 (22
+  partite su 22). Il primo giro del lavoro nuovo è fallito all'installazione di Chromium:
+  `ubuntu-latest` è la 26.04 e Playwright 1.56.1 non la supporta; il lavoro gira su `ubuntu-24.04`.
+- Commit: `fafbf00` (codice), `e147bc1` (misure e diario), `6883352` (CI su `ubuntu-24.04`), il
+  commit di queste righe; pull request TankDrugo/Fifa-tenkaichi-3#11.
 
 Fase chiusa: 1. Restano due scelte per Tancredi, nessuna blocca la fase 2: il banco dell'IA con il
 compagno scelto (`--real-pass`) come comportamento normale, e l'IA a 10 pensieri al secondo invece
