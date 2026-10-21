@@ -162,3 +162,16 @@ Resta della fase 0 solo `docker compose up` sul PC di Tancredi con Docker Deskto
 «Gioco nuovo (in costruzione)»); le altre condizioni della fase sono soddisfatte (compose nella
 chat, immagini amd64 e arm64, proposta approvata). Con la sua conferma la fase 0 è chiusa e la
 chat successiva fa la fase 1.
+
+## 2026-10-21 — fase 0 chiusa
+
+- Tancredi ha avviato `docker compose up --build` sul suo PC con Docker Desktop: su
+  http://localhost:3000/status le quattro righe (web, realtime, Postgres, Redis) sono verdi.
+  Scritto in `docs/DETTAGLI.md`, «Gioco nuovo · fase 0», sezione «Sul PC di Tancredi».
+- Con questo le tre condizioni della fase 0 (`docs/PIANO-3D-ONLINE.md`, sezione 5) sono
+  soddisfatte: compose con la pagina di stato nella chat e sul PC, immagini amd64 e arm64,
+  proposta per `CLAUDE.md` e `README.md` approvata e applicata.
+- Questo merge cambia solo `DIARIO.md` e `docs/DETTAGLI.md`: «Sito del gioco» non deve partire
+  (filtro `paths` di `.github/workflows/pages.yml`).
+
+Fase chiusa: 0. Resta: la fase 1 (simulazione condivisa in `packages/sim`), in una chat nuova.
