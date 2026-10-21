@@ -151,8 +151,8 @@ Dopo, la fase 1 in una chat nuova.
 - Docker nella chat: il primo build si è fermato su «self-signed certificate in certificate chain»
   (corepack verso `registry.npmjs.org`). I due Dockerfile leggono ora il certificato della rete da
   un secret di BuildKit, che passa `infra/docker-compose.cloud.yml`, solo nelle chat; Compose 5.6.0
-  vuole anche `BUILDX_BAKE_ENTITLEMENTS_FS=0` per leggere quel file. Comando in `CLAUDE.md`; a
-  questa riga di `CLAUDE.md` si aggiunge il comando rispetto al testo approvato.
+  vuole anche `BUILDX_BAKE_ENTITLEMENTS_FS=0` per leggere quel file. Comando in `CLAUDE.md`: è
+  un'aggiunta al testo approvato, che Tancredi ha approvato a parte lo stesso giorno.
 - Misure nella chat: build delle due immagini 36,8 s, `up --wait` 17,2 s, quattro servizi in
   1,5-6,2 ms, WebSocket 0,61 ms di mediana su 20 ping, 0,8 ms da Chromium; memoria a riposo web
   89,0 MiB, realtime 52,8, Postgres 38,1, Redis 6,0; una chiave Redis e una riga Postgres restano
