@@ -1,0 +1,9 @@
+# The new game (docs/PIANO-3D-ONLINE.md). web/ is the old game and stays outside the workspace.
+packages:
+  - apps/*
+  - packages/*
+
+# pnpm 10 runs no install script unless listed. esbuild finds its binary in an optional
+# dependency, and its script only checks that it is there: it stays off.
+ignoredBuiltDependencies:
+  - esbuild

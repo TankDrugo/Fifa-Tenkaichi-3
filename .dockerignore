@@ -1,0 +1,11 @@
+# The images are built from the repository root (infra/docker-compose.yml, context: ..) and need
+# only the workspace files.
+**/node_modules
+**/.next
+**/dist
+.git
+web
+tools
+docs
+dist-web
+infra/.env

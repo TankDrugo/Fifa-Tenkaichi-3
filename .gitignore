@@ -1,3 +1,9 @@
 # what tools/build_web_dist.sh makes when no folder is given
 dist-web/
 node_modules/
+# the new game (docs/PIANO-3D-ONLINE.md)
+.next/
+apps/*/dist/
+*.tsbuildinfo
+infra/.env
+apps/web/next-env.d.ts
