@@ -30,7 +30,14 @@ export function WsProbe({ url }: { url: string | null }) {
       ws.close();
     };
     ws.onerror = () => setProbe({ state: "error", url: target });
-    return () => ws.close();
+    // A socket the server closes before the tenth pong is a failure too, not a probe still running.
+    ws.onclose = () => {
+      if (rtts.length < PINGS) setProbe({ state: "error", url: target });
+    };
+    return () => {
+      ws.onclose = null;
+      ws.close();
+    };
   }, [url]);
 
   if (probe.state === "pending") return <p data-testid="ws-probe" data-state="pending">WebSocket: prova in corso…</p>;

@@ -795,3 +795,5 @@ abbia tutte e due (`https://hub.docker.com/v2/repositories/library/node/tags/<et
 - **`docker compose up` sul PC di Tancredi** con Docker Desktop: lo fa Tancredi (`README` proposto
   in `docs/PROPOSTA-FASE-0.md`).
 - **Proxy delle chat dentro `docker build`:** non provato, perché Docker non è partito.
+- **`/status` e `/api/status` sono pubblici** e mostrano le versioni di Node, Postgres e Redis: con
+  il server raggiungibile da fuori (fase 7) vanno dietro l'accesso di amministrazione (fase 5).
