@@ -43,6 +43,7 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `tools/make_commentary.py` | registra la telecronaca con Chatterbox (serve il dominio `us.aws.cdn.hf.co`) |
 | `tools/style_guard/`, `.claude/settings.json` | il controllo della forma delle risposte delle chat (`CLAUDE.md`) |
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
+| `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
 
 ## Comandi
 
@@ -165,6 +166,7 @@ progetto IA vista dall'alto (`ai_topdown/`), i documenti di progetto (`GDD.md`, 
 
 ## Cose aperte
 
+- Rifacimento in Next.js, 3D e online: `docs/PIANO-3D-ONLINE.md`, fase 0 da cominciare.
 - itch.io: la copertina `tools/cover/cover.jpg` da caricare a mano (Edit game → «Cover image»).
 - Il sito su GitHub Pages va acceso una volta: Settings → Pages → Source «GitHub Actions».
 - Telecronaca registrata: manca il dominio `us.aws.cdn.hf.co` per i pesi di Chatterbox.
