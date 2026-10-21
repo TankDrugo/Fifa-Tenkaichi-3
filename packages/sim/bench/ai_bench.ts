@@ -7,20 +7,20 @@
 //     to the carrier, how often three or more outfield players of one team are within 3 m of the ball.
 // Possession belongs to the team of the last player who had the ball at his feet.
 //
-// The old bench counts the passes through a wrapper that hands Match.pass only its first four
-// arguments (tools/ai_bench.js:66), so in its matches the AI's pass goes to the mate the stick's
-// direction picks (Match.bestReceiver), not to the one it chose (ai.ts, carrierThink). The same
-// wrapper is kept here, so the numbers compare with the old ones; --real-pass hands on every
-// argument and measures the game as it is played.
+// Every pass goes to the mate the AI chose (ai.ts, carrierThink), as in the game (Tancredi's
+// choice, 21/10/2026). The old bench counts the passes through a wrapper that hands Match.pass
+// only its first four arguments (tools/ai_bench.js:66), so in its matches the pass goes to the
+// mate the stick's direction picks (Match.bestReceiver): --old-pass does the same, and gives the
+// numbers of tools/ai_bench.js to compare with the ones measured before.
 //
-// Run: node packages/sim/bench/ai_bench.ts [matches=12] [minutes=4] [difficulty=1] [--json] [--real-pass]
+// Run: node packages/sim/bench/ai_bench.ts [matches=12] [minutes=4] [difficulty=1] [--json] [--old-pass]
 // ROLES=base, SWAP=1, SKILLS=2,0 as in the old bench.
 import { C, clubById, clubSquad, defaultSettings, FORMATIONS, Match, rolesFor, type Club, type FormationId, type MatchEvent, type Player, type Team } from "../src/index.ts";
 import { PAIRS } from "./scenarios.ts";
 
 const args = process.argv.slice(2);
 const take = (k: string) => { const i = args.indexOf(k); if (i >= 0) args.splice(i, 1); return i >= 0; };
-const asJson = take("--json"), realPass = take("--real-pass");
+const asJson = take("--json"), oldPass = take("--old-pass");
 const MATCHES = +(args[0] || 12), MINUTES = +(args[1] || 4), DIFF = +(args[2] || 1);
 
 const len = (x: number, z: number) => Math.hypot(x, z);
@@ -50,7 +50,7 @@ function play(i: number): Tally {
   const st: Tally = { cause: {}, shotOut: {}, goals: 0, shots: 0, hits: 0, keeperHits: 0, skills: 0, tackles: 0, passes: 0, passTries: 0, changes: 0, spells: [], carry: [], nearMate: [], length: [], width: [], options: [], pressure: [], crowd: 0, samples: 0, live: 0, score: [] };
   let owner = -1, spellStart = 0, carryT = 0, sampleT = 0, prevLoose: string | null = null, pending: string | null = null;
   const origPass = m.pass.bind(m);
-  m.pass = realPass ? (...a) => { st.passTries++; return origPass(...a); } : (p, dx, dz, lob) => { st.passTries++; return origPass(p, dx, dz, lob); };
+  m.pass = oldPass ? (p, dx, dz, lob) => { st.passTries++; return origPass(p, dx, dz, lob); } : (...a) => { st.passTries++; return origPass(...a); };
   const origKick = m.kick.bind(m);
   m.kick = (p, vx, vy, vz, kind) => { if (kind === "roll") st.passTries++; return origKick(p, vx, vy, vz, kind); };
   let guard = 0;
@@ -134,7 +134,7 @@ const res = {
 if (asJson) console.log(JSON.stringify(res));
 else {
   const f = (v: number, d?: number) => v.toFixed(d === undefined ? 2 : d).replace(".", ",");
-  console.log(`${MATCHES} partite fra IA da ${MINUTES} minuti, difficoltà ${DIFF}${realPass ? ", passaggi al compagno scelto dall'IA" : ""}`);
+  console.log(`${MATCHES} partite fra IA da ${MINUTES} minuti, difficoltà ${DIFF}${oldPass ? ", passaggi come in tools/ai_bench.js (--old-pass)" : ""}`);
   console.log(`gol a partita ${f(res.goals)} (${res.goals_in_4_8} fra 4 e 8) · tiri ${f(res.shots, 1)} · spallate ${f(res.hits, 1)} (al portiere ${f(res.keeper_hits, 1)}) · scivolate ${f(res.tackles, 1)} · skill ${f(res.skills, 1)}`);
   console.log(`casa ${f(res.home_goals)} gol, ospiti ${f(res.away_goals)} · vittorie casa ${res.home_wins}, ospiti ${res.away_wins}${process.env.SKILLS ? " (difficoltà " + process.env.SKILLS + ")" : ""}`);
   console.log(`cambi di possesso al minuto ${f(res.changes_per_min, 1)} · possesso ${f(res.possession_s)} s · palla al piede ${f(res.on_ball_s)} s`);
