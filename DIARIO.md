@@ -129,8 +129,9 @@ Resta: la fase 0 del piano, in una chat nuova.
 - `docs/PROPOSTA-FASE-0.md`: testo da aggiungere a `CLAUDE.md` e `README.md`, più due domande (filtro
   `paths` in `pages.yml`, permesso `Bash(dockerd)` in `.claude/settings.json`). I due file non sono
   cambiati.
-- Commit: `7208629` (codice), `d02a006` (immagine Node), più quello di questa voce; pull request
-  TankDrugo/Fifa-tenkaichi-3#8.
+- Commit: `7208629` (codice), `d02a006` (immagine Node), `2a71b59` (misure, diario, proposta),
+  `c772487` (la prova WebSocket di `/status` segna errore se il server chiude prima del decimo
+  ping, provato con un server che saluta e chiude); pull request TankDrugo/Fifa-tenkaichi-3#8.
 
 Resta, prima di chiudere la fase 0: `docker compose up` sul PC di Tancredi con Docker Desktop
 (poi http://localhost:3000/status); il suo sì alla proposta di `docs/PROPOSTA-FASE-0.md` e alle due
