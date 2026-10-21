@@ -1,4 +1,4 @@
-# Strike Legends nel browser — scelte e misure fino al 20/10/2026
+# Strike Legends nel browser — scelte e misure fino al 21/10/2026
 
 > Questo file era `web/README.md` nel repository di prima, ora archivio (README.md, «Archivio»).
 > I percorsi `js/` e `assets/` stanno in `web/`. I rimandi a `GDD.md`, `PRODUCTION.md`,
@@ -705,3 +705,93 @@ Ogni riga: stesso banco, `node tools/ai_bench.js 12 4 1`, prima → dopo la modi
 `node tools/web_checks.js` gioca senza browser le situazioni di una persona col joypad, ognuna con
 il numero che deve dare: spallata sul portiere che ha la palla → il portiere la tiene (prima della
 modifica: la perdeva); la stessa spallata su un giocatore di movimento → la palla cambia piede.
+
+## Gioco nuovo · fase 0, fondamenta (21/10/2026)
+
+Piano e decisioni in `docs/PIANO-3D-ONLINE.md`. Qui le scelte della fase 0 con il loro perché e le
+misure. `web/` non cambia: `git diff` contro `main` su `web/` dà 0 righe.
+
+### Cosa c'è
+
+| Percorso | Cosa |
+|---|---|
+| `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml` | workspace pnpm con `apps/*` e `packages/*`; `web/` e `tools/` ne restano fuori |
+| `tsconfig.base.json`, `eslint.config.mjs`, `vitest.config.mts` | TypeScript `strict` per tutti i pacchetti, lint, prove |
+| `packages/shared` | schemi zod: righe della pagina di stato, risposta di `/health`, messaggi WebSocket (`ping`, `pong`, `hello`, `error`) |
+| `apps/realtime` | server Node: `GET /health` (stato proprio e di Redis), WebSocket `/ws` con messaggi fino a 1.024 byte |
+| `apps/web` | Next.js: `/status` (i quattro servizi e un WebSocket aperto dal navigatore), `/api/status` in JSON, `/api/health` per Docker |
+| `infra/docker-compose.yml`, `infra/.env.example` | Postgres, Redis, realtime, web con controlli di salute, volumi `pgdata` e `redisdata` |
+| `infra/check-status.mjs` | verifica dall'esterno: `/api/status` e 20 ping WebSocket; codice 0 solo se tutto risponde |
+| `.github/workflows/ci.yml` | tre lavori: tipi, lint, prove, build; immagini amd64 e arm64 con l'avvio delle arm64 sotto QEMU; `docker compose up` con `check-status.mjs` |
+
+### Versioni e perché
+
+| Cosa | Versione | Perché |
+|---|---|---|
+| Next.js, React | 16.4.2, 19.3.1 | decisione di Tancredi (piano, sezione 1); ultime su npm al 21/10/2026 |
+| TypeScript | 6.0.3, non 7.0.2 | `typescript-eslint` 8.72.0 accetta `typescript >=4.8.4 <6.1.0` (`npm view typescript-eslint peerDependencies`): con la 7 il lint non legge i tipi; si passa alla 7 quando quel limite sale |
+| ESLint | 10.13.0, senza `eslint-config-next` | npm segna la 9.39.5 «This version is no longer supported»; `eslint-config-next` 16.4.2 porta `eslint-plugin-react` 7.37.5, `eslint-plugin-import` e `eslint-plugin-jsx-a11y`, che accettano ESLint fino alla 9. Le regole di Next.js (`@next/eslint-plugin-next` 16.4.2, 22 regole `core-web-vitals`) e degli hook di React (`eslint-plugin-react-hooks` 7.1.1) si prendono direttamente. Mancano le regole di accessibilità di `jsx-a11y`: il contrasto lo prova axe-core nella fase 4 (piano, sezione 4.1) |
+| Vitest | 5.0.5 | esegue TypeScript senza costruire prima, una sola configurazione per tutti i pacchetti; la fase 1 ci porta le prove di `tools/` |
+| zod | 4.6.7 | lo nomina il piano (sezione 3) per i messaggi fra client e server |
+| ws | 8.22.0 | Node 22 e 24 hanno il client WebSocket (lo usano le prove e `check-status.mjs`) ma non il server |
+| redis (node-redis) | 6.3.0 | il client del progetto Redis (https://github.com/redis/node-redis), in JavaScript: 0 file nativi |
+| pg | 8.23.1 | driver Postgres in JavaScript: 0 file nativi nello standalone; lo schema e gli strumenti di migrazione li sceglie la fase 5 |
+| esbuild | 0.28.2 | `apps/realtime` diventa un file solo, `dist/server.mjs` da 2,5 MB, costruito in 0,7 s: l'immagine non ha `node_modules` |
+| pnpm | 10.28.0 (c'è la 12.14.0) | è la versione installata nelle chat cloud (piano, sezione 2): nessuno scaricamento di corepack nelle chat |
+| Node nelle immagini e in CI | 24.22.0 | supporto fino al 30/04/2028, la 22 fino al 30/04/2027 (https://nodejs.org/en/about/previous-releases). `engines` chiede `>=22.12`: le chat hanno Node 22.22 e le prove passano su entrambe |
+| Postgres, Redis | 18.6, 8.10.2 | ultime stabili su Docker Hub al 21/10/2026 (Postgres 19 è alla rc1) |
+
+L'immagine `node:24.22.1-alpine3.24` è uscita il 21/10/2026 alle 11:38 UTC senza nessuna
+architettura dentro: il primo giro di CI è fallito con «no match for platform in manifest». Si usa
+la 24.22.0 del 14/10/2026, che ha amd64 e arm64. Prima di alzare un'etichetta va guardato che le
+abbia tutte e due (`https://hub.docker.com/v2/repositories/library/node/tags/<etichetta>`).
+
+### Scelte di struttura
+
+- **Import con `.ts` ed `erasableSyntaxOnly`:** Node 22.22 esegue i sorgenti senza costruirli
+  (`node apps/realtime/src/main.ts` parte e risponde su `/health`), quindi i banchi della fase 1
+  potranno girare con `node` su `packages/sim` come oggi `tools/*.js` su `web/js/`.
+- **Immagini senza emulazione:** la fase di costruzione gira sull'architettura di chi costruisce
+  (`FROM --platform=$BUILDPLATFORM`), quella finale copia soltanto. Funziona perché lo standalone
+  di Next.js, tolti `sharp` e `libvips` (`next.config.ts`, `outputFileTracingExcludes`; nessuna
+  pagina usa l'ottimizzatore di immagini), scende da 61 a 23 MB e contiene 0 file `.node`. Una
+  libreria nativa futura (argon2 nella fase 5) dovrà installare i binari per arm64 con
+  `supportedArchitectures` di pnpm, oppure costruire sotto QEMU.
+- **Postgres e Redis non esposti sul PC:** solo i contenitori li raggiungono, così un Postgres già
+  installato da Tancredi sulla porta 5432 non blocca `docker compose up`.
+- **Postgres 18:** l'immagine tiene i dati in `/var/lib/postgresql/18/docker`, quindi il volume va
+  su `/var/lib/postgresql` (`infra/docker-compose.yml`).
+- **Redis con `--appendonly yes`:** sessioni e code sopravvivono al riavvio del contenitore.
+- **Controlli con scadenza:** ogni controllo della pagina di stato si ferma a 2 s
+  (`packages/shared/src/status.ts`, `timed`); i client Redis hanno `disableOfflineQueue`, quindi
+  con Redis spento la riga diventa rossa subito invece di aspettare.
+- **Contrasto della pagina di stato:** con la formula WCAG, sullo sfondo il testo fa 15,5:1 e il
+  rosso 8,1:1; il valore più basso è il rosso sui riquadri della tabella, 7,1:1 (AA chiede 4,5:1).
+
+### Misure
+
+| Misura | Valore |
+|---|---|
+| `node tools/web_checks.js` prima / dopo | 11 `ok` su 11 / 11 `ok` su 11, stesse righe (4 min 51 s) |
+| `pnpm install` | 15,0 s con la cache vuota (primo giro, ancora con ESLint 9), 1,5 s con la cache piena; 311 pacchetti nel lockfile, 627 MB in `node_modules/.pnpm` |
+| `pnpm typecheck`, `pnpm lint`, `pnpm test` | 5,7 s; 2,7 s su 17 file; 8 prove su 8 in 1,5 s |
+| build | `apps/web` 14,3 s, `apps/realtime` 0,7 s |
+| CI, tre lavori in parallelo (secondo giro) | tipi-lint-prove-build 32 s, compose 60 s, immagini 77 s |
+| `docker compose up` in CI (GitHub Actions, Node 24.22.0) | 17,6 s dal primo contenitore creato a web sano |
+| `check-status.mjs` in CI | web 1,3 ms, realtime 4,6 ms, Postgres 18.6 1,5 ms, Redis 8.10.2 2,4 ms; WebSocket mediana 0,44 ms su 20 ping, massimo 4,33 ms |
+| memoria a riposo in CI (`docker stats`) | web 89,3 MiB, realtime 52,7 MiB, Postgres 35,2 MiB, Redis 6,0 MiB: 183,2 MiB in tutto |
+| immagini arm64 | costruite su amd64 senza emulazione; sotto QEMU `node -p process.arch` dà `arm64`, web risponde a `/api/health`, realtime risponde 503 su `/health` (nessun Redis nel lavoro, come previsto) |
+| `docker image ls` in CI | `ft3-web` 66,1 MB e `ft3-realtime` 62,6 MB per arm64, 271 MB e 246 MB per amd64. La differenza di 4 volte non viene dal contenuto, che è lo stesso standalone su due basi `node:24.22.0-alpine3.24`: il comando conta in modo diverso le immagini dell'architettura del runner. Quanto scarica Oracle si misura quando le immagini andranno in un registro (fase 7) |
+| pila locale senza Docker (chat, Redis 7.0.15 e Postgres 16.15 del contenitore, Node 22.22) | web risponde a `/api/health` 651 ms dopo l'avvio; `check-status.mjs`: web 1,6 ms, realtime 4,5 ms, Postgres 1,3 ms, Redis 3,8 ms, WebSocket 0,27 ms di mediana su 20 ping |
+| WebSocket dal navigatore (Chromium senza schermo, `/status`) | collegato, mediana 0,6 ms su 10 ping |
+| Redis spento | `/api/status` risponde 503, le righe Redis e realtime diventano rosse («acceso, ma non raggiunge Redis»), Postgres resta verde |
+
+### Cosa non è provato
+
+- **`docker compose up` in questa chat:** l'avvio di `dockerd` (piano, sezione 6) è stato rifiutato
+  due volte dal controllo dei permessi della sessione. Le prove con Docker sono quelle di GitHub
+  Actions; nella chat la pila è girata senza Docker, con le versioni del contenitore (Postgres 16 e
+  Redis 7 invece di 18 e 8). La strada per sbloccarlo è in `docs/PROPOSTA-FASE-0.md`.
+- **`docker compose up` sul PC di Tancredi** con Docker Desktop: lo fa Tancredi (`README` proposto
+  in `docs/PROPOSTA-FASE-0.md`).
+- **Proxy delle chat dentro `docker build`:** non provato, perché Docker non è partito.

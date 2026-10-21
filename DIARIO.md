@@ -109,3 +109,30 @@ Resta: caricare la copertina su itch.io a mano (Edit game → «Cover image»).
   `redis:8-alpine` scaricata e avviata); nessuna scheda video.
 
 Resta: la fase 0 del piano, in una chat nuova.
+
+## 2026-10-21 — fase 0 del rifacimento: fondamenta
+
+- Workspace pnpm alla radice con `apps/web` (Next.js 16.4.2, React 19.3.1), `apps/realtime`
+  (`/health` e WebSocket `/ws`), `packages/shared` (schemi zod); `infra/docker-compose.yml` con
+  Postgres 18.6, Redis 8.10.2, realtime e web, controlli di salute e volumi; pagina `/status` con
+  i quattro servizi e un WebSocket aperto dal navigatore; `infra/check-status.mjs`;
+  `.github/workflows/ci.yml` con tipi, lint, prove, build, immagini amd64 e arm64, compose. Scelte e
+  versioni con il perché in `docs/DETTAGLI.md`, «Gioco nuovo · fase 0».
+- Misure: su GitHub Actions `docker compose up` arriva a web sano in 17,6 s, i quattro servizi
+  rispondono in 1,3-4,6 ms, WebSocket 0,44 ms di mediana su 20 ping, 183,2 MiB di memoria a riposo
+  in tutto; le immagini arm64 si costruiscono su amd64 senza emulazione (standalone da 61 a 23 MB,
+  0 file nativi) e sotto QEMU partono. Nella chat, senza Docker: stessi controlli verdi con Postgres
+  16 e Redis 7 del contenitore, WebSocket da Chromium 0,6 ms. `node tools/web_checks.js`: 11 `ok` su
+  11 prima e dopo; `web/` invariato (0 righe di differenza).
+- Il primo giro di CI è fallito: `node:24.22.1-alpine3.24`, uscita alle 11:38 UTC dello stesso
+  giorno, non aveva ancora immagini; si usa la 24.22.0.
+- `docs/PROPOSTA-FASE-0.md`: testo da aggiungere a `CLAUDE.md` e `README.md`, più due domande (filtro
+  `paths` in `pages.yml`, permesso `Bash(dockerd)` in `.claude/settings.json`). I due file non sono
+  cambiati.
+- Commit: `7208629` (codice), `d02a006` (immagine Node), più quello di questa voce; pull request
+  TankDrugo/Fifa-tenkaichi-3#8.
+
+Resta, prima di chiudere la fase 0: `docker compose up` sul PC di Tancredi con Docker Desktop
+(poi http://localhost:3000/status); il suo sì alla proposta di `docs/PROPOSTA-FASE-0.md` e alle due
+domande; `docker compose up` dentro una chat cloud, bloccato finché `dockerd` non ha il permesso.
+Dopo, la fase 1 in una chat nuova.
