@@ -7,7 +7,7 @@ macchina. A schermo si chiama «Fifa Tenkaichi 3»; nel codice e nei salvataggi 
 `strikelegends`.
 
 - **Da giocare subito:** https://tankdrugo.github.io/Fifa-Tenkaichi-3/ , il sito che GitHub Pages
-  ricostruisce a ogni modifica su `main` (`.github/workflows/pages.yml`). Copia di lavoro delle
+  ricostruisce a ogni modifica di `web/` su `main` (`.github/workflows/pages.yml`). Copia di lavoro delle
   chat: https://claude.ai/artifact/P8PppHnpvqoj76uJorB6rE (privato).
 - **Su Windows:** `StrikeLegendsWeb.exe` si aggiorna da solo a ogni apertura (sezione
   «Distribuzione»).
@@ -39,11 +39,17 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `tools/skill_frames.js` | foto di ogni skill dentro una partita, un fotogramma ogni 1/30 s |
 | `tools/cover/` | copertina per itch.io (`cover.jpg`) e logo del campo (`web/assets/logo/`), da un solo disegno SVG: `node tools/cover/render_cover.js` |
 | `tools/build_web_dist.sh`, `tools/web_launcher/` | zip per itch.io ed exe per Windows (Go): `update.go` scarica l'ultima versione dal sito |
-| `.github/workflows/pages.yml` | a ogni push su `main`: il sito, lo zip per itch.io e `version.json` su GitHub Pages |
+| `.github/workflows/pages.yml` | a ogni push su `main` che cambia `web/` o questo file: il sito, lo zip per itch.io e `version.json` su GitHub Pages |
 | `tools/make_commentary.py` | registra la telecronaca con Chatterbox (serve il dominio `us.aws.cdn.hf.co`) |
 | `tools/style_guard/`, `.claude/settings.json` | il controllo della forma delle risposte delle chat (`CLAUDE.md`) |
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
 | `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
+| `package.json`, `pnpm-workspace.yaml` | workspace pnpm del gioco nuovo; `web/` ne resta fuori |
+| `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status` |
+| `apps/realtime` | gioco nuovo, server delle partite: `/health` e WebSocket `/ws` |
+| `packages/shared` | gioco nuovo, schemi condivisi fra navigatore e server |
+| `infra/` | gioco nuovo, `docker-compose.yml` (Postgres, Redis, web, realtime), `check-status.mjs`; `docker-compose.cloud.yml` solo per le chat cloud |
+| `.github/workflows/ci.yml` | gioco nuovo, a ogni pull request: tipi, lint, prove, immagini amd64 e arm64, compose |
 
 ## Comandi
 
@@ -140,6 +146,17 @@ butler si compila dai sorgenti e la chiave la mette il proxy: i passi sono in `d
 sezione «Distribuzione». Un file caricato a mano dal sito resta accanto al canale `html5` e non lo
 sostituisce. La copertina è `tools/cover/cover.jpg` e si carica a mano (Edit game → «Cover
 image»), perché l'API di itch.io non ha una chiamata per farlo.
+
+## Gioco nuovo (in costruzione)
+
+Piano e fasi in `docs/PIANO-3D-ONLINE.md`, scelte e misure in `docs/DETTAGLI.md`, «Gioco nuovo».
+Sul PC, con Docker Desktop avviato:
+
+    cd infra
+    docker compose up --build
+
+poi http://localhost:3000/status mostra web, realtime, Postgres e Redis collegati. `Ctrl+C` ferma
+tutto; `docker compose down --volumes` cancella anche i dati di prova.
 
 ## Crediti e licenze
 

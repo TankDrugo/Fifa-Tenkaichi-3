@@ -137,3 +137,28 @@ Resta, prima di chiudere la fase 0: `docker compose up` sul PC di Tancredi con D
 (poi http://localhost:3000/status); il suo sì alla proposta di `docs/PROPOSTA-FASE-0.md` e alle due
 domande; `docker compose up` dentro una chat cloud, bloccato finché `dockerd` non ha il permesso.
 Dopo, la fase 1 in una chat nuova.
+
+## 2026-10-21 — fase 0: proposta approvata, Docker nelle chat
+
+- Tancredi ha approvato la proposta, il filtro `paths` e il permesso per `dockerd`. Il testo è
+  copiato in `CLAUDE.md` («Working on the new game») e `README.md` (righe di «Struttura», sezione
+  «Gioco nuovo (in costruzione)»); `docs/PROPOSTA-FASE-0.md` è tolto, come diceva la proposta.
+- `.github/workflows/pages.yml`: il sito si ricostruisce solo per un push su `main` che cambia
+  `web/**` o il file stesso. Questo merge lo cambia, quindi il sito si ricostruisce un'ultima volta;
+  il merge successivo che non tocca `web/` è la prova che «Sito del gioco» non parte.
+- `.claude/settings.json`: `permissions.allow` con `Bash(dockerd)`. Nella chat `dockerd` è partito
+  (Docker 29.9.1).
+- Docker nella chat: il primo build si è fermato su «self-signed certificate in certificate chain»
+  (corepack verso `registry.npmjs.org`). I due Dockerfile leggono ora il certificato della rete da
+  un secret di BuildKit, che passa `infra/docker-compose.cloud.yml`, solo nelle chat; Compose 5.6.0
+  vuole anche `BUILDX_BAKE_ENTITLEMENTS_FS=0` per leggere quel file. Comando in `CLAUDE.md`; a
+  questa riga di `CLAUDE.md` si aggiunge il comando rispetto al testo approvato.
+- Misure nella chat: build delle due immagini 36,8 s, `up --wait` 17,2 s, quattro servizi in
+  1,5-6,2 ms, WebSocket 0,61 ms di mediana su 20 ping, 0,8 ms da Chromium; memoria a riposo web
+  89,0 MiB, realtime 52,8, Postgres 38,1, Redis 6,0; una chiave Redis e una riga Postgres restano
+  dopo `docker compose down` e `up` (`docs/DETTAGLI.md`, «Docker nelle chat cloud»).
+
+Resta della fase 0 solo `docker compose up` sul PC di Tancredi con Docker Desktop (`README.md`,
+«Gioco nuovo (in costruzione)»); le altre condizioni della fase sono soddisfatte (compose nella
+chat, immagini amd64 e arm64, proposta approvata). Con la sua conferma la fase 0 è chiusa e la
+chat successiva fa la fase 1.

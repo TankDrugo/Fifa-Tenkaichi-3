@@ -1,0 +1,15 @@
+# Only for the cloud chats, on top of docker-compose.yml:
+#   docker compose -f docker-compose.yml -f docker-compose.cloud.yml up --build
+# Their network re-signs HTTPS with the certificate in /root/.ccr/ca-bundle.crt; the builds need it
+# to download pnpm and the packages (Dockerfiles: secret ca_bundle). A PC does not use this file.
+services:
+  realtime:
+    build:
+      secrets: [ca_bundle]
+  web:
+    build:
+      secrets: [ca_bundle]
+
+secrets:
+  ca_bundle:
+    file: /root/.ccr/ca-bundle.crt

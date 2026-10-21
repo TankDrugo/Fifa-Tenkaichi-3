@@ -126,6 +126,33 @@ Exit 0 = clean, exit 1 = violations listed on stderr.
 - **Animations** come from the sheets that exist (`POSE` in `web/js/skills.js`); Tancredi said no to
   new Blender renders on 20/10/2026.
 
+## Working on the new game (docs/PIANO-3D-ONLINE.md)
+
+- **Where**: `apps/web` (Next.js: pages, API, later the 3D scene), `apps/realtime` (matches over
+  WebSocket), `packages/shared` (zod schemas shared by client and server), `packages/sim` from
+  phase 1, `infra/` (Docker). `web/` is the old game and is never edited for the new one.
+- **Checks before every push**, all from the repository root, all must pass (CI runs the same,
+  `.github/workflows/ci.yml`): `pnpm install --frozen-lockfile`, `pnpm typecheck`, `pnpm lint`,
+  `pnpm test`, `pnpm build`.
+- **Running the stack**: `cd infra && docker compose up --build`, then
+  `node infra/check-status.mjs` (exit 0 = the four services and the WebSocket answer) and
+  http://localhost:3000/status. In a cloud chat Docker needs `dockerd` started first (allowed in
+  `.claude/settings.json`), and the builds need the chat network's certificate:
+  `BUILDX_BAKE_ENTITLEMENTS_FS=0 docker compose -f docker-compose.yml -f docker-compose.cloud.yml up --build`
+  (why: `docs/DETTAGLI.md`, «Docker nelle chat cloud»). When the session does not allow `dockerd`,
+  say so and run the services as child processes of one script (the container has Redis 7.0 and
+  Postgres 16, which runs as the `postgres` user), then stop them.
+- **Versions** are exact in every `package.json` and in the image tags. A new library comes with
+  its reason in `docs/DETTAGLI.md`, section «Gioco nuovo». An image tag must list both `amd64` and
+  `arm64` on Docker Hub before it is used: a tag published a few hours ago can have neither.
+- **TypeScript**: relative imports carry the `.ts` extension and `erasableSyntaxOnly` is on, so
+  plain `node` runs the sources (`node apps/realtime/src/main.ts`), the way `tools/*.js` run today.
+- **Interface text** is Italian; code, identifiers and commit messages stay English.
+- **Publish**: the pull request merged on `main` is the whole publication of the new game. The
+  working link (artifact) is the old game: republish it only when a task changed `web/`.
+- **Frames per second** are measured by Tancredi on his laptop: cloud chats render WebGL in
+  software. Chats check the draw budget with `renderer.info` (plan, section 4.6).
+
 ## Closing a session
 
 Append an entry to the end of `DIARIO.md` (date, what changed with its numbers, commits, what is

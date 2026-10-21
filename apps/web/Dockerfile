@@ -11,7 +11,11 @@ WORKDIR /repo
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/web/package.json apps/web/
-RUN pnpm install --frozen-lockfile --filter "@ft3/web..."
+# The cloud chats' network re-signs HTTPS with its own certificate: infra/docker-compose.cloud.yml
+# passes it as the secret ca_bundle. Without it (a PC, CI) the download uses the usual ones.
+RUN --mount=type=secret,id=ca_bundle \
+    if [ -f /run/secrets/ca_bundle ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/ca_bundle; fi; \
+    pnpm install --frozen-lockfile --filter "@ft3/web..."
 COPY tsconfig.base.json ./
 COPY packages/shared packages/shared
 COPY apps/web apps/web
