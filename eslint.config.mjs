@@ -22,4 +22,18 @@ export default tseslint.config(
     languageOptions: { globals: { ...globals.browser } },
   },
   { files: ["apps/web/**/*.{ts,tsx}"], ...reactHooks.configs.flat.recommended },
+  // The simulation gives the same match in every engine only with the functions of
+  // packages/sim/src/fmath.ts and the match's own generator (docs/DETTAGLI.md, "Gioco nuovo · fase 1").
+  {
+    files: ["packages/sim/src/**/*.ts"],
+    ignores: ["packages/sim/src/**/*.test.ts"],
+    rules: {
+      "no-restricted-properties": ["error",
+        ...["sin", "cos", "tan", "asin", "acos", "atan", "atan2", "sinh", "cosh", "tanh", "exp", "expm1", "log", "log1p", "log2", "log10", "pow", "cbrt", "hypot"]
+          .map((property) => ({ object: "Math", property, message: "differs between engines: use src/fmath.ts" })),
+        { object: "Math", property: "random", message: "the match draws from its own generator (m.rng)" },
+      ],
+      "no-restricted-syntax": ["error", { selector: "BinaryExpression[operator='**']", message: "differs between engines: multiply" }],
+    },
+  },
 );
