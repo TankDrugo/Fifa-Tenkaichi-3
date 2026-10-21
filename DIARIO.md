@@ -94,3 +94,18 @@ Resta: leggere la riga «Permesso della pagina» del joypad nel riquadro di itch
   gioco non va ripubblicato.
 
 Resta: caricare la copertina su itch.io a mano (Edit game → «Cover image»).
+
+## 2026-10-21 — piano del rifacimento in Next.js, 3D e online
+
+- `docs/PIANO-3D-ONLINE.md`: prompt e piano per le chat che rifanno il gioco, con le decisioni di
+  Tancredi (Next.js anche come server; personaggi e animazioni disegnati nel codice, senza Mixamo
+  né archivio; account con nome utente e password; Postgres + Redis; tutto l'online insieme; gioco
+  attuale invariato; 60 fps sui portatili con la grafica integrata; prima Docker Desktop, poi
+  Oracle), 8 fasi con le prove di fine fase e il messaggio da incollare nella chat nuova.
+- Misure di partenza: 5.052 righe in `web/js/`; 0 `Math.random` nella simulazione; i pacchetti
+  rendono dal 164% al 567% del prezzo rivendendo al mercato del gioco, dal 25% al 90% con la
+  vendita rapida (`ut.js:233-236`, `ut.js:257`, `data.js:230-238`).
+- Ambiente cloud: Docker 29.8.2 e Compose v5.6.0 funzionano dopo `dockerd &` (immagine
+  `redis:8-alpine` scaricata e avviata); nessuna scheda video.
+
+Resta: la fase 0 del piano, in una chat nuova.
