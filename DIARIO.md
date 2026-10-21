@@ -211,3 +211,17 @@ Fase chiusa: 1. Restano due scelte per Tancredi, nessuna blocca la fase 2: il ba
 compagno scelto (`--real-pass`) come comportamento normale, e l'IA a 10 pensieri al secondo invece
 di 7,5 (cambia la partita, quindi in una fase che cambia l'IA). Dopo, la fase 2 (motore 3D) in una
 chat nuova.
+
+## 2026-10-21 — fase 1: due decisioni di Tancredi sul banco e sull'IA
+
+- **Banco dell'IA:** `packages/sim/bench/ai_bench.ts` passa a `Match.pass` il compagno scelto
+  dall'IA, come nella partita. `--old-pass` rimette l'involucro di `tools/ai_bench.js:66` e su 48
+  partite dà lo stesso JSON di `tools/ai_bench.js` (`cmp` vuoto). Riferimento nuovo, difficoltà
+  normale: 12 partite 5,33 gol e 10,2 cambi al minuto; 48 partite 5,63 e 10,4; 96 partite 5,49 e
+  10,3; passaggi riusciti 92% in tutte e tre. `tools/ai_bench.js` non cambia.
+- **IA a 7,5 pensieri al secondo:** resta così (`match.ts`, `step`); scritto in `docs/DETTAGLI.md`,
+  «Partite simultanee per core».
+- `README.md`: la riga dei banchi distingue `ai_bench.ts` (passaggi al compagno scelto) da
+  `tension_bench.ts` (stessi numeri di `tools/`).
+
+Resta: la fase 2 (motore 3D) in una chat nuova.

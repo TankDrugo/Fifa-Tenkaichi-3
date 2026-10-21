@@ -164,7 +164,8 @@ La simulazione (`packages/sim`) si prova senza Docker, dalla radice del reposito
 | Comando | Cosa dà (21/10/2026) |
 |---|---|
 | `node packages/sim/bench/checks.ts` | le 11 prove di `tools/web_checks.js`, stesse righe |
-| `node packages/sim/bench/ai_bench.ts 48 4 1`, `tension_bench.ts 48` | gli stessi numeri dei banchi di `tools/` |
+| `node packages/sim/bench/ai_bench.ts 48 4 1` | partite fra IA con i passaggi al compagno scelto dall'IA: 5,63 gol, 10,4 cambi al minuto, 92% di passaggi riusciti; con `--old-pass` gli stessi numeri di `tools/ai_bench.js` |
+| `node packages/sim/bench/tension_bench.ts 48` | gli stessi numeri di `tools/tension_bench.js` |
 | `node packages/sim/bench/parity.ts` | gioco vecchio e simulazione nuova, 22 partite uguali in ogni fotogramma |
 | `node packages/sim/bench/browser.ts` | le stesse 22 partite in Node e in Chromium, stessa impronta |
 | `node packages/sim/bench/speed.ts 3` | partite a 60 Hz che un core regge: circa 2.000 nella chat cloud |

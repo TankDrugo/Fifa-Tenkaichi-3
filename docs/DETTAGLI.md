@@ -922,8 +922,8 @@ codice girerà nel navigatore, in Next.js e in `apps/realtime`. `web/` non cambi
 - L'IA pensa una volta ogni 8 passi, non ogni 0,1 s come dice il commento di `web/js/ai.js`:
   `aiTick` riparte da 0,1 e scende di 1/60 a passo (`match.js`, `step`), dopo 6 passi vale
   2,08e-17, ancora sopra 0, e il pensiero arriva all'ottavo, 7,5 volte al secondo. Il porting tiene
-  questo ritmo, perché i numeri di questo file sono misurati con esso; portarlo a 10 al secondo
-  cambia la partita ed è una scelta per una fase che cambia l'IA.
+  questo ritmo, perché i numeri di questo file sono misurati con esso. Tancredi ha deciso il
+  21/10/2026 di lasciarlo a 7,5 al secondo.
 - Se tutte le partite di un core pensassero nello stesso passo, 16,7 ms / 38,0 µs = 438 partite:
   la fase 6 fa partire le partite in passi diversi, così i pensieri si distribuiscono.
 - Il passo più lungo (4,2 ms) è un caso isolato su 564.354, con il 99° percentile a 96,8 µs; la
@@ -935,13 +935,19 @@ codice girerà nel navigatore, in Next.js e in `apps/realtime`. `web/` non cambi
   `Match.pass` solo i primi quattro argomenti; il quinto è il compagno che l'IA ha scelto
   (`web/js/ai.js:281`). Nelle partite del banco il pallone va quindi al compagno che sceglie
   `bestReceiver` dalla direzione, quasi sempre lo stesso ma non sempre.
-- **Misura:** `bench/ai_bench.ts` tiene lo stesso involucro, così i numeri si confrontano con quelli
-  di questo file; con `--real-pass` passa tutti gli argomenti. Su 96 partite: gol 5,77 → 5,49, tiri
-  19,5 → 18,5, cambi al minuto 10,7 → 10,3, palla al piede 4,04 → 4,17 s, passaggi riusciti 92% →
-  92%.
-- **Raccomandazione:** dalla prima fase che cambia l'IA, `--real-pass` come comportamento del banco,
-  perché misura la partita che si gioca; i numeri di prima si confrontano con la riga a 96 partite
-  qui sopra. Decide Tancredi.
+- **Misura:** con l'involucro e senza, su 96 partite: gol 5,77 → 5,49, tiri 19,5 → 18,5, cambi al
+  minuto 10,7 → 10,3, palla al piede 4,04 → 4,17 s, passaggi riusciti 92% → 92%.
+- **Decisione di Tancredi (21/10/2026):** `bench/ai_bench.ts` passa a `Match.pass` tutti gli
+  argomenti, quindi misura la partita che si gioca. `--old-pass` rimette l'involucro e dà lo stesso
+  JSON di `tools/ai_bench.js` (su 48 partite, `cmp` vuoto): serve per confrontarsi con i numeri
+  scritti prima del 21/10/2026. `tools/ai_bench.js` resta com'è, come tutto il gioco vecchio.
+- **Riferimento del banco nuovo** (`node packages/sim/bench/ai_bench.ts`, difficoltà normale):
+
+| Partite | Gol | Tiri | Spallate | Cambi al minuto | Palla al piede | Passaggi riusciti | Vittorie casa / ospiti |
+|---|---|---|---|---|---|---|---|
+| 12 | 5,33 | 17,3 | 16,3 | 10,2 | 4,27 s | 92% | 3 / 7 |
+| 48 | 5,63 | 18,2 | 16,8 | 10,4 | 4,14 s | 92% | 23 / 18 |
+| 96 | 5,49 | 18,5 | 16,6 | 10,3 | 4,17 s | 92% | 46 / 35 |
 
 ### Versioni e perché
 
