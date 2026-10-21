@@ -1,0 +1,59 @@
+/* Contrast with the WCAG formula (AA asks 4.5:1). On --bg: text 15.5, muted 9.8, ok 10.9, down 8.1,
+   link 9.2. On --panel the lowest is down at 7.1. */
+:root {
+  color-scheme: dark;
+  --bg: #0d1424;
+  --panel: #16203a;
+  --text: #e8ecf6;
+  --muted: #b4bdd3;
+  --ok: #5ee08a;
+  --down: #ff8a8a;
+  --link: #8fb8ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, sans-serif;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+a {
+  color: var(--link);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+}
+
+th,
+td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a3658;
+  vertical-align: top;
+}
+
+.ok {
+  color: var(--ok);
+}
+
+.down {
+  color: var(--down);
+}
+
+.note {
+  color: var(--muted);
+}

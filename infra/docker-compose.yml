@@ -1,0 +1,77 @@
+# The new game on one machine, for development: from this folder, `docker compose up --build`,
+# then http://localhost:3000/status shows the four services linked.
+#
+# Postgres and Redis are not published on the host (no clash with a Postgres already there):
+# only the containers reach them. The defaults below are for a PC; production gets its own file.
+name: ft3
+
+services:
+  postgres:
+    image: postgres:18.6-alpine3.24
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ft3}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ft3-dev}
+      POSTGRES_DB: ${POSTGRES_DB:-ft3}
+    # Since version 18 the image keeps its data under /var/lib/postgresql/18/docker: the volume
+    # goes on the parent folder, so a later major version can sit next to it for pg_upgrade.
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.10.2-alpine3.23
+    # Append-only file: sessions and queues survive a restart of the container.
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  realtime:
+    build:
+      context: ..
+      dockerfile: apps/realtime/Dockerfile
+    image: ft3-realtime:dev
+    environment:
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "${REALTIME_PORT:-3001}:3001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    image: ft3-web:dev
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-ft3}:${POSTGRES_PASSWORD:-ft3-dev}@postgres:5432/${POSTGRES_DB:-ft3}
+      REDIS_URL: redis://redis:6379
+      REALTIME_INTERNAL_URL: http://realtime:3001
+      # What the browser opens: the host's port, not the container name.
+      REALTIME_PUBLIC_URL: ${REALTIME_PUBLIC_URL:-ws://localhost:3001}
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      realtime:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:

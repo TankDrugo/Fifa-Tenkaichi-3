@@ -1,0 +1,99 @@
+# Checks of the new game (docs/PIANO-3D-ONLINE.md, section 4.9). The old game in web/ keeps its own
+# checks in tools/ and its publication in pages.yml.
+name: Integrazione continua
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Named explicitly, so that every step runs with -eo pipefail and a failure before a tee counts.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  checks:
+    name: Tipi, lint, prove, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+
+  images:
+    name: Immagini amd64 e arm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - name: Costruisci le immagini per le due architetture
+        run: |
+          for app in realtime web; do
+            for arch in amd64 arm64; do
+              start=$(date +%s)
+              docker buildx build --platform linux/$arch --load -t ft3-$app:$arch -f apps/$app/Dockerfile .
+              echo "- $app $arch: $(( $(date +%s) - start )) s" >> "$GITHUB_STEP_SUMMARY"
+            done
+          done
+          docker image ls --format '- {{.Repository}}:{{.Tag}} {{.Size}}' | grep ft3- | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Le immagini arm64 partono (emulate con QEMU)
+        run: |
+          docker run --rm --platform linux/arm64 ft3-web:arm64 node -p 'process.arch' | grep -x arm64
+          docker run -d --name web-arm64 --platform linux/arm64 -p 3000:3000 ft3-web:arm64
+          docker run -d --name rt-arm64 --platform linux/arm64 -p 3001:3001 ft3-realtime:arm64
+          for i in $(seq 1 60); do curl -sf localhost:3000/api/health && break; sleep 2; done
+          curl -sf localhost:3000/api/health
+          # Without Redis the realtime health answers 503: it runs, and says what is missing.
+          test "$(curl -s -o /dev/null -w '%{http_code}' localhost:3001/health)" = 503
+          docker logs web-arm64; docker logs rt-arm64 | head -5
+
+  compose:
+    name: docker compose up e stato dei quattro servizi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Costruisci e avvia
+        working-directory: infra
+        run: |
+          docker compose build
+          start=$(date +%s)
+          docker compose up --detach --wait --wait-timeout 180
+          echo "- compose up --wait: $(( $(date +%s) - start )) s" >> "$GITHUB_STEP_SUMMARY"
+      - name: Stato dei quattro servizi e WebSocket
+        run: |
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          node infra/check-status.mjs http://localhost:3000 ws://localhost:3001 | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - name: Memoria a riposo
+        run: docker stats --no-stream --format '- {{.Name}} {{.MemUsage}}' | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Log dei servizi
+        if: always()
+        working-directory: infra
+        run: docker compose logs --no-color | tail -100
+      - name: Ferma tutto
+        if: always()
+        working-directory: infra
+        run: docker compose down --volumes
