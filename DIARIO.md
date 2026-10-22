@@ -325,3 +325,19 @@ Resta: le risposte di Tancredi alle domande di `docs/STUDIO-PERSONAGGI.md`, sezi
 
 Resta: il character design del primo personaggio nella chat nuova (passi 1-9 dello studio); quale
 personaggio e chi disegna gli schizzi sono le domande con cui comincia.
+
+## 2026-10-22 — un ramo solo: tutto su main
+
+- Tancredi vuole solo `main` e il ramo della chat al lavoro. Regola scritta in `CLAUDE.md`,
+  «Branches»: la chat parte da `main`, unisce la sua pull request e poi cancella il suo ramo.
+- I movimenti a metà non vanno su `main` («Ship only what works»: 22 passaggi su 67 con la scarpa più
+  vicina alla palla nel passo del rilascio): tolti con il revert `90af5e2`; il codice resta nella
+  storia al commit `ac0cd0d` (memoria dei passi, cinematica inversa con le sue prove, movimenti,
+  `apps/web/scripts/moves3.ts`).
+- Su `main` vanno: i prototipi dei personaggi in un solo `SkinnedMesh` con le foto delle 14
+  squadre, `docs/STUDIO-PERSONAGGI.md` con le risposte di Tancredi e il messaggio per la chat nuova
+  (ora parte da `main`), le righe aggiornate del piano.
+- Rami cancellati dopo il merge: `claude/epic-heisenberg-6b4vax`, `claude/jolly-dirac-lujx3j`,
+  `claude/vigilant-wright-45cvb3` (0 commit fuori da `main`) e `claude/magical-davinci-nf79cp`.
+
+Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONAGGI.md`, sezione 8.

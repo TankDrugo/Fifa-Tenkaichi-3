@@ -254,10 +254,9 @@ Strikers della fase 2.
 
 ```
 Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
-poi e docs/STUDIO-PERSONAGGI.md per intero. Il lavoro della chat precedente è sul ramo
-claude/magical-davinci-nf79cp, non unito a main: portalo nel tuo ramo (git fetch e git merge) prima
-di cominciare. Quel ramo ha anche movimenti a metà (DIARIO.md, 22/10/2026): restano fuori da main
-finché il loro banco non dà i numeri giusti; se la pull request li porterebbe su main, chiedimi.
+poi e docs/STUDIO-PERSONAGGI.md per intero. Parti da main: c'è tutto il lavoro della chat
+precedente; i movimenti a metà sono fuori da main e restano nella storia al commit ac0cd0d
+(DIARIO.md, 22/10/2026), da non toccare in questa chat.
 
 Il compito di questa chat è uno solo: il character design del gioco, fino a un personaggio finito
 e ottimo che fissi lo stile di tutti gli altri. Non fare altri personaggi, movimenti, campi o

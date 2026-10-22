@@ -120,6 +120,10 @@ Exit 0 = clean, exit 1 = violations listed on stderr.
   - the working link, https://claude.ai/artifact/P8PppHnpvqoj76uJorB6rE: `Artifact` with
     `action: "read"` on it first in a new chat, then `publish` with `url`, `file_path`
     `web/index.html` and the map `files` of the changed `js/...` files.
+- **Branches**: only `main` and the branch of the chat at work exist (Tancredi, 22/10/2026). A chat
+  starts from `main`, merges its pull request, then deletes its branch on GitHub
+  (`git push origin --delete <branch>`). Work that does not reach `main`, such as a move half done,
+  stays in the history at a commit named in `DIARIO.md`, not on a branch of its own.
 - **Ask before** deleting files, creating repositories or anything outside this repository; say at
   once when the network, an account or a licence blocks a step, with what is needed, and go on with
   the rest.
