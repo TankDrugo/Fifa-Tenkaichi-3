@@ -7,7 +7,7 @@ const config: NextConfig = {
   output: "standalone",
   // The workspace root, so the standalone output also carries packages/*.
   outputFileTracingRoot: path.join(path.dirname(fileURLToPath(import.meta.url)), "../.."),
-  transpilePackages: ["@ft3/shared"],
+  transpilePackages: ["@ft3/shared", "@ft3/sim"],
   // The images are built on the build machine's architecture and copied into the arm64 one: the
   // image optimizer would load a native sharp built for the wrong one, and nothing uses it. Leaving
   // sharp and libvips out of the standalone output takes it from 61 to 23 MB.
