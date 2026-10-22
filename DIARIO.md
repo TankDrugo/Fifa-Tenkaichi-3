@@ -285,3 +285,28 @@ Decisioni di Tancredi, 22/10/2026:
   ogni squadra; lo stile si sceglie su foto di esempio, una per squadra.
 - **Tribuna vicina:** piena, disegnata solo nelle inquadrature che la vedono.
 - **Sotto-fasi:** 3a, 3b e 3c in questa chat, una dopo l'altra.
+
+## 2026-10-22 — fase 3a fermata: studio di character design
+
+- Foto delle 14 squadre negli stili A e B (`docs/fase3/stili/`, `apps/web/scripts/photos3.ts`): i
+  personaggi in un solo `SkinnedMesh` con 20 ossa ciascuno, facce disegnate con canvas, da 4.676 a
+  7.380 triangoli a giocatore (mediana 5.736); su `/bench` 40 chiamate di disegno invece di 65.
+  Commit `f6c0948`.
+- Tancredi ha fermato lo stile: i personaggi restano prototipi; se ne fa uno solo fino in fondo, poi
+  gli altri; stile da fumetto con i bordi neri come Mario Strikers, ispirato al manga recente; prima
+  uno studio di character design.
+- Lavoro sui movimenti salvato sul ramo e fermato (commit `ac0cd0d`): memoria dei passi con le azioni
+  e il passo del contatto, cinematica inversa di gambe e braccia (300 punti su 300 raggiunti per
+  arto, `apps/web/game/ik.test.ts`), primi movimenti. Banco `apps/web/scripts/moves3.ts` su 2 partite:
+  scarpa più vicina alla palla nel passo del rilascio in 22 passaggi su 67 e 2 tiri su 11, piedi
+  appoggiati che scivolano 33,7 mm a fotogramma: da correggere quando si riprende.
+- `docs/STUDIO-PERSONAGGI.md`: ricerca in rete (Mario Strikers, Blue Lock, Inazuma Eleven, Captain
+  Tsubasa, Guilty Gear Xrd, Hi-Fi Rush, Spider-Verse, Team Fortress 2, League of Legends), il vincolo
+  della telecamera (la testa da 22 a 8 px in partita fra 2,5 e 7 teste), cosa si fa nel codice
+  (corpo come campo di distanza, contorno a scafo o in post-elaborazione: lo scafo porterebbe
+  `/bench` a circa 314.000 triangoli), metodo in 9 passi, 5 domande e i testi utili.
+- Niente pull request: il ramo `claude/magical-davinci-nf79cp` ha personaggi e movimenti non
+  approvati; `main` resta alla fase 2.
+
+Resta: le risposte di Tancredi alle domande di `docs/STUDIO-PERSONAGGI.md`, sezione 5; poi i passi
+1-9 sul primo personaggio; la misura di `/bench` sul portatile per chiudere la fase 2.
