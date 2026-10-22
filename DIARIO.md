@@ -259,3 +259,29 @@ schermo intero per 30 secondi (fotogrammi al secondo, tempo per fotogramma, 1% p
 60 di media e l'1% più lento sotto 25 ms). Due decisioni per la fase 3: il materiale dei personaggi
 (il piano diceva toon con contorno, le foto di Mario Strikers mostrano ombre morbide e riflessi, qui
 c'è il secondo) e se riempire la tribuna vicina, che la telecamera di partita non inquadra.
+
+## 2026-10-22 — fase 3 del rifacimento: sotto-fasi e decisioni
+
+La fase 2 resta aperta solo per la misura di Tancredi su `/bench` dal suo portatile. La fase 3
+(`docs/PIANO-3D-ONLINE.md`, sezione 5) chiede circa 23 movimenti, contro le 7 pose semplici di
+`apps/web/game/rig.ts` alla fine della fase 2, più varianti dei corpi, 12 campi e una partita con
+una persona, mentre `/partita` gioca senza persone (`apps/web/game/driver.ts`, `humans: []`).
+Divisa in tre sotto-fasi, tutte in questa chat per scelta di Tancredi:
+
+- **3a · Personaggi e movimenti:** stile dei personaggi per ognuna delle 14 squadre
+  (`packages/sim/src/data.ts`: 8 club e 6 squadre leggendarie), con giocatori diversi dentro la
+  stessa squadra; faccia su texture fatta con canvas con le espressioni, capelli modellati nel
+  codice, numero sulla schiena, varianti di corpo; tutti i movimenti della sezione 4.7 con il
+  contatto sul passo in cui la simulazione fa partire la palla; fogli di contatto in `docs/fase3/`.
+- **3b · Campi ed effetti:** i 12 campi a tema con le loro luci (`docs/DETTAGLI.md`, «Campi»), scia
+  della palla, scintille della Cometa, polvere, tempo atmosferico; tribuna vicina piena.
+- **3c · Partita intera contro l'IA:** tastiera e joypad con i profili di `web/js/input.js`,
+  tabellone, calcio d'inizio, gol, fine partita e barra speciale.
+
+Decisioni di Tancredi, 22/10/2026:
+
+- **Materiale dei personaggi:** morbido e lucido, come Mario Strikers, non toon con contorno (piano,
+  sezione 4.7, da aggiornare). Personaggi con lo stile della loro squadra e diversi fra loro dentro
+  ogni squadra; lo stile si sceglie su foto di esempio, una per squadra.
+- **Tribuna vicina:** piena, disegnata solo nelle inquadrature che la vedono.
+- **Sotto-fasi:** 3a, 3b e 3c in questa chat, una dopo l'altra.
