@@ -2,10 +2,10 @@
 // ears, beard, and the team's gear (looks.ts, style B). character.ts merges the pieces of all the
 // players into one mesh.
 import { LatheGeometry, Vector2, type BufferGeometry } from "three";
-import type { Body } from "./body";
-import { ANKLE, BONE, ELBOW, HAND, HIP, KNEE, SHOULDER } from "./rig";
-import { ball, box, bumpy, cone, cylinder, horn, keep, limb, place, ring, slab } from "./shapes";
-import type { Design } from "./looks";
+import type { Body } from "./body.ts";
+import { ANKLE, BONE, ELBOW, HAND, HIP, KNEE, SHOULDER } from "./rig.ts";
+import { ball, box, bumpy, cone, cylinder, horn, keep, limb, place, ring, slab } from "./shapes.ts";
+import type { Design } from "./looks.ts";
 
 export const REGION = { plain: 0, face: 1, shirt: 2 } as const;
 

@@ -4,8 +4,8 @@
 // played before the first frame), focus (a player 0-9 to look at), paused=1, post=0; style=A or B,
 // the characters' style (game/looks.ts).
 import { clubById } from "@ft3/sim";
-import type { Style } from "./looks";
-import { CAMERA, STYLE } from "./style";
+import type { Style } from "./looks.ts";
+import { CAMERA, STYLE } from "./style.ts";
 
 export interface StageOptions {
   home: string;

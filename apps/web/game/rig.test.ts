@@ -4,20 +4,19 @@
 import { describe, expect, it } from "vitest";
 import { Vector3 } from "three";
 import { CLUBS, clubSquad, FIGURES } from "@ft3/sim";
-import { CLASSIC_HEIGHT, FIGURE_BUILD, hipHeight, makeBody } from "./body";
-import { designFor } from "./looks";
-import { buildParts } from "./parts";
-import { BONE, BONES_PER_PLAYER, bonePosition, locomotion, newJoints, skeleton, type PoseInput } from "./rig";
-import { CHARACTER_HEIGHT } from "./style";
+import { CLASSIC_HEIGHT, FIGURE_BUILD, hipHeight, makeBody } from "./body.ts";
+import { designFor } from "./looks.ts";
+import { buildParts } from "./parts.ts";
+import { BONE, BONES_PER_PLAYER, bonePosition, newJoints, skeleton, stance } from "./rig.ts";
+import { CHARACTER_HEIGHT } from "./style.ts";
 
-const pose = (x: number, z: number, fx: number, fz: number): PoseInput => ({ x, z, fx, fz, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 });
 
 describe("lo scheletro sta dove lo mette la simulazione", () => {
   const body = makeBody({});
   for (const [x, z] of [[-13.47, -0.33], [13.48, -0.82], [2.72, -3.8], [0, 7.75]] as const) {
     it(`giocatore a (${x}; ${z}): testa e bacino sopra quel punto`, () => {
       const out = new Float32Array(BONES_PER_PLAYER * 16), j = newJoints();
-      locomotion(pose(x, z, 1, 0), body, j);
+      stance(j, 0);
       skeleton(x, z, 1, 0, 1, body, j, out, 0);
       const head = bonePosition(out, 0, BONE.head), pelvis = bonePosition(out, 0, BONE.pelvis);
       for (const p of [head, pelvis]) { expect(Math.abs(p.x - x)).toBeLessThan(0.15); expect(Math.abs(p.z - z)).toBeLessThan(0.15); }
@@ -27,7 +26,7 @@ describe("lo scheletro sta dove lo mette la simulazione", () => {
   }
   it("guarda dove guarda il giocatore: la faccia sta davanti", () => {
     const out = new Float32Array(BONES_PER_PLAYER * 16), j = newJoints();
-    locomotion(pose(0, 0, 0, -1), body, j);
+    stance(j, 0);
     skeleton(0, 0, 0, -1, 1, body, j, out, 0);
     // the head bone's +z (where the face is drawn) points along the facing
     const o = BONE.head * 16, forward = new Vector3(out[o + 8], out[o + 9], out[o + 10]).normalize();
@@ -35,7 +34,7 @@ describe("lo scheletro sta dove lo mette la simulazione", () => {
   });
   it("il secondo giocatore scrive le sue ossa e non quelle del primo", () => {
     const out = new Float32Array(2 * BONES_PER_PLAYER * 16), j = newJoints();
-    locomotion(pose(5, 2, 1, 0), body, j);
+    stance(j, 0);
     skeleton(5, 2, 1, 0, 1, body, j, out, BONES_PER_PLAYER);
     expect(bonePosition(out, 0, BONE.pelvis).length()).toBe(0);
     expect(Math.abs(bonePosition(out, BONES_PER_PLAYER, BONE.pelvis).x - 5)).toBeLessThan(0.15);

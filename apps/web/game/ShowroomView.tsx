@@ -2,9 +2,9 @@
 // The page around the showroom (showroom.ts): the team's name and the style on top. The scene is
 // drawn only in the browser (WebGL), so it is loaded without server rendering.
 import dynamic from "next/dynamic";
-import type { ShowroomOptions } from "./showroom";
+import type { ShowroomOptions } from "./showroom.ts";
 
-const ShowroomStage = dynamic(() => import("./ShowroomStage").then((m) => m.ShowroomStage), { ssr: false });
+const ShowroomStage = dynamic(() => import("./ShowroomStage.tsx").then((m) => m.ShowroomStage), { ssr: false });
 
 export function ShowroomView({ options, title }: { options: ShowroomOptions; title: string }) {
   return (

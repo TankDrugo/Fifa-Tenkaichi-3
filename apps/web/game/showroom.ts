@@ -4,13 +4,13 @@
 // the faces are lit, as on a team's presentation screen.
 import { Group, type PerspectiveCamera, type Scene, type WebGLRenderer } from "three";
 import { clubById, clubSquad, type Club } from "@ft3/sim";
-import { buildArena } from "./arena";
-import { buildCast, type Cast } from "./character";
-import { EXPRESSION, type Expression } from "./faces";
-import { createLook, type Look } from "./loop";
-import { designFor, type Design, type Style } from "./looks";
-import { teamKits } from "./players";
-import { BONES_PER_PLAYER, locomotion, newJoints, skeleton, type PoseInput } from "./rig";
+import { buildArena } from "./arena.ts";
+import { buildCast, type Cast } from "./character.ts";
+import { EXPRESSION, type Expression } from "./faces.ts";
+import { createLook, type Look } from "./loop.ts";
+import { designFor, type Design, type Style } from "./looks.ts";
+import { teamKits } from "./players.ts";
+import { BONES_PER_PLAYER, newJoints, skeleton, stance } from "./rig.ts";
 
 export interface ShowroomOptions {
   team: string;
@@ -36,7 +36,6 @@ export class ShowroomLoop {
   private camera: PerspectiveCamera;
   private options: ShowroomOptions;
   private joints = newJoints();
-  private pose: PoseInput = { x: 0, z: 0, fx: 0, fz: 1, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 };
 
   constructor(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, options: ShowroomOptions) {
     this.gl = gl; this.camera = camera; this.options = options;
@@ -60,15 +59,13 @@ export class ShowroomLoop {
   resize(width: number, height: number): void { this.look.composer.setSize(width, height); }
 
   frame(time: number, delta: number): void {
-    const cast = this.cast, p = this.pose, o = this.options;
+    const cast = this.cast, o = this.options;
     cast.designs.forEach((d, i) => {
       const k = ORDER.indexOf(i), x = (k - 2) * 0.74, z = -Math.abs(k - 2) * 0.22;
       // facing the camera, turned a little toward the middle of the line
-      const turn = (o.back ? Math.PI : 0) - (k - 2) * 0.12 * (o.back ? -1 : 1);
-      p.x = x; p.z = z; p.fx = Math.sin(turn); p.fz = Math.cos(turn); p.height = d.height; p.time = time + i * 0.9;
-      p.lookYaw = o.back ? 0 : (k - 2) * 0.1;
-      locomotion(p, cast.bodies[i]!, this.joints);
-      skeleton(x, z, p.fx, p.fz, d.height, cast.bodies[i]!, this.joints, cast.bones, i * BONES_PER_PLAYER, 1 + 0.015 * Math.sin(p.time * 2.2));
+      const turn = (o.back ? Math.PI : 0) - (k - 2) * 0.12 * (o.back ? -1 : 1), t = time + i * 0.9;
+      stance(this.joints, t, o.back ? 0 : (k - 2) * 0.1);
+      skeleton(x, z, Math.sin(turn), Math.cos(turn), d.height, cast.bodies[i]!, this.joints, cast.bones, i * BONES_PER_PLAYER, 1 + 0.015 * Math.sin(t * 2.2));
       const beat = (time + i * 1.37) % (3.1 + (i % 4) * 0.45);
       cast.expressions[i] = o.expression ? EXPRESSION[o.expression] : beat < 0.12 ? EXPRESSION.blink : EXPRESSION.neutral;
     });

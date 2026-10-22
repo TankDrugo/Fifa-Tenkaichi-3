@@ -9,13 +9,13 @@ import {
 } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { C } from "@ft3/sim";
-import { buildArena } from "./arena";
-import { Driver } from "./driver";
-import { crowdTime } from "./materials";
-import { buildActors, matchDesigns, teamKits, type Actors } from "./players";
-import type { StageOptions } from "./options";
-import type { FrameStats } from "./stats";
-import { DAY } from "./style";
+import { buildArena } from "./arena.ts";
+import { Driver } from "./driver.ts";
+import { crowdTime } from "./materials.ts";
+import { buildActors, matchDesigns, teamKits, type Actors } from "./players.ts";
+import type { StageOptions } from "./options.ts";
+import type { FrameStats } from "./stats.ts";
+import { DAY } from "./style.ts";
 
 // The light and the finish of every 3D page: a sky light, the sun with one shadow map of 2048
 // (docs/PIANO-3D-ONLINE.md, 4.6), reflections from three's own room made once on the graphics card,

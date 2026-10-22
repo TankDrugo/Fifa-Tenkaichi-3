@@ -1,6 +1,6 @@
 import type { ServiceName } from "@ft3/shared";
-import { checkAll } from "@/lib/checks";
-import { WsProbe } from "./ws-probe";
+import { checkAll } from "@/lib/checks.ts";
+import { WsProbe } from "./ws-probe.tsx";
 
 export const dynamic = "force-dynamic";
 

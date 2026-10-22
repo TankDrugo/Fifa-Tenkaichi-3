@@ -11,11 +11,11 @@ import {
   Bone, BufferAttribute, BufferGeometry, Color, Matrix4, MeshStandardMaterial, Skeleton, SkinnedMesh,
   Uint16BufferAttribute,
 } from "three";
-import { makeBody, type Body } from "./body";
-import { buildAtlases, EXPRESSIONS, NUMBER_COLUMNS, type Atlases } from "./faces";
-import type { Design } from "./looks";
-import { buildParts, REGION } from "./parts";
-import { BONES_PER_PLAYER } from "./rig";
+import { makeBody, type Body } from "./body.ts";
+import { buildAtlases, EXPRESSIONS, NUMBER_COLUMNS, type Atlases } from "./faces.ts";
+import type { Design } from "./looks.ts";
+import { buildParts, REGION } from "./parts.ts";
+import { BONES_PER_PLAYER } from "./rig.ts";
 
 export const MAX_PLAYERS = 16;
 
