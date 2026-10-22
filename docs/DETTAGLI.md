@@ -1101,6 +1101,11 @@ repository: senza, `next dev` lo ricrea a ogni avvio.
   testa e bacino stiano sopra il punto della simulazione: con l'errore rimesso fallisce 5 prove su 5.
 - **Opzioni vuote sul server:** `options.ts` prendeva i valori predefiniti da un modulo con
   `"use client"`, che sul server di Next.js è solo un riferimento; ora stanno in `options.ts`.
+- **Immagine Docker di `apps/web` senza la simulazione:** il primo giro di CI della pull request si
+  è fermato su «Can't resolve '@ft3/sim'», perché `apps/web/Dockerfile` copiava solo
+  `packages/shared`; ora copia anche `packages/sim`. Provato nella chat: `docker compose up` con i
+  quattro servizi verdi in `check-status.mjs`, `/partita` servita dal contenitore con 65 chiamate di
+  disegno e 182.273 triangoli.
 
 ### Cosa non è provato
 

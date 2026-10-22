@@ -10,6 +10,7 @@ RUN corepack enable
 WORKDIR /repo
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/shared/package.json packages/shared/
+COPY packages/sim/package.json packages/sim/
 COPY apps/web/package.json apps/web/
 # The cloud chats' network re-signs HTTPS with its own certificate: infra/docker-compose.cloud.yml
 # passes it as the secret ca_bundle. Without it (a PC, CI) the download uses the usual ones.
@@ -18,6 +19,8 @@ RUN --mount=type=secret,id=ca_bundle \
     pnpm install --frozen-lockfile --filter "@ft3/web..."
 COPY tsconfig.base.json ./
 COPY packages/shared packages/shared
+# the match the 3D pages draw (phase 2)
+COPY packages/sim packages/sim
 COPY apps/web apps/web
 RUN pnpm --filter @ft3/web build
 

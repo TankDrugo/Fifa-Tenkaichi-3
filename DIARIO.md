@@ -249,7 +249,10 @@ Resta: la fase 2 (motore 3D) in una chat nuova.
   della pagina vuote sul server (valori presi da un modulo `"use client"`).
 - CI: il lavoro «Simulazione in Node e in Chromium» costruisce `apps/web` e lancia `bench3d.ts`.
   `pnpm test` 26 su 26. `web/` e `packages/sim` invariati.
-- Commit: `db05eb8` (scena), il commit di questa voce; pull request in questa chat.
+- Il primo giro di CI si è fermato sull'immagine Docker di `apps/web`, che non copiava
+  `packages/sim`; corretto e provato con `docker compose up` nella chat.
+- Commit: `db05eb8` (scena), `2816ec3` (misure, foto, diario), il commit della correzione Docker;
+  pull request TankDrugo/Fifa-tenkaichi-3#13.
 
 Resta della fase 2: la misura di Tancredi sul suo portatile, aprendo http://localhost:3000/bench a
 schermo intero per 30 secondi (fotogrammi al secondo, tempo per fotogramma, 1% più lenti; obiettivo
