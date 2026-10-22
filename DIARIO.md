@@ -341,3 +341,16 @@ personaggio e chi disegna gli schizzi sono le domande con cui comincia.
   `claude/vigilant-wright-45cvb3` (0 commit fuori da `main`) e `claude/magical-davinci-nf79cp`.
 
 Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONAGGI.md`, sezione 8.
+
+## 2026-10-22 — rami: la cancellazione la fa GitHub
+
+- Pull request TankDrugo/Fifa-Tenkaichi-3#14 unita su `main` (merge `c32b5e8`), con i 4 controlli
+  della CI verdi.
+- La chat non può cancellare rami: `git push origin --delete` risponde 403 dalla rete della chat,
+  anche per il suo ramo. `CLAUDE.md`, «Branches»: i rami uniti li cancella GitHub con l'impostazione
+  «Automatically delete head branches», che attiva Tancredi; i 4 rami di oggi
+  (`claude/epic-heisenberg-6b4vax`, `claude/jolly-dirac-lujx3j`, `claude/vigilant-wright-45cvb3`,
+  `claude/magical-davinci-nf79cp`, 0 commit fuori da `main`) li cancella Tancredi da
+  https://github.com/TankDrugo/Fifa-Tenkaichi-3/branches.
+
+Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONAGGI.md`, sezione 8.
