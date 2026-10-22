@@ -975,3 +975,143 @@ quindi in CI provano anche Node 24.
 - **`apps/realtime` non usa ancora la simulazione:** le partite sul server sono della fase 6.
 - **Processori di Oracle (Ampere A1, arm64):** le partite per core sono misurate solo sul Xeon della
   chat; sulla macchina vera si misurano nella fase 7.
+
+## Gioco nuovo · fase 2, motore 3D (22/10/2026)
+
+`apps/web` disegna in 3D una partita di `packages/sim` con `@react-three/fiber`: http://localhost:3000/partita
+e, con i numeri del motore, http://localhost:3000/bench. `web/` e `packages/sim` non cambiano: le 22
+partite di `packages/sim/bench/parity.ts` restano uguali in ogni fotogramma.
+
+### Il riferimento: Mario Strikers: Battle League
+
+Tancredi, 22/10/2026: per qualità e profondità del 3D il riferimento è Mario Strikers: Battle
+League, non il gioco vecchio. Le immagini guardate, solo come riferimento e non messe nel
+repository:
+
+- due foto di partita a 1280 × 720 dalla pagina del gioco sul negozio Nintendo
+  (https://www.nintendo.com/us/store/products/mario-strikers-battle-league-switch/), file
+  `assets.nintendo.com/.../70010000049936/197c3c4a…` (stadio con i tubi, «A» qui sotto) e
+  `…/f2678b33…` (stadio nella giungla, «B»), più le schermate dell'equipaggiamento con Mario,
+  Wario e Yoshi;
+- da Super Mario Wiki (https://www.mariowiki.com/Mario_Strikers:_Battle_League e la sua
+  galleria): l'ingresso del Mushroom Hill (`MSBL_Mushroom_Hill_intro.jpg`, 1920 × 1080) e lo stadio
+  galattico (`PN_MSBL_update_Pauline_Diddy_Kong_pic2.jpg`).
+
+| Osservazione | Misura sulle foto | Conseguenza nel gioco nuovo |
+|---|---|---|
+| Inclinazione della telecamera di partita | il cerchio di centrocampo è alto 0,47 (B) e 0,49 (A) volte la sua larghezza: arcoseno 28,0° e 29,3° | 29° verso il basso (`apps/web/game/style.ts`, `CAMERA`) |
+| Obiettivo | in B le linee perpendicolari alla linea laterale si incontrano 883 px sopra il bordo alto, al centro (x 624 su 1280): f·tan(29°) = 1.243 px, f = 2.242 px, campo visivo verticale 18,2° (17,5° con 28°) | 18°: un teleobiettivo da lontano, i giocatori lontani grandi quasi come i vicini |
+| Cosa inquadra | in B la linea laterale vicina è a 690 px e la lontana a 160 px, sopra c'è il pubblico; in lunghezza si vede dalla metà campo alla porta, circa il 60% | 19,8 m a metà schermo e mira 0,35 m oltre la metà della larghezza: le due linee cadono a 690 e 159 px (calcolo con la telecamera di three, `scripts/bench3d.ts`). La telecamera segue la palla solo in lunghezza |
+| Proporzioni del campo | lunghezza / larghezza circa 1,79 in B | la simulazione ha 28 × 16 m, 1,75: stesso campo, nessuna modifica |
+| Grandezza dei personaggi | in B la lunghezza del campo è circa 35 altezze di un personaggio (45-55 px su circa 1.580 px di metà campo per due); al Mushroom Hill la porta è alta circa 2,25 volte il portiere | sul nostro campo da 28 m e porta da 2,2 m, un calciatore di 0,85 m (`CHARACTER_HEIGHT`), testa grande, guanti e scarpe grosse |
+| Bordi del campo | nessuna linea da cui uscire: una recinzione bassa, trasparente, con un disegno che si illumina dal basso | la recinzione sta dove la simulazione fa rimbalzare la palla (`match.ts`, `stepBall`); il disegno è nostro, rombi azzurri |
+| Materiali dei personaggi | ombreggiatura morbida e lucida con riflessi e luce sui bordi, non a bande piatte (schermate dell'equipaggiamento) | materiale standard di three con luce di bordo nello shader (`game/materials.ts`) |
+| Pubblico | tifosi piccoli e fitti su gradoni, colori vivi; nessun tifoso fra la telecamera e il campo | gradoni su quattro lati, tifosi su tre (sezione «Stadio») |
+| Prestazioni | 1080p e 60 fotogrammi al secondo in partita, pubblico in 3D aggiornato a metà frequenza, nessun anti-aliasing (analisi di Digital Foundry riportata da https://gonintendo.com/contents/4619-mario-strikers-battle-league-s-framerate-resolution-and-more-detailed) | il pubblico si muove a 30 aggiornamenti al secondo nello shader; nessun anti-aliasing, risoluzione fino a 1,5 volte i pixel CSS |
+
+Lo stile, non i contenuti: personaggi, stadi, disegni della recinzione e stemmi sono di questo
+gioco (piano, sezione 4.7: «Nessun personaggio esistente copiato»).
+
+### Telecamera: le prove
+
+`node apps/web/scripts/bench3d.ts http://localhost:3000 --photos` fotografa lo stesso istante (seme
+7, dopo 900 passi) con quattro telecamere. Le misure sono della telecamera di three a 1280 × 720:
+dove cadono le linee laterali e quanti pixel è alto un calciatore di 0,85 m sulla linea vicina e
+su quella lontana.
+
+| Foto | Telecamera | Distanza | Linea laterale vicina | Linea lontana | Calciatore vicino | Calciatore lontano |
+|---|---|---|---|---|---|---|
+| `docs/fase2/telecamera-a-strikers.jpg` | **A**, come Mario Strikers: 29° verso il basso, 18° di campo visivo, 19,8 m a metà schermo | 35,2 m | 690 px | 159 px | 56 px | 43 px |
+| `docs/fase2/telecamera-b-vicina.jpg` | B, più vicina: stesso angolo e obiettivo, 15 m a metà schermo | 26,6 m | 836 px | 107 px | 78 px | 55 px |
+| `docs/fase2/telecamera-c-dall-alto.jpg` | C, più dall'alto e grandangolare: 45°, 30° di campo visivo | 20,8 m | 893 px | 83 px | 35 px | 38 px |
+| `docs/fase2/telecamera-d-radente.jpg` | D, più radente: 20° verso il basso, 12° di campo visivo | 53,0 m | 577 px | 211 px | 59 px | 47 px |
+
+`docs/fase2/calciatori-da-vicino.jpg` mostra i calciatori da 3 m.
+
+Scelta: **A**, perché è quella misurata sulle foto di partita di Mario Strikers (linee laterali a
+690 e 159 px contro 690 e 160, cerchio 0,49 contro 0,47-0,49) e perché un calciatore vicino è alto
+56 px, come i 45-55 px dei personaggi nelle stesse foto. La B ingrandisce i calciatori a 78 px ma
+la linea laterale vicina cade sotto il bordo dello schermo (836 px su 720); la C perde anche lei la
+linea vicina (893 px) e rimpicciolisce i calciatori a 35-38 px; la D mette la linea vicina a 577 px
+e riempie gli ultimi 143 px con il muro della tribuna vicina.
+
+### Il calciatore
+
+- **Scheletro** (`game/rig.ts`): bacino, petto, collo, testa, spalle, braccia, avambracci, mani,
+  cosce, gambe, piedi, con le lunghezze di un corpo alto 1, poi 0,85 m per l'altezza della carta
+  (0,92-1,07). Sulle ossa: 14 tipi di forme (testa, capelli, occhi, collo, busto, bacino, braccia,
+  avambracci, guanti, sfere delle giunture, cosce, pantaloncini, calzettoni, scarpe), ognuno un
+  `InstancedMesh` per tutti e dieci i calciatori: 14 chiamate di disegno più 13 per le ombre,
+  qualunque sia il numero dei giocatori.
+- **Corsa** dalla simulazione: fase del passo e andatura (camminata, corsa, scatto) di
+  `Match.advanceGait`, ampiezza di gambe e braccia dalla velocità, inclinazione in curva dalla
+  rotazione, testa verso la palla. Pose semplici per tiro, scivolata, spallata data e presa, portiere
+  con la palla, esultanza: la fase 3 le rifà con i movimenti della sezione 4.7.
+- **Colori**: pelle e capelli nuovi per i 14 aspetti delle carte (`style.ts`, `LOOK_COLOURS`),
+  maglia e calzettoni del colore della squadra, pantaloncini del secondo colore, portieri in un
+  colore lontano da tutte e due le maglie (`players.ts`, `teamKits`).
+- **Il piano diceva «materiale toon con contorno»** (sezione 4.7). Le schermate di Mario Strikers
+  mostrano ombre morbide e riflessi; qui c'è il materiale standard con luce di bordo. Il materiale
+  definitivo dei personaggi si decide nella fase 3, con i fogli di contatto.
+
+### Stadio
+
+- Campo con le strisce del taglio e uno stemma nostro dipinto al centro; recinzione con pali bianchi
+  e pannello trasparente luminoso su quattro lati, aperta sulle porte; porte con pali spessi e rete
+  a rombi.
+- Tribune a 12 gradoni su quattro lati, tifosi da 36 triangoli in tre `InstancedMesh` (lato lontano
+  e i due dietro le porte). Il lato vicino resta vuoto come nelle foto di partita: 45.000 triangoli
+  in meno a fotogramma. Due maxischermi con le luci sopra la tribuna lontana.
+- Luce: un emisfero e il sole alto dietro il lato lontano, così le ombre cadono verso la telecamera
+  come nelle foto; una mappa d'ombra da 2048 sul campo, le porte e la recinzione; riflessi da
+  `RoomEnvironment` di three, fatti una volta sulla scheda video.
+- Post-elaborazione (postprocessing): bloom a metà risoluzione, vignettatura leggera, mappatura dei
+  toni «Neutral» di Khronos, che tiene i colori saturi.
+
+### Misure
+
+| Misura | Valore |
+|---|---|
+| `renderer.info` sull'intero fotogramma, ombre e post-elaborazione comprese (`scripts/bench3d.ts`, Chromium 141 in software) | 6 prove: 1280 × 720 e 1920 × 1080, risoluzione × 1 e × 1,5 (fino a 2880 × 1620), al calcio d'inizio e dopo 29,2 e 111,6 s di partita: in tutte al massimo **65 chiamate di disegno** (budget 150) e **182.273 triangoli** (budget 300.000), mappa d'ombra 2048 |
+| Di cosa sono fatti i triangoli (1280 × 720, dopo 900 passi) | calciatori 43.012 più 41.732 delle loro ombre; pubblico 80.568 (2.238 tifosi); stadio 9.900 più 7.016 di ombre; il resto sono i rettangoli della post-elaborazione |
+| La scena mostra la partita della simulazione | impronta dopo 900 passi: `f405f43f0a2aff2c` nella pagina e in Node |
+| Codice 3D scaricato dal navigatore | 986 KB, 259 KB compressi con gzip; solo `/partita` e `/bench` lo caricano |
+| Fotogrammi in software | 17-18 fotogrammi in 8 s: non dicono niente del portatile |
+| `pnpm test` | 26 prove su 26 (21 della fase 1, 5 di `apps/web/game/rig.test.ts`) |
+| `pnpm build` | `/partita` e `/bench` costruite come pagine dinamiche, 20,5 s di compilazione |
+
+### Versioni e perché
+
+| Cosa | Versione | Perché |
+|---|---|---|
+| three | 0.186.1 (24/09/2026) | decisione di Tancredi (piano, sezione 1) |
+| @react-three/fiber | 9.8.1 (24/09/2026) | decisione di Tancredi; la 9.8.2 è del 14/10/2026, meno di due settimane |
+| postprocessing | 6.39.5 (09/09/2026) | bloom con la catena di mipmap a metà risoluzione, vignettatura e mappatura dei toni in un solo passaggio; usato direttamente perché l'involucro per React, `@react-three/postprocessing` 3.2.2, è uscito il 21/10/2026 |
+| @types/three | 0.186.0 | i tipi della stessa versione |
+| Playwright in `apps/web` | 1.56.1 | `scripts/bench3d.ts`; la stessa versione di `packages/sim` e dei browser delle chat |
+
+`apps/web/AGENTS.md` lo scrive `next dev` 16.4.2: dice di leggere la documentazione di Next.js in
+`node_modules/next/dist/docs/`, perché questa versione cambia API e convenzioni. Resta nel
+repository: senza, `next dev` lo ricrea a ogni avvio.
+
+### Errori trovati nel lavoro
+
+- **Calciatori al doppio della distanza:** la radice dello scheletro era composta con sé stessa come
+  genitore; nella prima foto si vedevano 3 calciatori su 10. Ora `game/rig.test.ts` controlla che
+  testa e bacino stiano sopra il punto della simulazione: con l'errore rimesso fallisce 5 prove su 5.
+- **Opzioni vuote sul server:** `options.ts` prendeva i valori predefiniti da un modulo con
+  `"use client"`, che sul server di Next.js è solo un riferimento; ora stanno in `options.ts`.
+- **Immagine Docker di `apps/web` senza la simulazione:** il primo giro di CI della pull request si
+  è fermato su «Can't resolve '@ft3/sim'», perché `apps/web/Dockerfile` copiava solo
+  `packages/shared`; ora copia anche `packages/sim`. Provato nella chat: `docker compose up` con i
+  quattro servizi verdi in `check-status.mjs`, `/partita` servita dal contenitore con 65 chiamate di
+  disegno e 182.273 triangoli.
+
+### Cosa non è provato
+
+- **Fotogrammi al secondo:** qui Chromium disegna in software; la fase si chiude con la misura di
+  Tancredi su `/bench` dal suo portatile (piano, sezione 5).
+- **Firefox e Safari** non sono provati.
+- **Scia della palla, scintille della Cometa, polvere e i 12 campi a tema** sono della fase 3 con i
+  movimenti (piano, sezione 5); qui c'è un campo, di giorno.
+- **Faccia, numeri sulla schiena, varianti dei capelli:** fase 3 (sezione 4.7).

@@ -65,6 +65,17 @@ jobs:
         run: |
           node packages/sim/bench/browser.ts | tee browser.txt
           tail -1 browser.txt >> "$GITHUB_STEP_SUMMARY"
+      # the 3D scene (phase 2): renderer.info within the budget of the plan's section 4.6, and the
+      # page shows the simulation's match (apps/web/scripts/bench3d.ts)
+      - name: Scena 3D, budget di disegno
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+        run: |
+          pnpm --filter @ft3/web build
+          (pnpm --filter @ft3/web start > web.log 2>&1 &)
+          for i in $(seq 1 60); do curl -sf http://localhost:3000/api/health > /dev/null && break; sleep 1; done
+          node apps/web/scripts/bench3d.ts http://localhost:3000 --seconds 6 | tee bench3d.txt
+          cat bench3d.txt >> "$GITHUB_STEP_SUMMARY"
 
   images:
     name: Immagini amd64 e arm64
