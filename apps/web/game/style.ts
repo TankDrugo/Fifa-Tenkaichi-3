@@ -23,11 +23,12 @@ export const LOOK_COLOURS: [skin: string, hair: string][] = [
   ["#b7c4d4", "#3e4c60"], ["#f7fbff", "#cfe3f5"],
 ];
 
+// The characters' style until Tancredi chooses on the photos of each team (game/looks.ts):
+// "A" the footballers in the kit, "B" the team's gear and the lore peoples as what they are.
+export const STYLE: "A" | "B" = "B";
+
 // Keepers wear a colour that is not either team's: the first of these the two shirts leave free.
 export const KEEPER_COLOURS = ["#ffd23f", "#2ee6a6", "#ff8c42", "#b07cff", "#2f3b4c"];
-export const GLOVES = "#f4f6fb";
-export const BOOTS = "#20242c";
-export const EYES = "#141820";
 
 // The first ground, by day: saturated grass with mowing stripes, a lit fence, tiers of stands.
 export const DAY = {

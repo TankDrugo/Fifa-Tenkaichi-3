@@ -5,25 +5,57 @@
 import { BloomEffect, EffectComposer, EffectPass, RenderPass, ToneMappingEffect, ToneMappingMode, VignetteEffect } from "postprocessing";
 import {
   DirectionalLight, Group, HalfFloatType, HemisphereLight, PMREMGenerator, Vector2, Vector3,
-  type PerspectiveCamera, type Scene, type Texture, type WebGLRenderer,
+  type Object3D, type PerspectiveCamera, type Scene, type Texture, type WebGLRenderer,
 } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { C } from "@ft3/sim";
 import { buildArena } from "./arena";
 import { Driver } from "./driver";
 import { crowdTime } from "./materials";
-import { buildActors, teamKits, type Actors } from "./players";
+import { buildActors, matchDesigns, teamKits, type Actors } from "./players";
 import type { StageOptions } from "./options";
 import type { FrameStats } from "./stats";
 import { DAY } from "./style";
+
+// The light and the finish of every 3D page: a sky light, the sun with one shadow map of 2048
+// (docs/PIANO-3D-ONLINE.md, 4.6), reflections from three's own room made once on the graphics card,
+// bloom at half resolution, a light vignette and the tone mapping.
+export interface Look {
+  sun: DirectionalLight;
+  composer: EffectComposer;
+  dispose(): void;
+}
+
+export function createLook(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, root: Object3D): Look {
+  root.add(new HemisphereLight(DAY.hemiSky, DAY.hemiGround, 0.8));
+  const sun = new DirectionalLight(DAY.sun, 3.3);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -19, right: 19, top: 14, bottom: -14, near: 8, far: 70 });
+  sun.shadow.camera.updateProjectionMatrix();
+  sun.shadow.bias = -0.0004;
+  sun.shadow.normalBias = 0.02;
+  root.add(sun, sun.target);
+  const pmrem = new PMREMGenerator(gl);
+  const env: Texture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
+  scene.environment = env;
+  scene.environmentIntensity = 0.45;
+  const composer = new EffectComposer(gl, { frameBufferType: HalfFloatType });
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new BloomEffect({ mipmapBlur: true, luminanceThreshold: 0.9, luminanceSmoothing: 0.15, intensity: 0.7, resolutionScale: 0.5 });
+  composer.addPass(new EffectPass(camera, bloom, new VignetteEffect({ offset: 0.32, darkness: 0.32 }), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL })));
+  // renderer.info over the whole frame, not only its last pass
+  gl.info.autoReset = false;
+  return { sun, composer, dispose() { composer.dispose(); env.dispose(); } };
+}
 
 export class StageLoop {
   readonly root = new Group();
   readonly driver: Driver;
   private actors: Actors;
   private sun: DirectionalLight;
-  private composer: EffectComposer;
-  private env: Texture;
+  private look: Look;
   private followX = 0;
   private ready = false;
   private target = new Vector3();
@@ -39,41 +71,17 @@ export class StageLoop {
     this.driver = new Driver(options.home, options.away, options.seed);
     this.driver.skip(options.skip);
     this.root.add(buildArena().group);
-    this.actors = buildActors(this.driver.match, teamKits(this.driver.colours[0], this.driver.colours[1]));
+    const m = this.driver.match;
+    this.actors = buildActors(matchDesigns(m, teamKits(this.driver.colours[0], this.driver.colours[1]), [options.home, options.away], options.style));
     this.root.add(this.actors.group);
-
-    this.root.add(new HemisphereLight(DAY.hemiSky, DAY.hemiGround, 0.8));
-    // one shadow map of 2048 (docs/PIANO-3D-ONLINE.md, 4.6) over the pitch, the goals and the fence;
     // the sun high behind the far side, so the shadows fall toward the camera as in the reference
-    const sun = new DirectionalLight(DAY.sun, 3.3);
-    sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048);
-    Object.assign(sun.shadow.camera, { left: -19, right: 19, top: 14, bottom: -14, near: 8, far: 70 });
-    sun.shadow.camera.updateProjectionMatrix();
-    sun.shadow.bias = -0.0004;
-    sun.shadow.normalBias = 0.02;
-    this.sun = sun;
-    this.root.add(sun, sun.target);
-
-    // reflections for the glossy materials, from three's own room, made once on the graphics card
-    const pmrem = new PMREMGenerator(gl);
-    this.env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    pmrem.dispose();
-    scene.environment = this.env;
-    scene.environmentIntensity = 0.45;
-
-    // bloom at half resolution, a light vignette, the tone mapping (section 4.6)
-    this.composer = new EffectComposer(gl, { frameBufferType: HalfFloatType });
-    this.composer.addPass(new RenderPass(scene, camera));
-    const bloom = new BloomEffect({ mipmapBlur: true, luminanceThreshold: 0.9, luminanceSmoothing: 0.15, intensity: 0.7, resolutionScale: 0.5 });
-    this.composer.addPass(new EffectPass(camera, bloom, new VignetteEffect({ offset: 0.32, darkness: 0.32 }), new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL })));
-    // renderer.info over the whole frame, not only its last pass
-    gl.info.autoReset = false;
+    this.look = createLook(gl, scene, camera, this.root);
+    this.sun = this.look.sun;
     camera.fov = options.fovDeg;
     camera.updateProjectionMatrix();
   }
 
-  resize(width: number, height: number): void { this.composer.setSize(width, height); }
+  resize(width: number, height: number): void { this.look.composer.setSize(width, height); }
 
   frame(time: number, delta: number): void {
     const o = this.options;
@@ -103,13 +111,13 @@ export class StageLoop {
 
     const gl = this.gl;
     gl.info.reset();
-    if (o.post) this.composer.render(delta); else gl.render(this.scene, cam);
+    if (o.post) this.look.composer.render(delta); else gl.render(this.scene, cam);
     const r = gl.info.render, size = gl.getDrawingBufferSize(this.buffer);
     this.stats.frame(delta, { calls: r.calls, triangles: r.triangles, geometries: gl.info.memory.geometries, textures: gl.info.memory.textures, programs: gl.info.programs?.length ?? 0, width: size.x, height: size.y, dpr: gl.getPixelRatio() });
   }
 
   dispose(): void {
-    this.composer.dispose();
-    this.env.dispose();
+    this.look.dispose();
+    this.actors.cast.dispose();
   }
 }
