@@ -225,3 +225,34 @@ chat nuova.
   `tension_bench.ts` (stessi numeri di `tools/`).
 
 Resta: la fase 2 (motore 3D) in una chat nuova.
+
+## 2026-10-22 — fase 2 del rifacimento: motore 3D
+
+- Tancredi ha chiesto di continuare in questa chat e ha fissato il riferimento per qualità e
+  profondità del 3D: Mario Strikers: Battle League, non il gioco vecchio. Ha aperto la rete della
+  chat per guardarne le immagini (negozio Nintendo, Super Mario Wiki); non sono nel repository.
+- Dalle due foto di partita a 1280 × 720: telecamera a 29° verso il basso (cerchio di centrocampo
+  0,47 e 0,49 volte più basso che largo), campo visivo verticale di 18° (punto di fuga 883 px sopra
+  lo schermo), linee laterali a 690 e 160 px, personaggi alti circa 1/35 del campo. Sul campo della
+  simulazione: calciatori di 0,85 m e 19,8 m inquadrati a metà schermo, con le linee a 690 e 159 px.
+- `apps/web`: `/partita` e `/bench` con `@react-three/fiber` su `packages/sim`; scheletro e corsa
+  del calciatore in TypeScript (`game/rig.ts`), 14 `InstancedMesh` per i dieci calciatori;
+  recinzione luminosa trasparente al posto delle linee, porte spesse, 12 gradoni, 2.238 tifosi su tre
+  lati, maxischermi; sole con una mappa d'ombra da 2048, bloom a metà risoluzione, vignettatura,
+  mappatura dei toni. Versioni: three 0.186.1, `@react-three/fiber` 9.8.1, postprocessing 6.39.5.
+- Misure (`apps/web/scripts/bench3d.ts`, Chromium in software): 65 chiamate di disegno e 182.273
+  triangoli in tutte le 6 prove (1280 × 720 e 1920 × 1080, risoluzione × 1 e × 1,5, tre momenti della
+  partita), contro un budget di 150 e 300.000; impronta dopo 900 passi `f405f43f0a2aff2c` nella
+  pagina e in Node. Foto delle quattro telecamere provate e dei calciatori da vicino in `docs/fase2/`.
+- Due errori trovati e corretti: i calciatori disegnati al doppio della distanza dal centro (la
+  radice dello scheletro moltiplicata per sé stessa; ora la prova `game/rig.test.ts`) e le opzioni
+  della pagina vuote sul server (valori presi da un modulo `"use client"`).
+- CI: il lavoro «Simulazione in Node e in Chromium» costruisce `apps/web` e lancia `bench3d.ts`.
+  `pnpm test` 26 su 26. `web/` e `packages/sim` invariati.
+- Commit: `db05eb8` (scena), il commit di questa voce; pull request in questa chat.
+
+Resta della fase 2: la misura di Tancredi sul suo portatile, aprendo http://localhost:3000/bench a
+schermo intero per 30 secondi (fotogrammi al secondo, tempo per fotogramma, 1% più lenti; obiettivo
+60 di media e l'1% più lento sotto 25 ms). Due decisioni per la fase 3: il materiale dei personaggi
+(il piano diceva toon con contorno, le foto di Mario Strikers mostrano ombre morbide e riflessi, qui
+c'è il secondo) e se riempire la tribuna vicina, che la telecamera di partita non inquadra.

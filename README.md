@@ -45,7 +45,7 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
 | `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
 | `package.json`, `pnpm-workspace.yaml` | workspace pnpm del gioco nuovo; `web/` ne resta fuori |
-| `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status` |
+| `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status`; `/partita` e `/bench`, la partita in 3D (`apps/web/game/`) |
 | `apps/realtime` | gioco nuovo, server delle partite: `/health` e WebSocket `/ws` |
 | `packages/shared` | gioco nuovo, schemi condivisi fra navigatore e server |
 | `packages/sim` | gioco nuovo, la simulazione in TypeScript (partita, IA, skill, carte), la stessa nel navigatore e sul server; `bench/` ha le prove e i banchi di `tools/` portati |
@@ -169,6 +169,13 @@ La simulazione (`packages/sim`) si prova senza Docker, dalla radice del reposito
 | `node packages/sim/bench/parity.ts` | gioco vecchio e simulazione nuova, 22 partite uguali in ogni fotogramma |
 | `node packages/sim/bench/browser.ts` | le stesse 22 partite in Node e in Chromium, stessa impronta |
 | `node packages/sim/bench/speed.ts 3` | partite a 60 Hz che un core regge: circa 2.000 nella chat cloud |
+
+La partita in 3D: con il gioco nuovo avviato (`docker compose up` qui sopra, oppure
+`pnpm --filter @ft3/web dev`), http://localhost:3000/partita mostra due squadre dell'IA e
+http://localhost:3000/bench gli stessi numeri del motore: fotogrammi al secondo, tempo per
+fotogramma, l'1% dei fotogrammi più lenti, chiamate di disegno e triangoli.
+`node apps/web/scripts/bench3d.ts http://localhost:3000` controlla il budget di disegno e che la
+pagina mostri la partita della simulazione; con `--photos` rifà le foto di `docs/fase2/`.
 
 ## Crediti e licenze
 
