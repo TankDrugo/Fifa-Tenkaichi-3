@@ -202,6 +202,8 @@ accorcerebbe i passi 3-7.
 
 ## 5. Domande per Tancredi
 
+Risposte del 22/10/2026 nella sezione 7.
+
 1. **Personaggi nel codice.** La decisione «niente modelli esterni» resta? Se resta, il corpo si fa
    con il campo di distanza della sezione 3; se cade, serve qualcuno che modelli in Blender e la
    regola della sezione 1 del piano cambia.
@@ -232,3 +234,52 @@ Se puoi procurarli, in quest'ordine di utilità per il lavoro:
 
 Le immagini guardate per questo studio restano fuori dal repository, come le foto di Mario
 Strikers della fase 2.
+
+## 7. Risposte di Tancredi (22/10/2026)
+
+- **Strumento**: nessuna regola sul codice; si fa ciò che dà il personaggio migliore. Il piano è
+  aggiornato (`docs/PIANO-3D-ONLINE.md`, sezione 1, riga «Personaggi e animazioni»). Conseguenza: il
+  campo di distanza della sezione 3 diventa una delle strade, da mettere a confronto con un modello
+  fatto in Blender o altrove, sulle stesse foto.
+- **Triangoli**: i 300.000 non sono un limite (piano, sezione 4.6). Conseguenza: lo scafo rovesciato
+  non è più escluso dai 314.000 triangoli stimati nella sezione 3; decide la misura sul portatile.
+- **Quanti personaggi**: per ora uno solo, finito. Resta da scegliere quale (uno nuovo che faccia da
+  volto del gioco, o uno esistente) e chi disegna gli schizzi: domande per la chat nuova.
+- **Pose tenute**: per ora no.
+- **Manga di riferimento**: Dragon Ball (Akira Toriyama), Blue Lock (Yusuke Nomura), Dorohedoro (Q
+  Hayashida), Naoki Urasawa. La chat nuova ne studia il segno prima del passo 2.
+- **Testi**: Tancredi li manda nella chat nuova.
+
+## 8. Messaggio da incollare nella chat nuova
+
+```
+Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
+poi e docs/STUDIO-PERSONAGGI.md per intero. Il lavoro della chat precedente è sul ramo
+claude/magical-davinci-nf79cp, non unito a main: portalo nel tuo ramo (git fetch e git merge) prima
+di cominciare. Quel ramo ha anche movimenti a metà (DIARIO.md, 22/10/2026): restano fuori da main
+finché il loro banco non dà i numeri giusti; se la pull request li porterebbe su main, chiedimi.
+
+Il compito di questa chat è uno solo: il character design del gioco, fino a un personaggio finito
+e ottimo che fissi lo stile di tutti gli altri. Non fare altri personaggi, movimenti, campi o
+interfaccia.
+
+Mie decisioni del 22/10/2026:
+- stile da fumetto, con i bordi d'inchiostro delle illustrazioni di Mario Strikers: Battle League,
+  e il manga come ispirazione: Dragon Ball (Toriyama), Blue Lock (Nomura), Dorohedoro (Hayashida),
+  Naoki Urasawa; si copia lo stile, mai i personaggi;
+- nessuna regola sullo strumento (codice, Blender o altro): si sceglie quello che dà il personaggio
+  migliore, mettendo a confronto le prove con foto; prima di scegliere dimmi cosa si può usare in
+  questa chat (programmi installabili, rete) e cosa servirebbe da me;
+- i 300.000 triangoli non sono un limite: conta la misura dei fotogrammi sul mio portatile;
+- niente pose tenute (animazione a 30 pose al secondo) per ora.
+
+Prima di cominciare: ricerca sul segno dei quattro manga (linee e spessori, proporzioni, occhi,
+capelli, ombre, corpi in movimento) e sui libri e le slide che ti mando in questa chat; scrivi in
+docs/STUDIO-PERSONAGGI.md cosa prendi da ciascuno, con le fonti. Poi dimmi in poche righe cosa farai
+e fammi le domande ancora aperte: quale personaggio (uno nuovo come volto del gioco o uno che
+esiste già) e chi disegna gli schizzi.
+
+Segui i 9 passi della sezione 4 dello studio: ogni passo finisce con immagini da mostrarmi e si va
+avanti solo con il mio sì. Alla fine: guida di stile e misure in docs/, voce in DIARIO.md, commit,
+pull request e merge su main. Scrivimi sempre in italiano.
+```

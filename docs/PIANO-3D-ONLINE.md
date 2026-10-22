@@ -11,7 +11,7 @@ regge, la chat lo scrive e chiede.
 | Tema | Decisione | Conseguenza per il lavoro |
 |---|---|---|
 | Tecnologia | Next.js (App Router, TypeScript) per interfaccia **e** server; React; 3D con three.js tramite `@react-three/fiber` | API dentro Next.js; le partite in tempo reale in un servizio Node a parte (sezione 3), perché tengono aperta una connessione WebSocket per tutta la partita |
-| Personaggi e animazioni | **Disegnati nel codice**: niente Mixamo, niente archivio, niente modelli esterni | Calciatori stilizzati costruiti con forme e uno scheletro in TypeScript; ogni animazione è codice (sezione 4.7) |
+| Personaggi e animazioni | **Il modo che dà il personaggio migliore** (22/10/2026; il 21/10/2026 era «disegnati nel codice, niente Mixamo, niente archivio, niente modelli esterni») | Lo strumento (codice, Blender o altro) si sceglie con prove fotografate; lo stile si fissa su un personaggio solo (`docs/STUDIO-PERSONAGGI.md`) |
 | Account | Nome utente e password, **nessuna email** | Hash argon2id; password dimenticata: la reimposta Tancredi da un pannello di amministrazione |
 | Dati | **Postgres + Redis** | Postgres su disco per account, carte, crediti, scambi; Redis per sessioni, code delle partite, presenza, classifiche, limiti di frequenza |
 | Online | **Tutto insieme**: UT 1 contro 1 in tempo reale, 2 contro 2 in tempo reale, mercato fra giocatori, salvataggio sul server e classifiche | Le fasi si fanno una alla volta, ma il gioco nuovo va online per gli amici solo quando funzionano tutte e quattro |
@@ -169,9 +169,15 @@ Ogni requisito ha una prova che una chat può rifare e un numero da scrivere in 
   `/bench` mostra fotogrammi al secondo, tempo per fotogramma e i numeri di
   `renderer.info`. *Prova:* le chat controllano il budget con `renderer.info` nel Chromium senza
   schermo; Tancredi apre `/bench` sul suo portatile e scrive il risultato. Obiettivo: 60 di
-  media, con l'1% dei fotogrammi più lenti sotto 25 ms.
+  media, con l'1% dei fotogrammi più lenti sotto 25 ms. Tancredi, 22/10/2026: i 300.000 triangoli
+  sono un riferimento e non un limite; il controllo che resta è la misura sul portatile.
 
-### 4.7 Personaggi e animazioni nel codice
+### 4.7 Personaggi e animazioni
+
+Tancredi, 22/10/2026: questa sezione descrive i prototipi della fase 3a. Lo stile nuovo (fumetto
+con i bordi d'inchiostro, manga: Dragon Ball, Blue Lock, Dorohedoro, Naoki Urasawa) si studia su un
+personaggio solo, con il metodo di `docs/STUDIO-PERSONAGGI.md`; i movimenti e le prove restano.
+
 - Calciatori stilizzati, tipo giocattolo: testa grande, corpo arrotondato, arti con giunture
   nascoste da sfere, faccia disegnata su una texture fatta con canvas (occhi, sopracciglia, bocca,
   con espressioni che cambiano), capelli come forme modellate nel codice (varianti), maglia,

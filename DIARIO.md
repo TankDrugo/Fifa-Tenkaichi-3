@@ -310,3 +310,18 @@ Decisioni di Tancredi, 22/10/2026:
 
 Resta: le risposte di Tancredi alle domande di `docs/STUDIO-PERSONAGGI.md`, sezione 5; poi i passi
 1-9 sul primo personaggio; la misura di `/bench` sul portatile per chiudere la fase 2.
+
+## 2026-10-22 — risposte di Tancredi allo studio dei personaggi
+
+- Nessuna regola sullo strumento dei personaggi: si fa ciò che dà il personaggio migliore. Il piano
+  diceva «disegnati nel codice, niente modelli esterni» (`docs/PIANO-3D-ONLINE.md`, sezione 1, decisione
+  del 21/10/2026): riga aggiornata.
+- I 300.000 triangoli sono un riferimento, non un limite (piano, sezione 4.6); resta la misura sul
+  portatile.
+- Un personaggio solo, finito; niente pose tenute per ora; manga di riferimento Dragon Ball, Blue
+  Lock, Dorohedoro, Naoki Urasawa.
+- `docs/STUDIO-PERSONAGGI.md`, sezioni 7 e 8: le risposte e il messaggio per la chat nuova, dove
+  Tancredi manda i testi.
+
+Resta: il character design del primo personaggio nella chat nuova (passi 1-9 dello studio); quale
+personaggio e chi disegna gli schizzi sono le domande con cui comincia.
