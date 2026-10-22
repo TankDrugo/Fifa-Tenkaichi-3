@@ -259,3 +259,85 @@ schermo intero per 30 secondi (fotogrammi al secondo, tempo per fotogramma, 1% p
 60 di media e l'1% più lento sotto 25 ms). Due decisioni per la fase 3: il materiale dei personaggi
 (il piano diceva toon con contorno, le foto di Mario Strikers mostrano ombre morbide e riflessi, qui
 c'è il secondo) e se riempire la tribuna vicina, che la telecamera di partita non inquadra.
+
+## 2026-10-22 — fase 3 del rifacimento: sotto-fasi e decisioni
+
+La fase 2 resta aperta solo per la misura di Tancredi su `/bench` dal suo portatile. La fase 3
+(`docs/PIANO-3D-ONLINE.md`, sezione 5) chiede circa 23 movimenti, contro le 7 pose semplici di
+`apps/web/game/rig.ts` alla fine della fase 2, più varianti dei corpi, 12 campi e una partita con
+una persona, mentre `/partita` gioca senza persone (`apps/web/game/driver.ts`, `humans: []`).
+Divisa in tre sotto-fasi, tutte in questa chat per scelta di Tancredi:
+
+- **3a · Personaggi e movimenti:** stile dei personaggi per ognuna delle 14 squadre
+  (`packages/sim/src/data.ts`: 8 club e 6 squadre leggendarie), con giocatori diversi dentro la
+  stessa squadra; faccia su texture fatta con canvas con le espressioni, capelli modellati nel
+  codice, numero sulla schiena, varianti di corpo; tutti i movimenti della sezione 4.7 con il
+  contatto sul passo in cui la simulazione fa partire la palla; fogli di contatto in `docs/fase3/`.
+- **3b · Campi ed effetti:** i 12 campi a tema con le loro luci (`docs/DETTAGLI.md`, «Campi»), scia
+  della palla, scintille della Cometa, polvere, tempo atmosferico; tribuna vicina piena.
+- **3c · Partita intera contro l'IA:** tastiera e joypad con i profili di `web/js/input.js`,
+  tabellone, calcio d'inizio, gol, fine partita e barra speciale.
+
+Decisioni di Tancredi, 22/10/2026:
+
+- **Materiale dei personaggi:** morbido e lucido, come Mario Strikers, non toon con contorno (piano,
+  sezione 4.7, da aggiornare). Personaggi con lo stile della loro squadra e diversi fra loro dentro
+  ogni squadra; lo stile si sceglie su foto di esempio, una per squadra.
+- **Tribuna vicina:** piena, disegnata solo nelle inquadrature che la vedono.
+- **Sotto-fasi:** 3a, 3b e 3c in questa chat, una dopo l'altra.
+
+## 2026-10-22 — fase 3a fermata: studio di character design
+
+- Foto delle 14 squadre negli stili A e B (`docs/fase3/stili/`, `apps/web/scripts/photos3.ts`): i
+  personaggi in un solo `SkinnedMesh` con 20 ossa ciascuno, facce disegnate con canvas, da 4.676 a
+  7.380 triangoli a giocatore (mediana 5.736); su `/bench` 40 chiamate di disegno invece di 65.
+  Commit `f6c0948`.
+- Tancredi ha fermato lo stile: i personaggi restano prototipi; se ne fa uno solo fino in fondo, poi
+  gli altri; stile da fumetto con i bordi neri come Mario Strikers, ispirato al manga recente; prima
+  uno studio di character design.
+- Lavoro sui movimenti salvato sul ramo e fermato (commit `ac0cd0d`): memoria dei passi con le azioni
+  e il passo del contatto, cinematica inversa di gambe e braccia (300 punti su 300 raggiunti per
+  arto, `apps/web/game/ik.test.ts`), primi movimenti. Banco `apps/web/scripts/moves3.ts` su 2 partite:
+  scarpa più vicina alla palla nel passo del rilascio in 22 passaggi su 67 e 2 tiri su 11, piedi
+  appoggiati che scivolano 33,7 mm a fotogramma: da correggere quando si riprende.
+- `docs/STUDIO-PERSONAGGI.md`: ricerca in rete (Mario Strikers, Blue Lock, Inazuma Eleven, Captain
+  Tsubasa, Guilty Gear Xrd, Hi-Fi Rush, Spider-Verse, Team Fortress 2, League of Legends), il vincolo
+  della telecamera (la testa da 22 a 8 px in partita fra 2,5 e 7 teste), cosa si fa nel codice
+  (corpo come campo di distanza, contorno a scafo o in post-elaborazione: lo scafo porterebbe
+  `/bench` a circa 314.000 triangoli), metodo in 9 passi, 5 domande e i testi utili.
+- Niente pull request: il ramo `claude/magical-davinci-nf79cp` ha personaggi e movimenti non
+  approvati; `main` resta alla fase 2.
+
+Resta: le risposte di Tancredi alle domande di `docs/STUDIO-PERSONAGGI.md`, sezione 5; poi i passi
+1-9 sul primo personaggio; la misura di `/bench` sul portatile per chiudere la fase 2.
+
+## 2026-10-22 — risposte di Tancredi allo studio dei personaggi
+
+- Nessuna regola sullo strumento dei personaggi: si fa ciò che dà il personaggio migliore. Il piano
+  diceva «disegnati nel codice, niente modelli esterni» (`docs/PIANO-3D-ONLINE.md`, sezione 1, decisione
+  del 21/10/2026): riga aggiornata.
+- I 300.000 triangoli sono un riferimento, non un limite (piano, sezione 4.6); resta la misura sul
+  portatile.
+- Un personaggio solo, finito; niente pose tenute per ora; manga di riferimento Dragon Ball, Blue
+  Lock, Dorohedoro, Naoki Urasawa.
+- `docs/STUDIO-PERSONAGGI.md`, sezioni 7 e 8: le risposte e il messaggio per la chat nuova, dove
+  Tancredi manda i testi.
+
+Resta: il character design del primo personaggio nella chat nuova (passi 1-9 dello studio); quale
+personaggio e chi disegna gli schizzi sono le domande con cui comincia.
+
+## 2026-10-22 — un ramo solo: tutto su main
+
+- Tancredi vuole solo `main` e il ramo della chat al lavoro. Regola scritta in `CLAUDE.md`,
+  «Branches»: la chat parte da `main`, unisce la sua pull request e poi cancella il suo ramo.
+- I movimenti a metà non vanno su `main` («Ship only what works»: 22 passaggi su 67 con la scarpa più
+  vicina alla palla nel passo del rilascio): tolti con il revert `90af5e2`; il codice resta nella
+  storia al commit `ac0cd0d` (memoria dei passi, cinematica inversa con le sue prove, movimenti,
+  `apps/web/scripts/moves3.ts`).
+- Su `main` vanno: i prototipi dei personaggi in un solo `SkinnedMesh` con le foto delle 14
+  squadre, `docs/STUDIO-PERSONAGGI.md` con le risposte di Tancredi e il messaggio per la chat nuova
+  (ora parte da `main`), le righe aggiornate del piano.
+- Rami cancellati dopo il merge: `claude/epic-heisenberg-6b4vax`, `claude/jolly-dirac-lujx3j`,
+  `claude/vigilant-wright-45cvb3` (0 commit fuori da `main`) e `claude/magical-davinci-nf79cp`.
+
+Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONAGGI.md`, sezione 8.

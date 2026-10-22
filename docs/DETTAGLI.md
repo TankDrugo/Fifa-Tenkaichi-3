@@ -1115,3 +1115,26 @@ repository: senza, `next dev` lo ricrea a ogni avvio.
 - **Scia della palla, scintille della Cometa, polvere e i 12 campi a tema** sono della fase 3 con i
   movimenti (piano, sezione 5); qui c'è un campo, di giorno.
 - **Faccia, numeri sulla schiena, varianti dei capelli:** fase 3 (sezione 4.7).
+
+## Gioco nuovo · fase 3a, prototipi dei personaggi (22/10/2026)
+
+Tancredi ha fermato lo stile dei personaggi per uno studio di character design
+(`docs/STUDIO-PERSONAGGI.md`); su `main` restano i prototipi, che servono come base tecnica.
+
+- **Un solo `SkinnedMesh` per tutti i calciatori** (`apps/web/game/character.ts`): 20 ossa a
+  giocatore (`rig.ts`), forme fuse in una geometria con colore, ruvidità, metallo e luce nei vertici;
+  faccia (8 espressioni) e numero da atlanti disegnati con canvas (`faces.ts`); motivo della maglia
+  nello shader. Corpi dalle 21 figure delle carte (`body.ts`), capelli, barba, naso e occhi estratti
+  dall'id della carta (`looks.ts`), equipaggiamento delle squadre nello stile B (`parts.ts`).
+- **Foto**: `/personaggi?team=<squadra>&style=A|B`, e `node apps/web/scripts/photos3.ts` per le 14
+  squadre in `docs/fase3/stili/`.
+
+| Misura | Valore |
+|---|---|
+| `renderer.info` (`scripts/bench3d.ts`, Chromium in software, 6 prove come nella fase 2) | **40 chiamate di disegno** (fase 2: 65) e **222.715 triangoli** (fase 2: 182.273) in tutte le prove |
+| Triangoli per giocatore, 14 squadre × 2 stili | da 4.676 a 7.380, mediana 5.736 (`game/rig.test.ts`: al massimo 9.000) |
+| La scena mostra la partita della simulazione | impronta dopo 900 passi `f405f43f0a2aff2c` nella pagina e in Node, come nella fase 2 |
+| `pnpm test` | 29 prove su 29 |
+
+I movimenti della sezione 4.7 del piano sono nella storia al commit `ac0cd0d` e fuori da `main`
+(`DIARIO.md`, 22/10/2026): non danno ancora i loro numeri.

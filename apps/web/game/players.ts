@@ -1,30 +1,15 @@
-// The ten footballers and the ball on screen, read from packages/sim every frame. Each kind of
-// shape of the rig (rig.ts) is one InstancedMesh for all ten players: 14 draw calls for the
-// team bodies whatever the number of players, plus their shadows.
-import {
-  CanvasTexture, CapsuleGeometry, Color, Group, InstancedMesh, Matrix4, Mesh, Quaternion, SphereGeometry,
-  SRGBColorSpace, Vector3, type BufferGeometry,
-} from "three";
-import { C, CLIP_DURATION, kitsClash, type Match } from "@ft3/sim";
+// The ten footballers and the ball on screen, read from packages/sim every frame. All the players
+// are one SkinnedMesh (character.ts): one draw call for the bodies and one for their shadows,
+// whatever their hair, gear and bodies.
+import { CanvasTexture, Group, Mesh, Quaternion, SphereGeometry, SRGBColorSpace, Vector3 } from "three";
+import { C, CLIP_DURATION, clubById, kitsClash, type Match, type Player } from "@ft3/sim";
+import { buildCast, type Cast } from "./character";
 import type { Driver } from "./driver";
+import { EXPRESSION, type Expression } from "./faces";
+import { designFor, type Design, type Style } from "./looks";
 import { standardMaterial } from "./materials";
-import { JOINT_ROLES, PART_KINDS, PART_ROLE, PER_PLAYER, posePlayer, type ColourRole, type PartKind, type PoseInput } from "./rig";
-import { BOOTS, EYES, GLOVES, KEEPER_COLOURS, LOOK_COLOURS } from "./style";
-
-// a capsule of radius 1 and half height 1, so a limb's scale is (radius, half length, radius)
-const limb = () => new CapsuleGeometry(1, 2, 3, 10).scale(1, 0.5, 1);
-const GEOMETRY: Record<PartKind, () => BufferGeometry> = {
-  head: () => new SphereGeometry(1, 20, 14),
-  // a cap over the top of the head, tilted back so the forehead and the eyes show
-  hair: () => new SphereGeometry(1, 18, 7, 0, Math.PI * 2, 0, Math.PI * 0.52).rotateX(-0.55),
-  eye: () => new SphereGeometry(1, 8, 5),
-  neck: limb, torso: limb, upperArm: limb, forearm: limb, thigh: limb, shortsLeg: limb, shin: limb,
-  pelvis: () => new SphereGeometry(1, 14, 10),
-  hand: () => new SphereGeometry(1, 12, 8),
-  joint: () => new SphereGeometry(1, 10, 7),
-  foot: () => new SphereGeometry(1, 12, 8),
-};
-const ROUGHNESS: Record<ColourRole, number> = { skin: 0.55, hair: 0.7, eye: 0.15, shirt: 0.55, shorts: 0.6, socks: 0.65, boots: 0.3, gloves: 0.45 };
+import { BONES_PER_PLAYER, locomotion, newJoints, skeleton, type PoseInput } from "./rig";
+import { KEEPER_COLOURS } from "./style";
 
 export interface PlayerKit {
   shirt: string;
@@ -42,6 +27,11 @@ export function teamKits(home: { kit: string; second: string }, away: { kit: str
     : { shirt: t.kit, shorts: t.second, socks: t.kit }));
 }
 
+// The designs of a match's players: each card's own face and body, its team's kit and gear.
+export function matchDesigns(match: Match, kits: PlayerKit[][], clubs: [string, string], style: Style): Design[] {
+  return match.players.map((p) => designFor(p.card, clubById(clubs[p.team])!, kits[p.team]![p.slot]!, style, p.isKeeper, p.slot));
+}
+
 const BALL_TEXTURE = (): CanvasTexture => {
   const c = document.createElement("canvas");
   c.width = 256; c.height = 128;
@@ -55,42 +45,42 @@ const BALL_TEXTURE = (): CanvasTexture => {
   return t;
 };
 
+// What the face shows, from what the simulation says the player is doing.
+export function expressionOf(p: Player, m: Match, time: number, i: number): Expression {
+  if (p.celebrate >= 0) return "joy";
+  if (p.react > 0 || p.knockT > 0 || p.slideDownT > 0) return "pain";
+  if (p.fooled > 0) return "surprise";
+  if (p.kickT >= 0 || p.charge >= 0 || p.hitT >= 0 || p.slideT >= 0) return "effort";
+  if (m.ball.carrier === p) return "focus";
+  // a blink every few seconds, each player on his own beat
+  const beat = (time + i * 1.37) % (3.1 + (i % 4) * 0.45);
+  return beat < 0.12 ? "blink" : "neutral";
+}
+
 export interface Actors {
   group: Group;
+  cast: Cast;
   update(driver: Driver, time: number, dt: number): void;
 }
 
-export function buildActors(match: Match, kits: PlayerKit[][]): Actors {
+export function buildActors(designs: Design[]): Actors {
   const group = new Group();
-  const meshes = {} as Record<PartKind, InstancedMesh>;
-  const matrices = {} as Record<PartKind, Matrix4[]>;
-  const n = match.players.length;
-  const colour = new Color();
-  for (const kind of PART_KINDS) {
-    const count = n * PER_PLAYER[kind];
-    const role = PART_ROLE[kind];
-    const mesh = new InstancedMesh(GEOMETRY[kind](), standardMaterial({ roughness: role ? ROUGHNESS[role] : 0.55, rim: kind === "eye" ? 0 : 0.55 }), count);
-    mesh.castShadow = kind !== "eye"; mesh.receiveShadow = true; mesh.frustumCulled = false;
-    match.players.forEach((p, i) => {
-      const kit = kits[p.team]![p.slot]!, [skin, hair] = LOOK_COLOURS[p.look % LOOK_COLOURS.length]!;
-      const of = (r: ColourRole) => ({ skin, hair, eye: EYES, shirt: kit.shirt, shorts: kit.shorts, socks: kit.socks, boots: BOOTS, gloves: GLOVES })[r];
-      for (let j = 0; j < PER_PLAYER[kind]; j++) mesh.setColorAt(i * PER_PLAYER[kind] + j, colour.set(of(role ?? JOINT_ROLES[j]!)));
-    });
-    meshes[kind] = mesh;
-    matrices[kind] = Array.from({ length: count }, () => new Matrix4());
-    group.add(mesh);
-  }
+  const cast = buildCast(designs);
+  group.add(cast.mesh);
 
   const ball = new Mesh(new SphereGeometry(C.ballRadius, 28, 18), standardMaterial({ map: BALL_TEXTURE(), roughness: 0.35, rim: 0.3 }));
   ball.castShadow = true;
   group.add(ball);
 
+  const n = designs.length;
   const prevYaw = new Float64Array(n).fill(NaN);
   const spin = new Quaternion(), axis = new Vector3();
+  const joints = newJoints();
   const pose: PoseInput = { x: 0, z: 0, fx: 1, fz: 0, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 };
 
   return {
     group,
+    cast,
     update(driver: Driver, time: number, dt: number) {
       const a = driver.alpha, A = driver.before, B = driver.after, m = driver.match;
       const bx = A.ballX + (B.ballX - A.ballX) * a, bz = A.ballZ + (B.ballZ - A.ballZ) * a;
@@ -104,8 +94,9 @@ export function buildActors(match: Match, kits: PlayerKit[][]): Actors {
         prevYaw[i] = yaw;
         let look = Math.atan2(bx - x, bz - z) - yaw;
         if (look > Math.PI) look -= Math.PI * 2; else if (look < -Math.PI) look += Math.PI * 2;
+        const d = cast.designs[i]!;
         pose.x = x; pose.z = z; pose.fx = fx; pose.fz = fz;
-        pose.height = p.isKeeper ? 1 : p.height;
+        pose.height = d.height;
         pose.speed = Math.hypot(p.vx, p.vz);
         pose.gait = p.gait; pose.phase = p.phase;
         pose.turnRate = dt > 0 ? turn / dt : 0;
@@ -118,13 +109,14 @@ export function buildActors(match: Match, kits: PlayerKit[][]): Actors {
         pose.hold = p.isKeeper && m.ball.carrier === p;
         pose.celebrate = p.celebrate;
         pose.charge = p.charge >= 0 ? p.charge / C.shotCharge : -1;
-        posePlayer(pose, matrices, i);
+        const body = cast.bodies[i]!;
+        locomotion(pose, body, joints);
+        const still = pose.speed < 0.3;
+        skeleton(x, z, fx, fz, d.height, body, joints, cast.bones, i * BONES_PER_PLAYER, still ? 1 + 0.015 * Math.sin(pose.time * 2.2) : 1);
+        cast.expressions[i] = EXPRESSION[expressionOf(p, m, time, i)];
       });
-      for (const kind of PART_KINDS) {
-        const mesh = meshes[kind], list = matrices[kind];
-        for (let k = 0; k < list.length; k++) mesh.setMatrixAt(k, list[k]!);
-        mesh.instanceMatrix.needsUpdate = true;
-      }
+      cast.time.value = time;
+      cast.commit();
       // the ball, rolling on the ground by the way it moves
       const by = A.ballY + (B.ballY - A.ballY) * a;
       const vx = m.ball.vx, vz = m.ball.vz, sp = Math.hypot(vx, vz);
