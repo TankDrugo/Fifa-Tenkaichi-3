@@ -2,15 +2,14 @@
 // are one SkinnedMesh (character.ts): one draw call for the bodies and one for their shadows,
 // whatever their hair, gear and bodies.
 import { CanvasTexture, Group, Mesh, Quaternion, SphereGeometry, SRGBColorSpace, Vector3 } from "three";
-import { C, clubById, kitsClash, type Match } from "@ft3/sim";
-import { buildCast, type Cast } from "./character.ts";
-import type { Driver } from "./driver.ts";
-import { EXPRESSION } from "./faces.ts";
-import { designFor, type Design, type Style } from "./looks.ts";
-import { standardMaterial } from "./materials.ts";
-import { Animator, type MoveContext, type Pose } from "./moves.ts";
-import { BONES_PER_PLAYER, newJoints, skeleton } from "./rig.ts";
-import { KEEPER_COLOURS } from "./style.ts";
+import { C, CLIP_DURATION, clubById, kitsClash, type Match, type Player } from "@ft3/sim";
+import { buildCast, type Cast } from "./character";
+import type { Driver } from "./driver";
+import { EXPRESSION, type Expression } from "./faces";
+import { designFor, type Design, type Style } from "./looks";
+import { standardMaterial } from "./materials";
+import { BONES_PER_PLAYER, locomotion, newJoints, skeleton, type PoseInput } from "./rig";
+import { KEEPER_COLOURS } from "./style";
 
 export interface PlayerKit {
   shirt: string;
@@ -46,6 +45,18 @@ const BALL_TEXTURE = (): CanvasTexture => {
   return t;
 };
 
+// What the face shows, from what the simulation says the player is doing.
+export function expressionOf(p: Player, m: Match, time: number, i: number): Expression {
+  if (p.celebrate >= 0) return "joy";
+  if (p.react > 0 || p.knockT > 0 || p.slideDownT > 0) return "pain";
+  if (p.fooled > 0) return "surprise";
+  if (p.kickT >= 0 || p.charge >= 0 || p.hitT >= 0 || p.slideT >= 0) return "effort";
+  if (m.ball.carrier === p) return "focus";
+  // a blink every few seconds, each player on his own beat
+  const beat = (time + i * 1.37) % (3.1 + (i % 4) * 0.45);
+  return beat < 0.12 ? "blink" : "neutral";
+}
+
 export interface Actors {
   group: Group;
   cast: Cast;
@@ -61,34 +72,55 @@ export function buildActors(designs: Design[]): Actors {
   ball.castShadow = true;
   group.add(ball);
 
-  const animator = new Animator(designs.length, designs);
-  const pose: Pose = { x: 0, z: 0, fx: 0, fz: 1, joints: newJoints(), expression: "neutral", ballInHands: null, contactMiss: -1 };
+  const n = designs.length;
+  const prevYaw = new Float64Array(n).fill(NaN);
   const spin = new Quaternion(), axis = new Vector3();
-  const ctx: MoveContext = { frames: [], before: undefined!, after: undefined!, alpha: 0, time: 0, dt: 0 };
+  const joints = newJoints();
+  const pose: PoseInput = { x: 0, z: 0, fx: 1, fz: 0, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 };
 
   return {
     group,
     cast,
     update(driver: Driver, time: number, dt: number) {
-      ctx.frames = driver.frames; ctx.before = driver.before; ctx.after = driver.after; ctx.alpha = driver.alpha; ctx.time = time; ctx.dt = dt;
-      animator.begin(ctx);
-      let hands: Vector3 | null = null;
-      cast.designs.forEach((d, i) => {
+      const a = driver.alpha, A = driver.before, B = driver.after, m = driver.match;
+      const bx = A.ballX + (B.ballX - A.ballX) * a, bz = A.ballZ + (B.ballZ - A.ballZ) * a;
+      m.players.forEach((p, i) => {
+        const x = A.x[i]! + (B.x[i]! - A.x[i]!) * a, z = A.z[i]! + (B.z[i]! - A.z[i]!) * a;
+        let fx = A.fx[i]! + (B.fx[i]! - A.fx[i]!) * a, fz = A.fz[i]! + (B.fz[i]! - A.fz[i]!) * a;
+        const fl = Math.hypot(fx, fz) || 1; fx /= fl; fz /= fl;
+        const yaw = Math.atan2(fx, fz);
+        let turn = Number.isNaN(prevYaw[i]!) ? 0 : yaw - prevYaw[i]!;
+        if (turn > Math.PI) turn -= Math.PI * 2; else if (turn < -Math.PI) turn += Math.PI * 2;
+        prevYaw[i] = yaw;
+        let look = Math.atan2(bx - x, bz - z) - yaw;
+        if (look > Math.PI) look -= Math.PI * 2; else if (look < -Math.PI) look += Math.PI * 2;
+        const d = cast.designs[i]!;
+        pose.x = x; pose.z = z; pose.fx = fx; pose.fz = fz;
+        pose.height = d.height;
+        pose.speed = Math.hypot(p.vx, p.vz);
+        pose.gait = p.gait; pose.phase = p.phase;
+        pose.turnRate = dt > 0 ? turn / dt : 0;
+        pose.lookYaw = Math.abs(look) < 1.6 ? look : 0;
+        pose.time = time + i * 0.7;
+        pose.kick = p.kickT >= 0 && p.kickClip ? Math.min(1, p.kickT / (CLIP_DURATION[p.kickClip] ?? 0.3)) : -1;
+        pose.slide = p.slideT >= 0 ? 0.5 * Math.min(1, p.slideT / C.slideTime) : p.slideDownT > 0 ? 0.5 + 0.5 * (1 - p.slideDownT / C.slideDown) : -1;
+        pose.react = p.react;
+        pose.lunge = p.hitT >= 0;
+        pose.hold = p.isKeeper && m.ball.carrier === p;
+        pose.celebrate = p.celebrate;
+        pose.charge = p.charge >= 0 ? p.charge / C.shotCharge : -1;
         const body = cast.bodies[i]!;
-        animator.pose(ctx, i, d, body, pose);
-        const still = Math.hypot(ctx.after.players[i]!.vx, ctx.after.players[i]!.vz) < 0.3;
-        skeleton(pose.x, pose.z, pose.fx, pose.fz, d.height, body, pose.joints, cast.bones, i * BONES_PER_PLAYER, still ? 1 + 0.015 * Math.sin((time + i * 0.7) * 2.2) : 1);
-        cast.expressions[i] = EXPRESSION[pose.expression];
-        if (pose.ballInHands) hands = pose.ballInHands;
+        locomotion(pose, body, joints);
+        const still = pose.speed < 0.3;
+        skeleton(x, z, fx, fz, d.height, body, joints, cast.bones, i * BONES_PER_PLAYER, still ? 1 + 0.015 * Math.sin(pose.time * 2.2) : 1);
+        cast.expressions[i] = EXPRESSION[expressionOf(p, m, time, i)];
       });
       cast.time.value = time;
       cast.commit();
-      const A = driver.before.ball, B = driver.after.ball, a = driver.alpha, m = driver.match;
       // the ball, rolling on the ground by the way it moves
+      const by = A.ballY + (B.ballY - A.ballY) * a;
       const vx = m.ball.vx, vz = m.ball.vz, sp = Math.hypot(vx, vz);
-      // a ball in the keeper's hands is drawn there (the simulation carries it at 0,75 m)
-      if (hands) ball.position.copy(hands);
-      else ball.position.set(A.x + (B.x - A.x) * a, A.y + (B.y - A.y) * a, A.z + (B.z - A.z) * a);
+      ball.position.set(bx, by, bz);
       if (sp > 0.01 && dt > 0) {
         axis.set(vz / sp, 0, -vx / sp);
         ball.quaternion.premultiply(spin.setFromAxisAngle(axis, sp * dt / C.ballRadius));

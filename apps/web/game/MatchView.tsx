@@ -5,12 +5,12 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fingerprint } from "@ft3/sim";
-import type { Driver } from "./driver.ts";
-import type { StageLoop } from "./loop.ts";
-import { FrameStats } from "./stats.ts";
-import type { StageOptions } from "./options.ts";
+import type { Driver } from "./driver";
+import type { StageLoop } from "./loop";
+import { FrameStats } from "./stats";
+import type { StageOptions } from "./options";
 
-const Stage = dynamic(() => import("./Stage.tsx").then((m) => m.Stage), { ssr: false });
+const Stage = dynamic(() => import("./Stage").then((m) => m.Stage), { ssr: false });
 
 const it = (v: number, d = 1) => v.toLocaleString("it-IT", { minimumFractionDigits: d, maximumFractionDigits: d });
 

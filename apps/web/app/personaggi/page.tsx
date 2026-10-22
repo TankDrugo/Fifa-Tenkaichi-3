@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { clubById } from "@ft3/sim";
-import { EXPRESSIONS, type Expression } from "@/game/faces.ts";
-import { ShowroomView } from "@/game/ShowroomView.tsx";
+import { EXPRESSIONS, type Expression } from "@/game/faces";
+import { ShowroomView } from "@/game/ShowroomView";
 
 export const metadata: Metadata = { title: "Personaggi · Fifa Tenkaichi 3" };
 

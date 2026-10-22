@@ -11,9 +11,9 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import type { PerspectiveCamera } from "three";
-import { StageLoop } from "./loop.ts";
-import type { FrameStats } from "./stats.ts";
-import type { StageOptions } from "./options.ts";
+import { StageLoop } from "./loop";
+import type { FrameStats } from "./stats";
+import type { StageOptions } from "./options";
 
 export function Stage({ options, stats, onLoop }: { options: StageOptions; stats: FrameStats; onLoop?: (l: StageLoop) => void }) {
   return (

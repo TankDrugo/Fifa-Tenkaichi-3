@@ -12,8 +12,8 @@
 // Mario Strikers: Battle League dresses its teams in gear of the team's colours; the shapes here
 // are this game's own (docs/PIANO-3D-ONLINE.md, section 4.7: no character copied).
 import { BODY_HEIGHT, type Card, type Club } from "@ft3/sim";
-import { FIGURE_BUILD, type Build } from "./body.ts";
-import { LOOK_COLOURS } from "./style.ts";
+import { FIGURE_BUILD, type Build } from "./body";
+import { LOOK_COLOURS } from "./style";
 
 export type HairStyle = "none" | "crop" | "buzz" | "spiky" | "mohawk" | "afro" | "curly" | "slick" | "quiff" | "ponytail" | "buns" | "long" | "bob" | "twintails" | "fringe" | "topknot" | "dreads" | "sidepart" | "fur" | "crest";
 export type Facial = "none" | "beard" | "mustache" | "goatee";

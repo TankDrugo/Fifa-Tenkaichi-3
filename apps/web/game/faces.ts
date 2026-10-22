@@ -4,8 +4,8 @@
 // of the head and picks the column the match asks for. The tile spans the head's width: x from -R
 // to R, y from the head's centre -R to +R.
 import { CanvasTexture, SRGBColorSpace } from "three";
-import type { Design } from "./looks.ts";
-import { contrast, shade } from "./parts.ts";
+import type { Design } from "./looks";
+import { contrast, shade } from "./parts";
 
 export const EXPRESSIONS = ["neutral", "focus", "effort", "joy", "pain", "surprise", "upset", "blink"] as const;
 export type Expression = (typeof EXPRESSIONS)[number];

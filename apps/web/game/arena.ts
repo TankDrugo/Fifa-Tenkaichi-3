@@ -16,8 +16,8 @@ import {
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { C, rng } from "@ft3/sim";
-import { DAY } from "./style.ts";
-import { standardMaterial } from "./materials.ts";
+import { DAY } from "./style";
+import { standardMaterial } from "./materials";
 
 const L = C.length / 2, W = C.width / 2, GW = C.goalWidth / 2, GH = C.goalHeight, GD = C.goalDepth;
 // between the fence and the first tier
