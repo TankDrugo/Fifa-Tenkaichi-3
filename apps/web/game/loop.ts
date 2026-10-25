@@ -118,6 +118,6 @@ export class StageLoop {
 
   dispose(): void {
     this.look.dispose();
-    this.actors.cast.dispose();
+    this.actors.dispose();
   }
 }

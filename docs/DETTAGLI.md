@@ -1138,3 +1138,40 @@ Tancredi ha fermato lo stile dei personaggi per uno studio di character design
 
 I movimenti della sezione 4.7 del piano sono nella storia al commit `ac0cd0d` e fuori da `main`
 (`DIARIO.md`, 22/10/2026): non danno ancora i loro numeri.
+
+## Gioco nuovo · personaggi da modelli GLB (25/10/2026)
+
+Piano: `docs/STUDIO-PERSONAGGI.md`, sezione 11. Ogni punto si chiude con foto o numeri e con il sì
+di Tancredi.
+
+### Punto 1 · strato «aspetto del giocatore»
+
+- **L'interfaccia** (`apps/web/game/appearance.ts`): `Appearance` con `object` (da aggiungere alla
+  scena), `count`, `triangles`, `set(i, frame)`, `commit(time)`, `dispose()`. In ingresso un
+  `PlayerFrame` a giocatore: posizione, direzione, altezza della carta, velocità, andatura e fase del
+  passo, curva, sguardo, gli stati della simulazione (calcio, scivolata, colpo preso, spallata,
+  palla in mano, esultanza, tiro caricato) e l'espressione. `createAppearance(designs, model?)`
+  sceglie la realizzazione.
+- **Pezzi in codice** (`pieceAppearance.ts`): il `SkinnedMesh` unico di `character.ts` con le pose
+  di `rig.ts`, spostati qui da `players.ts` e `showroom.ts`. `rig.ts` prende il tipo del fotogramma
+  dall'interfaccia (`PoseInput = PlayerMotion`).
+- **Modello GLB** (`modelAppearance.ts`): una copia del modello a giocatore (`SkeletonUtils.clone`,
+  così ogni copia ha le sue ossa), piedi a terra, altezza portata a `CHARACTER_HEIGHT` × l'altezza
+  della carta, girata verso dove guarda il giocatore; andatura e azioni non la muovono ancora
+  (punto 5).
+- `players.ts` e `showroom.ts` non importano più `character.ts` né `rig.ts` (ricerca con `grep`:
+  0 righe); `loop.ts` parla con `Actors`, `scripts/bench3d.ts` legge solo `renderer.info` e
+  l'impronta.
+
+| Misura | Prima | Dopo |
+|---|---|---|
+| `renderer.info` (`scripts/bench3d.ts`, 6 prove come nella fase 2) | 40 chiamate di disegno, 222.715 triangoli in tutte | uguale: 40 e 222.715 in tutte |
+| Impronta dopo 900 passi, pagina e Node | `f405f43f0a2aff2c` | `f405f43f0a2aff2c` |
+| Foto a tempo fisso (1,25 s), PNG 1280 × 720: `/partita` dopo 900 passi, `/partita` da vicino, `/personaggi` Fulmini Rossi stile B, Lupi stile A di schiena | — | 0 pixel diversi su 921.600 in tutte e 4; due giri sul codice di prima danno anche loro 0 pixel diversi |
+| `pnpm test` | 29 prove | 34 prove: 5 nuove in `game/appearance.test.ts` (una copia a giocatore e i triangoli; piedi a terra, posizione, altezza e verso in 3 punti del campo; ossa proprie per ogni copia di un modello con scheletro) |
+
+Ambiente della chat (25/10/2026): Playwright 1.56.1 cerca Chromium 1194, la chat ha 1243 in
+`/opt/pw-browsers`. Si lancia con `PLAYWRIGHT_BROWSERS_PATH` su una cartella della chat che contiene
+`chromium_headless_shell-1194/chrome-linux/headless_shell` come collegamento a
+`/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell`
+e il file vuoto `INSTALLATION_COMPLETE`. `bench3d.ts` dura 8 min 45 s.

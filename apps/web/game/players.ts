@@ -1,14 +1,13 @@
-// The ten footballers and the ball on screen, read from packages/sim every frame. All the players
-// are one SkinnedMesh (character.ts): one draw call for the bodies and one for their shadows,
-// whatever their hair, gear and bodies.
-import { CanvasTexture, Group, Mesh, Quaternion, SphereGeometry, SRGBColorSpace, Vector3 } from "three";
+// The ten footballers and the ball on screen, read from packages/sim every frame. The players are
+// drawn through the player look layer (appearance.ts): this file says where each one is and what
+// he is doing, not how he looks.
+import { CanvasTexture, Group, Mesh, Quaternion, SphereGeometry, SRGBColorSpace, Vector3, type Object3D } from "three";
 import { C, CLIP_DURATION, clubById, kitsClash, type Match, type Player } from "@ft3/sim";
-import { buildCast, type Cast } from "./character";
+import { createAppearance, newFrame, type Appearance } from "./appearance";
 import type { Driver } from "./driver";
-import { EXPRESSION, type Expression } from "./faces";
+import type { Expression } from "./faces";
 import { designFor, type Design, type Style } from "./looks";
 import { standardMaterial } from "./materials";
-import { BONES_PER_PLAYER, locomotion, newJoints, skeleton, type PoseInput } from "./rig";
 import { KEEPER_COLOURS } from "./style";
 
 export interface PlayerKit {
@@ -59,14 +58,16 @@ export function expressionOf(p: Player, m: Match, time: number, i: number): Expr
 
 export interface Actors {
   group: Group;
-  cast: Cast;
+  players: Appearance;
   update(driver: Driver, time: number, dt: number): void;
+  dispose(): void;
 }
 
-export function buildActors(designs: Design[]): Actors {
+// model: the GLB to draw every player with; without it, the pieces in code
+export function buildActors(designs: Design[], model?: Object3D): Actors {
   const group = new Group();
-  const cast = buildCast(designs);
-  group.add(cast.mesh);
+  const players = createAppearance(designs, model);
+  group.add(players.object);
 
   const ball = new Mesh(new SphereGeometry(C.ballRadius, 28, 18), standardMaterial({ map: BALL_TEXTURE(), roughness: 0.35, rim: 0.3 }));
   ball.castShadow = true;
@@ -75,12 +76,11 @@ export function buildActors(designs: Design[]): Actors {
   const n = designs.length;
   const prevYaw = new Float64Array(n).fill(NaN);
   const spin = new Quaternion(), axis = new Vector3();
-  const joints = newJoints();
-  const pose: PoseInput = { x: 0, z: 0, fx: 1, fz: 0, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 };
+  const pose = newFrame();
 
   return {
     group,
-    cast,
+    players,
     update(driver: Driver, time: number, dt: number) {
       const a = driver.alpha, A = driver.before, B = driver.after, m = driver.match;
       const bx = A.ballX + (B.ballX - A.ballX) * a, bz = A.ballZ + (B.ballZ - A.ballZ) * a;
@@ -94,7 +94,7 @@ export function buildActors(designs: Design[]): Actors {
         prevYaw[i] = yaw;
         let look = Math.atan2(bx - x, bz - z) - yaw;
         if (look > Math.PI) look -= Math.PI * 2; else if (look < -Math.PI) look += Math.PI * 2;
-        const d = cast.designs[i]!;
+        const d = designs[i]!;
         pose.x = x; pose.z = z; pose.fx = fx; pose.fz = fz;
         pose.height = d.height;
         pose.speed = Math.hypot(p.vx, p.vz);
@@ -109,14 +109,10 @@ export function buildActors(designs: Design[]): Actors {
         pose.hold = p.isKeeper && m.ball.carrier === p;
         pose.celebrate = p.celebrate;
         pose.charge = p.charge >= 0 ? p.charge / C.shotCharge : -1;
-        const body = cast.bodies[i]!;
-        locomotion(pose, body, joints);
-        const still = pose.speed < 0.3;
-        skeleton(x, z, fx, fz, d.height, body, joints, cast.bones, i * BONES_PER_PLAYER, still ? 1 + 0.015 * Math.sin(pose.time * 2.2) : 1);
-        cast.expressions[i] = EXPRESSION[expressionOf(p, m, time, i)];
+        pose.expression = expressionOf(p, m, time, i);
+        players.set(i, pose);
       });
-      cast.time.value = time;
-      cast.commit();
+      players.commit(time);
       // the ball, rolling on the ground by the way it moves
       const by = A.ballY + (B.ballY - A.ballY) * a;
       const vx = m.ball.vx, vz = m.ball.vz, sp = Math.hypot(vx, vz);
@@ -126,5 +122,6 @@ export function buildActors(designs: Design[]): Actors {
         ball.quaternion.premultiply(spin.setFromAxisAngle(axis, sp * dt / C.ballRadius));
       }
     },
+    dispose() { players.dispose(); },
   };
 }
