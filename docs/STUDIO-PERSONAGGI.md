@@ -282,3 +282,302 @@ Segui i 9 passi della sezione 4 dello studio: ogni passo finisce con immagini da
 avanti solo con il mio sì. Alla fine: guida di stile e misure in docs/, voce in DIARIO.md, commit,
 pull request e merge su main. Scrivimi sempre in italiano.
 ```
+
+## 9. Il segno dei quattro manga (ricerca del 22/10/2026, chat del character design)
+
+Fonti lette in questa chat; le pagine di wiki dei fan con le tavole (`*.fandom.com`) e il sito
+ufficiale di Dragon Ball rispondono 403 dalla rete della chat, l'articolo tecnico di CGWORLD
+sull'anime di Dorohedoro era in manutenzione: le misure sulle tavole (spessori in pixel, teste di
+altezza) si fanno sulle foto che manda Tancredi. I libri e le slide annunciati nel messaggio di
+apertura non erano allegati al 22/10/2026: la sezione 6 resta l'elenco da procurare.
+
+### Akira Toriyama (Dragon Ball)
+
+- **Linee e spessori.** Toriyama inchiostra con un pennino Zebra G (circa 40 pagine per pennino) e
+  inchiostro Pilot, a volte pennarelli Copic e Pigma; le linee lisce, dice, vengono dalla carta
+  liscia (intervista via mail del 19/03/2010,
+  https://www.kanzenshuu.com/translations/training-manga-mind-akira-toriyama-qa, domande 1 e 3). Il
+  pennino G allarga la linea quando si preme. Conseguenza: il contorno del nostro personaggio ha uno
+  spessore che cambia lungo il tratto, non costante; nello scafo rovesciato è il colore dei vertici
+  (sezione 1, Guilty Gear Xrd).
+- **Ombre.** Il suo editore Torishima racconta che Toriyama usava le campiture nere perché
+  all'inizio non aveva i soldi per i retini; Toriyama dice di aver imparato dall'anime di Dragon
+  Ball e da Toyoo Ashida che i colori separati, non sfumati, rendono l'illustrazione più leggibile
+  e più facile da colorare (https://en.wikipedia.org/wiki/Akira_Toriyama, sezione «Style», note
+  107 e 112). Conseguenza: ombre a gradino netto (2 toni) e il nero pieno come terzo valore per le
+  zone più scure; nessuna sfumatura morbida sul corpo.
+- **Profondità.** «Nel mio stile non uso molte tecniche per dare profondità, ma la profondità la
+  tengo a mente» (stessa intervista, domanda 4). Conseguenza: è la regola di Guilty Gear Xrd
+  («uccidere tutto ciò che sembra 3D», sezione 1): niente luce speculare, niente occlusione
+  morbida sul personaggio; il volume lo danno la silhouette e il gradino dell'ombra.
+- **Capelli.** I capelli del Super Saiyan sono biondi perché lasciarli bianchi sulla pagina
+  risparmiava l'inchiostro del nero pieno a un assistente (Hiroyuki Nakano, caporedattore di
+  Shōnen Jump, https://www.animenewsnetwork.com/interest/2018-03-20/editor-in-chief-explains-why-dragon-ball-super-saiyan-hair-turns-blond/.129245).
+  Conseguenza: in quel segno i capelli sono una massa grafica col contorno, riconoscibile dalla
+  forma anche senza il riempimento; i nostri capelli si progettano come sagoma (passo 3) prima che
+  come colore.
+- **Personaggi piccoli e riconoscibili.** Per gli sprite di Dragon Quest, che sono minuscoli,
+  basta un tratto distintivo per riconoscere il personaggio (Toriyama, 1995, Wikipedia, nota 126);
+  per Goku ha attenuato i tratti distintivi per mettere in risalto personalità e movimenti (2010,
+  domanda 9); i personaggi più potenti spesso sono piccoli (nota 128). Conseguenza: a 56 px in
+  partita (sezione 2) il personaggio porta un tratto solo, grande; la forza si dice con la posa,
+  non con la stazza.
+- **Forme.** Il segno passa dalle forme tonde di Dr. Slump agli angoli più vivi della seconda metà
+  di Dragon Ball (James S. Yadao, *The Rough Guide to Manga*, citato da Wikipedia, nota 129).
+  Conseguenza: è il cerchio e il triangolo della sezione 1 dentro un autore solo: tondo per i
+  volumi grandi (testa, busto), punte per capelli, mani e scarpe.
+- **Corpi in movimento.** Nei combattimenti inclina le vignette e ne cambia la misura; nei
+  movimenti continui usa vignette lunghe «per far capire dove si muovono e come» (2010, domanda
+  5). Conseguenza: ogni posa del personaggio deve far leggere la direzione del moto da sola; è il
+  controllo della silhouette in posa al passo 3.
+
+### Yūsuke Nomura (ノ村優介, disegni di Blue Lock)
+
+- **Occhi e aura.** Nomura porta da *Dolly Kill Kill* (2014) l'abitudine di caricare di dettagli
+  gli occhi e di disegnare l'aura come un mostro; in Blue Lock aura e sequenza del tiro sono prese
+  dal manga di combattimento per farsi capire anche da chi non segue il calcio
+  (https://animecorner.me/interview-blue-lock-creators-muneyuki-kaneshiro-yusuke-nomura/).
+  Conseguenza: l'occhio ricco di dettagli (iride disegnata, riflessi, ciglia) vale per i primi
+  piani sopra i 100 px (sezione 2); l'aura è il linguaggio per tiro caricato e Cometa, cioè per gli
+  effetti, non per il corpo.
+- **Ogni giocatore con un aspetto suo.** Lo scopo dichiarato è distinguersi dagli altri manga di
+  calcio con l'aspetto di ciascun personaggio (stessa intervista); i capelli e i gesti nascono
+  dall'ego scritto dallo sceneggiatore, e le luci dentro i capelli di Bachira sono un'idea di
+  Nomura (https://animecorner.me/interview-muneyuki-kaneshiro-and-megumu-tsuchiya-on-creating-blue-locks-characters/).
+  Conseguenza: confermato l'ordine del passo 2 (riga di carattere, poi capelli e gesti); i riflessi
+  dei capelli sono disegnati nella texture, a strisce, non calcolati dalla luce.
+- **Il nome.** Il disegnatore si firma ノ村優介, con la «ノ» in katakana; «野村» è un altro, l'attore
+  del film (ricerca su Natalie, https://natalie.mu/comic/artist/116600). Conseguenza: le ricerche in
+  giapponese sul suo segno vanno fatte con ノ村.
+
+### Q Hayashida (Dorohedoro)
+
+- **Texture a mano.** Ha studiato pittura a olio all'Università delle Arti di Tokyo e lavora con
+  vernici e stoffe (https://en.wikipedia.org/wiki/Q_Hayashida); le copertine sono collage con
+  vernice spray, stoffa e il cartone delle scatole di Amazon (intervista a SigIkki riportata da
+  https://animefeminist.com/the-devils-in-the-details-the-grotesquely-charming-world-of-hayashida-q);
+  nelle tavole usa inchiostro e texture a mano con pochissimo retino
+  (https://noflyingnotights.com/blog/2014/12/19/dorohedoro-vols-1-13/). Conseguenza: la «grana» del
+  fumetto viene da una texture disegnata dentro l'ombra (tratteggio, segni di pennello), non da un
+  filtro su tutto lo schermo; si prova al passo 8 solo nei primi piani, perché a 56 px un
+  tratteggio sotto 2 px diventa grigio.
+- **Linea ruvida.** La critica descrive il segno «ruvido e abbozzato, ma dettagliato con pazienza»
+  e lo accosta a Kentaro Miura, Pushead, Simon Bisley, Tsutomu Nihei, Katsuhiro Otomo
+  (https://en.wikipedia.org/wiki/Dorohedoro, sezione «Reception»). Conseguenza: il contorno può
+  avere piccole irregolarità volute (spessore che oscilla lungo il bordo, interruzioni), ottenibili
+  con un rumore sullo spessore per vertice; da mettere a confronto con il contorno regolare di
+  Toriyama al passo 8.
+- **Teste e maschere.** I protagonisti hanno teste non umane o mascherate (Caiman con la testa di
+  lucertola, il tifoso di *Hanshin Hangi* con un sacco in testa) e la recensione nota corpi e
+  maschere abbinati a facce e caratteri in contrasto (fonti sopra). La statuina in scala 1/6 di
+  Caiman (210 cm nella storia) cambia espressione con due facce di lucertola da montare
+  (https://www.goodsmile.info/en/product/5246/Caiman.html). Conseguenza: per la squadra della
+  Cometa Verde e le altre squadre non umane il riconoscimento passa dalla forma della testa; le
+  espressioni si fanno cambiando la parte della faccia, che è il nostro atlante di facce
+  (`apps/web/game/faces.ts`).
+- **Dorohedoro in 3D.** L'anime di MAPPA (2020) è il primo lavoro dello studio con una produzione
+  basata sul 3D: secondo l'analisi di CGWORLD il 42% delle inquadrature è in 3D con resa a celle, il
+  18% disegnato a mano, il 40% le due cose insieme, compresi effetti disegnati sopra i modelli
+  (https://cgworld.jp/feature/202004-cgw260hs3doro.html, https://cgworld.jp/feature/202010-cgj-doro.html;
+  numeri presi dal riassunto del motore di ricerca, perché il sito era in manutenzione: da
+  ricontrollare sulla pagina). Conseguenza: il caso più vicino al nostro (fumetto ruvido portato in 3D) usa il
+  modello 3D per il corpo e il disegno per gli effetti; per noi gli effetti (aura, Cometa) restano
+  disegnati, con sprite o texture animate, sopra il personaggio 3D.
+
+### Naoki Urasawa (Monster, 20th Century Boys, Pluto)
+
+- **Facce che cambiano.** «Non ci sono facce uguali in situazioni diverse»: cerca i cambiamenti
+  sottili da un momento all'altro e consiglia agli studenti un corso di recitazione prima della
+  scuola d'arte (intervista a Japan House Los Angeles, 2019,
+  https://j-generation.com/2019/01/naoki-urasawa-interview-monster-20th-century-boys-2019/).
+  Conseguenza: le 8 espressioni dell'atlante sono il minimo; nei primi piani la faccia si compone da
+  parti con un valore continuo (angolo delle sopracciglia, apertura di occhi e bocca), non da 8
+  disegni fissi.
+- **Scheletro, poi posa, poi penna.** Parte dallo scheletro («basta un piccolo cambiamento per
+  cambiare la personalità»), decide l'emozione della vignetta, poi la postura, poi disegna; sconsiglia
+  l'abitudine «prima il cerchio della testa, poi le spalle»
+  (https://www.toy-people.com/en/?p=81923, che riprende Toyo Keizai Online). Conseguenza: il passo
+  3 disegna silhouette in posa (tiro, esultanza, attesa), non solo in piedi; il carattere si legge
+  da spalle, schiena e mani.
+- **Il naso prima di tutto.** Disegna il naso per primo, «per fissare il centro», e in 20th Century
+  Boys ogni personaggio importante ha un naso suo (corto e a punta, grande, largo) legato al
+  carattere, sulla scia di Tezuka e Ishinomori (stessa fonte). Conseguenza: nella nostra faccia il
+  naso, che nei prototipi è un punto (`docs/fase3/stili/`), diventa un tratto di carattere: una
+  forma scelta al passo 6, visibile nei primi piani e nella silhouette di profilo.
+- **Riconoscibili da soli.** I critici notano personaggi riconoscibili uno per uno e la somiglianza
+  con attori del cinema; Natsume colloca il suo segno vicino a Katsuhiro Otomo dal 1979
+  (https://en.wikipedia.org/wiki/Naoki_Urasawa, sezione «Style»). Conseguenza: le proporzioni della
+  faccia (distanza fra gli occhi, lunghezza del naso, mascella) variano davvero da un personaggio
+  all'altro, non solo capelli e colore; per il primo personaggio si fissano le misure che gli altri
+  potranno spostare.
+
+### Cosa prendo da ciascuno
+
+| Parte del segno | Da chi | Regola per il primo personaggio | Dove si prova |
+|---|---|---|---|
+| Contorno | Toriyama (pennino G), Hayashida (linea ruvida) | spessore che cambia lungo il tratto, più grosso sul bordo esterno che dentro; irregolarità da provare | passo 8, scafo con spessore per vertice contro contorno a schermo |
+| Ombre | Toriyama (neri e colori separati), TF2 (ombra fredda) | 2 toni a gradino netto più il nero pieno; ombra blu-viola, mai grigia | passo 5 in grigi, passo 8 nel 3D |
+| Grana | Hayashida | tratteggio dentro l'ombra solo nei primi piani | passo 8, primo piano a 400 px |
+| Proporzioni | Toriyama (piccolo e forte), sezione 2 (56 px) | prova a 3, 3,5 e 4,5 teste; la forza nella posa | passo 4 |
+| Occhi | Nomura per i primi piani, Toriyama per la partita | iride disegnata sopra i 100 px; due segni semplici sotto i 20 px | passo 6, a 128 e a 20 px |
+| Naso e faccia | Urasawa | naso come tratto di carattere; parti con valori continui | passo 6 |
+| Capelli | Toriyama (massa col contorno), Nomura (luci dentro i capelli) | sagoma riconoscibile anche nera; riflessi dipinti a strisce | passi 3 e 6 |
+| Corpo in movimento | Toriyama (direzione leggibile), Urasawa (emozione, poi postura) | silhouette in posa che dice direzione e stato d'animo | passo 3 |
+| Effetti | Nomura (aura), Dorohedoro anime (effetti disegnati sopra il 3D) | aura e Cometa disegnate, non nel modello | dopo questo personaggio |
+
+## 10. Strumenti provati in questa chat (22/10/2026)
+
+| Strumento | Prova | Risultato | Uso proposto |
+|---|---|---|---|
+| Blender come modulo Python (`bpy` 5.2.3 da PyPI) | `pip install bpy==5.2.3` in un ambiente a parte | installato in 5 min 45 s, 1,0 GB | costruire il modello con uno script (forme fuse, suddivisione, scheletro con pesi automatici) ed esportarlo in glTF per three.js |
+| Cycles (Blender, processore) | figura di prova di 4.092 triangoli a 400 × 400 | 1,4-2,4 s; il nodo «Shader to RGB» non esiste in Cycles, quindi niente ombra a gradino | foto da vicino senza toon |
+| Eevee (Blender, OpenGL in software) | stessa figura, dopo `apt-get install libegl1 libegl-mesa0 libgl1-mesa-dri` | 12,7-38,1 s; ombra a 2 toni con «Shader to RGB» e rampa a gradini, contorno Freestyle | fogli del modello e primi piani del passo 7 |
+| Esportazione glTF | stessa figura | file `.glb` di 30.668 byte; Draco e MeshOptimizer mancano nel pacchetto PyPI | il modello arriva al gioco senza compressione, che si aggiunge con `gltf-transform` se serve |
+| three.js 0.186.1, Chromium senza schermo | già in `apps/web` (`DIARIO.md`, fase 2) | WebGL in software: foto sì, fotogrammi al secondo no | resa nel gioco (scafo rovesciato, gradini, contorno a schermo) e foto di confronto |
+| potrace, Inkscape, Krita | `apt-get install --dry-run` | si installano dai pacchetti di Ubuntu 24.04 | potrace trasforma in curve gli schizzi fotografati |
+| Python: scikit-image 0.26, trimesh 5.1 | `pip download` | disponibili | campo di distanza trasformato in mesh (marching cubes), se si prova la strada del codice |
+| Rete | Wikipedia, kanzenshuu, animecorner, PyPI, download.blender.org, apt | rispondono | ricerca e programmi |
+| Rete | `*.fandom.com`, dragon-ball-official.com | 403 | le tavole dei manga le fotografa Tancredi |
+
+Il vecchio gioco rendeva già i suoi fogli con Blender in un contenitore, circa 2,1 s a cella
+(`docs/DETTAGLI.md`, «Undici personaggi VRoid»). Le foto di prova sono fuori dal repository, nella
+cartella di lavoro della chat. Conseguenza: in questa chat si possono usare insieme Blender, per
+costruire il modello e disegnare i fogli, e three.js, per la resa nel gioco; il confronto del passo 8
+mette il modello fatto con Blender contro quello fatto con il campo di distanza in TypeScript, con la
+stessa resa three.js.
+
+## 11. Piano del 25/10/2026: architettura dei personaggi e modelli GLB
+
+Tancredi, 25/10/2026: la chat nuova lavora sull'architettura e cambia i personaggi; i modelli li
+passa lui in GLB, prima senza animazioni, poi se riesce con animazioni (per esempio la corsa).
+Conseguenza: i passi 1-7 della sezione 4 (silhouette, proporzioni, faccia, foglio del modello)
+escono dal lavoro della chat; restano le regole di resa della sezione 9 (contorno, ombra a
+gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
+
+### Da dove si parte
+
+- Oggi un personaggio è fatto di pezzi costruiti nel codice (`apps/web/game/parts.ts`, 437 righe),
+  fusi in un solo `SkinnedMesh` per tutti i giocatori, con uno scheletro proprio di 20 ossa a
+  giocatore (`apps/web/game/character.ts:1-6`, `rig.ts:22`). Corsa e pose sono angoli scritti nel
+  codice (`rig.ts:73`, `locomotion`). Conseguenza: un GLB ha geometria, materiali e scheletro suoi e
+  non entra in questa catena; serve uno strato in mezzo fra la simulazione e il modello disegnato.
+- Il materiale è lo standard lucido (`apps/web/game/materials.ts:1-4`, decisione «morbido e lucido»
+  del 22/10/2026); lo studio porta al toon con contorno (sezione 9). Conseguenza: il materiale si
+  sceglie con foto affiancate sui modelli di Tancredi.
+
+### Decisioni
+
+| Tema | Decisione | Appiglio |
+|---|---|---|
+| Libreria 3D | resta three.js 0.186.1 con `@react-three/fiber` 9.8.1; `GLTFLoader` di three per i modelli; drei per `<Outlines>` | sezione 10; la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md`, fase 2) |
+| Formato | GLB (glTF 2.0 binario), mai STL | STL ha solo triangoli, senza colori, texture né scheletro (https://en.wikipedia.org/wiki/STL_(file_format)) |
+| Personaggi esistenti | i pezzi in codice restano come riserva per le carte senza GLB, finché ogni figura non ha il suo modello | `packages/sim/src/data.ts:93-105`, 22 figure |
+| Pose tenute | no | sezione 7 |
+
+### Cosa deve avere un GLB di Tancredi
+
+Glossario per la chat nuova, da scrivere anche in `docs/` per Tancredi: un file per personaggio;
+in piedi, piedi sull'origine, guarda verso +Z, alto in metri qualsiasi (lo porta il gioco a
+`CHARACTER_HEIGHT`, `apps/web/game/style.ts`); materiali con un nome per le parti che prendono i
+colori della squadra (`maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe`; il resto resta
+com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con i nomi delle ossa di
+Mixamo se c'è; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
+mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md`, 22/10/2026).
+
+### Punti da implementare nella chat nuova
+
+Ognuno chiuso da foto o numeri e dal sì di Tancredi; misure prima e dopo in `docs/DETTAGLI.md`.
+
+1. **Strato «aspetto del giocatore»**: un'interfaccia sola che il resto del gioco usa (posizione,
+   direzione, andatura e azione dalla simulazione in ingresso; disegno in uscita), con due
+   realizzazioni: i pezzi in codice di oggi e il modello GLB. `players.ts`, `loop.ts`, `showroom.ts`
+   e `scripts/bench3d.ts` parlano solo con l'interfaccia. Prova: `pnpm test`, `bench3d.ts` con gli
+   stessi numeri di prima (40 chiamate di disegno, impronta `f405f43f0a2aff2c` dopo 900 passi).
+2. **Registro dei modelli**: `apps/web/public/models/<id>.glb` più un elenco che lega figura o carta
+   al modello; caricamento con `GLTFLoader` prima della partita, normalizzazione (altezza, piedi a
+   terra, verso), controllo con errori leggibili (materiali senza nome, triangoli, texture troppo
+   grandi). Prova: un test per ogni controllo.
+3. **Colori di squadra**: i materiali con nome prendono maglia e secondo colore del club
+   (`packages/sim/src/data.ts`), numero sulla schiena come decalcomania; foto delle 14 squadre con lo
+   stesso modello.
+4. **Resa**: toon a 2 e 3 gradini con ombra blu-viola contro lo standard di oggi; contorno con drei
+   `<Outlines>`, `OutlineEffect` e contorno a schermo; foto affiancate in partita e da vicino, con
+   triangoli e chiamate di disegno.
+5. **Movimento senza animazioni**: il modello statico scivola, si gira e si inclina con l'andatura;
+   se il GLB ha uno scheletro, le ossa si collegano a quelle di `rig.ts` e la corsa scritta nel
+   codice (`locomotion`) muove braccia e gambe. Foglio di contatto della corsa.
+6. **Animazioni dal GLB** (quando arrivano): `AnimationMixer` con la clip di corsa, velocità della
+   clip legata all'andatura della simulazione, passaggio morbido fra ferma, camminata e corsa; poi le
+   altre clip una alla volta.
+7. **Budget**: `/bench` con 10 modelli GLB: chiamate di disegno, triangoli, tempo di caricamento;
+   misura di Tancredi sul portatile.
+8. **Guida in `docs/`** per i modelli (le regole sopra, con i numeri misurati), voce in `DIARIO.md`,
+   pull request unita su `main`.
+
+**Ambiente** (sezione 10), se serve Blender per controllare o sistemare un GLB: `pip install
+bpy==5.2.3` in un ambiente a parte (circa 6 minuti, 1 GB); Eevee vuole prima `apt-get update` e
+`apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri`.
+
+## 12. Prompt per l'immagine di riferimento (facoltativo: per chi genera i modelli da un'immagine)
+
+Non allegare al generatore l'immagine di Battle League: porterebbe nel risultato i colori e lo
+stemma di un personaggio che esiste.
+
+```
+Full-body character illustration of an ORIGINAL football (soccer) striker for an arcade
+football video game. Comic-book style: bold black ink outlines with varying line weight,
+thicker on the outer silhouette and thinner on inner details, like the official
+illustrations of Mario Strikers: Battle League, with a Japanese manga influence: Akira
+Toriyama's simple readable shapes, the intense detailed eyes of Blue Lock (Yusuke Nomura),
+the rough hand-inked texture of Dorohedoro (Q Hayashida), Naoki Urasawa's characterful
+noses and faces. Flat cel shading: two tones per colour with hard edges, solid black for
+the darkest areas, shadows tinted blue-violet (never grey). No soft gradients, no glossy
+highlights, no airbrush.
+
+Character: lanky, wiry young man, about 3.5 heads tall, long thin arms that reach his
+knees, narrow waist, oversized hands in padded white sport gloves, big chunky boots.
+Angular face, long pointed chin, sharp cheekbones, a short hooked nose, thick angular
+eyebrows, narrowed eyes staring at the viewer, a cocky sneer showing gritted teeth.
+Signature trait: a tall jagged crest of black hair shaped like a zig-zag lightning bolt.
+
+Pose: wide athletic crouch facing the viewer, knees bent outward, weight low, arms hanging
+with clenched fists, ready to sprint.
+
+Kit: short-sleeved red jersey (#e23b2e) with cream (#f2f0e6) collar and cuffs, an invented
+round crest with a lightning bolt on the chest, cream shorts, red socks pulled up over the
+knees with two cream stripes, black and red football boots with thick soles.
+
+Full body visible including both feet, centred, plain flat warm-orange background, no text.
+
+Avoid: Waluigi, Wario, Mario or any existing Nintendo or anime character, letters or
+logos on cap and gloves, purple, moustache, cap, photorealism, 3D render look,
+soft shading, extra fingers, cropped feet.
+```
+
+Foglio per il modello da immagine (dopo il sì sull'illustrazione):
+
+```
+Character turnaround model sheet of the same character: front, three-quarter, side and back
+views side by side, same scale and aligned at the feet, standing in a relaxed A-pose (arms
+45 degrees away from the body, legs slightly apart), neutral expression, orthographic view,
+even flat lighting, same ink outlines and two-tone cel shading, plain white background,
+no ground shadow, no text.
+```
+
+## 13. Messaggio da incollare nella chat nuova (25/10/2026)
+
+```
+Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
+poi e docs/STUDIO-PERSONAGGI.md per intero (le sezioni 9-13 sono della chat del 22-25/10). Parti
+da main; i movimenti a metà restano nella storia al commit ac0cd0d e non si toccano.
+
+Il compito è l'architettura dei personaggi del gioco nuovo: i modelli li passo io in GLB, prima
+senza animazioni, poi, se ci riesco, con animazioni come la corsa. Segui il piano della sezione 11
+dello studio, punto per punto: ogni punto finisce con foto o numeri da mostrarmi e si va avanti
+solo con il mio sì. Comincia dal punto 1, che non ha bisogno dei miei file; quando ti mando un GLB,
+controllalo con le regole della sezione 11 e dimmi cosa manca. Non fare movimenti nuovi, campi o
+interfaccia.
+
+Alla fine: misure in docs/DETTAGLI.md, guida per i modelli in docs/, voce in DIARIO.md, commit,
+pull request e merge su main. Scrivimi sempre in italiano.
+```

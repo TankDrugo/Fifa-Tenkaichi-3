@@ -11,7 +11,7 @@ regge, la chat lo scrive e chiede.
 | Tema | Decisione | Conseguenza per il lavoro |
 |---|---|---|
 | Tecnologia | Next.js (App Router, TypeScript) per interfaccia **e** server; React; 3D con three.js tramite `@react-three/fiber` | API dentro Next.js; le partite in tempo reale in un servizio Node a parte (sezione 3), perché tengono aperta una connessione WebSocket per tutta la partita |
-| Personaggi e animazioni | **Il modo che dà il personaggio migliore** (22/10/2026; il 21/10/2026 era «disegnati nel codice, niente Mixamo, niente archivio, niente modelli esterni») | Lo strumento (codice, Blender o altro) si sceglie con prove fotografate; lo stile si fissa su un personaggio solo (`docs/STUDIO-PERSONAGGI.md`) |
+| Personaggi e animazioni | **Modelli GLB fatti da Tancredi**, prima senza animazioni, poi con (25/10/2026; il 22/10/2026 era «il modo che dà il personaggio migliore»; il 21/10/2026 era «disegnati nel codice, niente Mixamo, niente archivio, niente modelli esterni») | Il gioco carica i GLB dietro uno strato «aspetto del giocatore»; i pezzi in codice restano come riserva; piano in `docs/STUDIO-PERSONAGGI.md`, sezione 11 |
 | Account | Nome utente e password, **nessuna email** | Hash argon2id; password dimenticata: la reimposta Tancredi da un pannello di amministrazione |
 | Dati | **Postgres + Redis** | Postgres su disco per account, carte, crediti, scambi; Redis per sessioni, code delle partite, presenza, classifiche, limiti di frequenza |
 | Online | **Tutto insieme**: UT 1 contro 1 in tempo reale, 2 contro 2 in tempo reale, mercato fra giocatori, salvataggio sul server e classifiche | Le fasi si fanno una alla volta, ma il gioco nuovo va online per gli amici solo quando funzionano tutte e quattro |
