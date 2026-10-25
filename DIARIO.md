@@ -365,12 +365,16 @@ Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONA
 - Sezione 10, strumenti provati: `bpy` 5.2.3 installato in 5 min 45 s (1 GB); figura di prova di
   4.092 triangoli a 400 × 400 resa con Cycles in 1,4-2,4 s e con Eevee in 12,7-38,1 s (dopo Mesa con
   `apt-get`), ombra a gradino solo in Eevee, contorno Freestyle; glTF di 30.668 byte.
-- Sezione 11, decisioni prese dalla chat su delega di Tancredi: personaggio nuovo, attaccante dei
+- Prima versione della sezione 11, decisioni prese dalla chat su delega di Tancredi: personaggio nuovo, attaccante dei
   Fulmini Rossi; brief «veloce, sfrontato, a fumetto»; niente schizzi a mano, riferimento generato
   da Tancredi; Blender per il modello, three.js per la resa, drei `<Outlines>` da provare al passo 8;
   modelli da immagine solo in GLB e dal nostro foglio del modello. Misura sul riferimento di Battle
   League mandato da Tancredi: 3,3 teste in posa accovacciata.
 - Sezioni 12 e 13: il prompt per l'immagine di riferimento e il messaggio per la chat nuova.
+- Poi Tancredi ha cambiato strada: la chat nuova lavora sull'architettura dei personaggi e i
+  modelli li passa lui in GLB, prima senza animazioni, poi con. Sezioni 11 e 13 riscritte (8 punti:
+  strato «aspetto del giocatore», registro dei modelli, colori di squadra, resa, movimento senza
+  animazioni, animazioni dal GLB, budget, guida); riga «Personaggi e animazioni» del piano aggiornata.
 - Nessun codice cambiato; `web/` invariato.
 
-Resta: i 9 punti della sezione 11 nella chat nuova; la misura di `/bench` sul portatile per la fase 2.
+Resta: gli 8 punti della sezione 11 nella chat nuova; la misura di `/bench` sul portatile per la fase 2.

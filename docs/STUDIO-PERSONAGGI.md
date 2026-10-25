@@ -446,51 +446,79 @@ costruire il modello e disegnare i fogli, e three.js, per la resa nel gioco; il 
 mette il modello fatto con Blender contro quello fatto con il campo di distanza in TypeScript, con la
 stessa resa three.js.
 
-## 11. Decisioni del 25/10/2026
+## 11. Piano del 25/10/2026: architettura dei personaggi e modelli GLB
 
-Tancredi, 25/10/2026: «in base a quello che ci può servire decidi tu i punti da implementare». Le
-scelte qui sotto sono quelle proposte in chat, ciascuna con il suo appiglio; la chat nuova le
-segue e le rimette in discussione solo con un numero che le smentisce.
+Tancredi, 25/10/2026: la chat nuova lavora sull'architettura e cambia i personaggi; i modelli li
+passa lui in GLB, prima senza animazioni, poi se riesce con animazioni (per esempio la corsa).
+Conseguenza: i passi 1-7 della sezione 4 (silhouette, proporzioni, faccia, foglio del modello)
+escono dal lavoro della chat; restano le regole di resa della sezione 9 (contorno, ombra a
+gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
+
+### Da dove si parte
+
+- Oggi un personaggio è fatto di pezzi costruiti nel codice (`apps/web/game/parts.ts`, 437 righe),
+  fusi in un solo `SkinnedMesh` per tutti i giocatori, con uno scheletro proprio di 20 ossa a
+  giocatore (`apps/web/game/character.ts:1-6`, `rig.ts:22`). Corsa e pose sono angoli scritti nel
+  codice (`rig.ts:73`, `locomotion`). Conseguenza: un GLB ha geometria, materiali e scheletro suoi e
+  non entra in questa catena; serve uno strato in mezzo fra la simulazione e il modello disegnato.
+- Il materiale è lo standard lucido (`apps/web/game/materials.ts:1-4`, decisione «morbido e lucido»
+  del 22/10/2026); lo studio porta al toon con contorno (sezione 9). Conseguenza: il materiale si
+  sceglie con foto affiancate sui modelli di Tancredi.
+
+### Decisioni
 
 | Tema | Decisione | Appiglio |
 |---|---|---|
-| Personaggio | uno **nuovo**, volto del gioco, **attaccante dei Fulmini Rossi** | i Fulmini Rossi giocano in casa in ogni `/partita` e `/bench` di base (`apps/web/game/options.ts:27`), quindi ogni foto lo mostra con la divisa `#e23b2e` / `#f2f0e6` (`packages/sim/src/data.ts:11`) e prova i due strati corpo più divisa; 8 squadre su 14 sono club umani (`data.ts:11-18`) |
-| Brief (passo 1) | tre parole: **veloce, sfrontato, a fumetto**; pubblico: gli amici di Tancredi | sezione 4, passo 1 |
-| Schizzi | nessuno schizzo a mano; Tancredi genera l'immagine di riferimento con il prompt della sezione 12; la chat disegna le silhouette in SVG e la bozza 3D in Blender | sezione 4: la chat non ha uno strumento che generi illustrazioni |
-| Riferimento di forma | figura magra, braccia lunghe fino alle ginocchia, mani e scarpe grandi, posa accovacciata a gambe larghe | immagine di Battle League mandata da Tancredi (476 × 750 px): testa 216 px su 723, 3,3 teste in posa; guanti larghi metà della testa |
-| Proporzioni | prova a 3, 3,5 e 4,5 teste | sezione 2 (56 px in partita) e il 3,3 misurato sopra |
-| Segno | regole della tabella «Cosa prendo da ciascuno» (sezione 9) | sezione 9 |
-| Strumento del modello | Blender come modulo Python (`bpy` 5.2.3) per costruire il modello e i fogli; three.js per la resa nel gioco | sezione 10 |
-| Modelli da immagine (siti tipo Meshy o Tripo) | terza strada del passo 8, solo partendo dal nostro foglio del modello (passo 7), in **GLB**, mai STL; licenza letta prima dell'uso | STL ha solo triangoli, senza colori, texture né scheletro (https://en.wikipedia.org/wiki/STL_(file_format)) |
-| Libreria 3D | resta **three.js** 0.186.1 con `@react-three/fiber` 9.8.1; si aggiunge **drei** per `<Outlines>` (scafo rovesciato anche su `skinnedMesh`, https://drei.docs.pmnd.rs/abstractions/outlines) | la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md`, fase 2); `apps/web/game/` ha 2.348 righe scritte per three.js; nessun confronto trovato con fotogrammi misurati fra three.js, Babylon.js e PlayCanvas |
-| Contorno (passo 8) | tre prove sullo stesso personaggio: drei `<Outlines>`, `OutlineEffect` di three.js, contorno a schermo di `postprocessing` | sezione 3 e sezione 1 (Guilty Gear Xrd) |
+| Libreria 3D | resta three.js 0.186.1 con `@react-three/fiber` 9.8.1; `GLTFLoader` di three per i modelli; drei per `<Outlines>` | sezione 10; la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md`, fase 2) |
+| Formato | GLB (glTF 2.0 binario), mai STL | STL ha solo triangoli, senza colori, texture né scheletro (https://en.wikipedia.org/wiki/STL_(file_format)) |
+| Personaggi esistenti | i pezzi in codice restano come riserva per le carte senza GLB, finché ogni figura non ha il suo modello | `packages/sim/src/data.ts:93-105`, 22 figure |
 | Pose tenute | no | sezione 7 |
 
-**Punti da implementare nella chat nuova**, in ordine, ognuno chiuso da immagini e dal sì di
-Tancredi (sezione 4):
+### Cosa deve avere un GLB di Tancredi
 
-1. Brief in un'immagine: le tre parole, i vincoli in numeri (56 px, 150 chiamate, budget triangoli
-   come riferimento), la tavola delle regole della sezione 9.
-2. Foglio del carattere: nome, passato, ego in una riga, tratto principale (proposta: cresta di
-   capelli a zig-zag), forma dominante (triangolo).
-3. 12-20 silhouette in SVG, in piedi e in posa (tiro, esultanza, attesa), a 56 e 400 px; prova di
-   lettura in mezzo ai 9 prototipi di `/partita`.
-4. La silhouette scelta a 3, 3,5 e 4,5 teste, come bozza 3D in Blender, foto in partita e da vicino.
-5. Studio in grigi e poi colori Fulmini Rossi, ombra blu-viola a gradino.
-6. Faccia: occhi, sopracciglia, naso, bocca, 8 espressioni a 128 e 20 px, parti con valori continui.
-7. Foglio del modello (davanti, tre quarti, lato, dietro) reso da Blender con Eevee e Freestyle.
-8. Prototipo nel gioco: modello Blender in glTF contro campo di distanza in TypeScript (ed
-   eventuale modello da immagine in GLB), tre contorni, 2 e 3 toni; foto affiancate con triangoli e
-   chiamate di disegno; `/bench` da misurare sul portatile di Tancredi.
-9. Guida di stile in `docs/` (spessori, ombre, proporzioni, triangoli, regole per capelli e divisa),
-   misure in `docs/DETTAGLI.md`, voce in `DIARIO.md`, pull request unita su `main`.
+Glossario per la chat nuova, da scrivere anche in `docs/` per Tancredi: un file per personaggio;
+in piedi, piedi sull'origine, guarda verso +Z, alto in metri qualsiasi (lo porta il gioco a
+`CHARACTER_HEIGHT`, `apps/web/game/style.ts`); materiali con un nome per le parti che prendono i
+colori della squadra (`maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe`; il resto resta
+com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con i nomi delle ossa di
+Mixamo se c'è; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
+mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md`, 22/10/2026).
 
-**Ambiente** (sezione 10): `bpy` si installa con `pip install bpy==5.2.3` in un ambiente a parte
-(circa 6 minuti, 1 GB); Eevee nel contenitore vuole prima `apt-get update` e
-`apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri`; Freestyle disegna solo dopo aver creato
-un insieme di linee con il suo stile (`freestyle_settings.linesets.new`, `linestyle`).
+### Punti da implementare nella chat nuova
 
-## 12. Prompt per l'immagine di riferimento (Tancredi lo usa su un generatore di immagini)
+Ognuno chiuso da foto o numeri e dal sì di Tancredi; misure prima e dopo in `docs/DETTAGLI.md`.
+
+1. **Strato «aspetto del giocatore»**: un'interfaccia sola che il resto del gioco usa (posizione,
+   direzione, andatura e azione dalla simulazione in ingresso; disegno in uscita), con due
+   realizzazioni: i pezzi in codice di oggi e il modello GLB. `players.ts`, `loop.ts`, `showroom.ts`
+   e `scripts/bench3d.ts` parlano solo con l'interfaccia. Prova: `pnpm test`, `bench3d.ts` con gli
+   stessi numeri di prima (40 chiamate di disegno, impronta `f405f43f0a2aff2c` dopo 900 passi).
+2. **Registro dei modelli**: `apps/web/public/models/<id>.glb` più un elenco che lega figura o carta
+   al modello; caricamento con `GLTFLoader` prima della partita, normalizzazione (altezza, piedi a
+   terra, verso), controllo con errori leggibili (materiali senza nome, triangoli, texture troppo
+   grandi). Prova: un test per ogni controllo.
+3. **Colori di squadra**: i materiali con nome prendono maglia e secondo colore del club
+   (`packages/sim/src/data.ts`), numero sulla schiena come decalcomania; foto delle 14 squadre con lo
+   stesso modello.
+4. **Resa**: toon a 2 e 3 gradini con ombra blu-viola contro lo standard di oggi; contorno con drei
+   `<Outlines>`, `OutlineEffect` e contorno a schermo; foto affiancate in partita e da vicino, con
+   triangoli e chiamate di disegno.
+5. **Movimento senza animazioni**: il modello statico scivola, si gira e si inclina con l'andatura;
+   se il GLB ha uno scheletro, le ossa si collegano a quelle di `rig.ts` e la corsa scritta nel
+   codice (`locomotion`) muove braccia e gambe. Foglio di contatto della corsa.
+6. **Animazioni dal GLB** (quando arrivano): `AnimationMixer` con la clip di corsa, velocità della
+   clip legata all'andatura della simulazione, passaggio morbido fra ferma, camminata e corsa; poi le
+   altre clip una alla volta.
+7. **Budget**: `/bench` con 10 modelli GLB: chiamate di disegno, triangoli, tempo di caricamento;
+   misura di Tancredi sul portatile.
+8. **Guida in `docs/`** per i modelli (le regole sopra, con i numeri misurati), voce in `DIARIO.md`,
+   pull request unita su `main`.
+
+**Ambiente** (sezione 10), se serve Blender per controllare o sistemare un GLB: `pip install
+bpy==5.2.3` in un ambiente a parte (circa 6 minuti, 1 GB); Eevee vuole prima `apt-get update` e
+`apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri`.
+
+## 12. Prompt per l'immagine di riferimento (facoltativo: per chi genera i modelli da un'immagine)
 
 Non allegare al generatore l'immagine di Battle League: porterebbe nel risultato i colori e lo
 stemma di un personaggio che esiste.
@@ -543,16 +571,13 @@ Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci d
 poi e docs/STUDIO-PERSONAGGI.md per intero (le sezioni 9-13 sono della chat del 22-25/10). Parti
 da main; i movimenti a metà restano nella storia al commit ac0cd0d e non si toccano.
 
-Il compito è uno solo: il character design del primo personaggio, l'attaccante nuovo dei Fulmini
-Rossi, fino a un personaggio finito che fissi lo stile di tutti gli altri. Non fare altri
-personaggi, movimenti, campi o interfaccia.
+Il compito è l'architettura dei personaggi del gioco nuovo: i modelli li passo io in GLB, prima
+senza animazioni, poi, se ci riesco, con animazioni come la corsa. Segui il piano della sezione 11
+dello studio, punto per punto: ogni punto finisce con foto o numeri da mostrarmi e si va avanti
+solo con il mio sì. Comincia dal punto 1, che non ha bisogno dei miei file; quando ti mando un GLB,
+controllalo con le regole della sezione 11 e dimmi cosa manca. Non fare movimenti nuovi, campi o
+interfaccia.
 
-Le decisioni sono nella sezione 11 dello studio (personaggio, brief, schizzi, strumenti, three.js
-con drei per il contorno, niente pose tenute): seguile. Fai i 9 punti della sezione 11 in ordine;
-ogni punto finisce con immagini da mostrarmi e si va avanti solo con il mio sì. L'immagine di
-riferimento generata con il prompt della sezione 12 te la mando io, quando ce l'ho; se non c'è
-ancora, comincia dai punti 1 e 2.
-
-Alla fine: guida di stile e misure in docs/, voce in DIARIO.md, commit, pull request e merge su
-main. Scrivimi sempre in italiano.
+Alla fine: misure in docs/DETTAGLI.md, guida per i modelli in docs/, voce in DIARIO.md, commit,
+pull request e merge su main. Scrivimi sempre in italiano.
 ```
