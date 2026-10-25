@@ -445,3 +445,114 @@ cartella di lavoro della chat. Conseguenza: in questa chat si possono usare insi
 costruire il modello e disegnare i fogli, e three.js, per la resa nel gioco; il confronto del passo 8
 mette il modello fatto con Blender contro quello fatto con il campo di distanza in TypeScript, con la
 stessa resa three.js.
+
+## 11. Decisioni del 25/10/2026
+
+Tancredi, 25/10/2026: «in base a quello che ci può servire decidi tu i punti da implementare». Le
+scelte qui sotto sono quelle proposte in chat, ciascuna con il suo appiglio; la chat nuova le
+segue e le rimette in discussione solo con un numero che le smentisce.
+
+| Tema | Decisione | Appiglio |
+|---|---|---|
+| Personaggio | uno **nuovo**, volto del gioco, **attaccante dei Fulmini Rossi** | i Fulmini Rossi giocano in casa in ogni `/partita` e `/bench` di base (`apps/web/game/options.ts:27`), quindi ogni foto lo mostra con la divisa `#e23b2e` / `#f2f0e6` (`packages/sim/src/data.ts:11`) e prova i due strati corpo più divisa; 8 squadre su 14 sono club umani (`data.ts:11-18`) |
+| Brief (passo 1) | tre parole: **veloce, sfrontato, a fumetto**; pubblico: gli amici di Tancredi | sezione 4, passo 1 |
+| Schizzi | nessuno schizzo a mano; Tancredi genera l'immagine di riferimento con il prompt della sezione 12; la chat disegna le silhouette in SVG e la bozza 3D in Blender | sezione 4: la chat non ha uno strumento che generi illustrazioni |
+| Riferimento di forma | figura magra, braccia lunghe fino alle ginocchia, mani e scarpe grandi, posa accovacciata a gambe larghe | immagine di Battle League mandata da Tancredi (476 × 750 px): testa 216 px su 723, 3,3 teste in posa; guanti larghi metà della testa |
+| Proporzioni | prova a 3, 3,5 e 4,5 teste | sezione 2 (56 px in partita) e il 3,3 misurato sopra |
+| Segno | regole della tabella «Cosa prendo da ciascuno» (sezione 9) | sezione 9 |
+| Strumento del modello | Blender come modulo Python (`bpy` 5.2.3) per costruire il modello e i fogli; three.js per la resa nel gioco | sezione 10 |
+| Modelli da immagine (siti tipo Meshy o Tripo) | terza strada del passo 8, solo partendo dal nostro foglio del modello (passo 7), in **GLB**, mai STL; licenza letta prima dell'uso | STL ha solo triangoli, senza colori, texture né scheletro (https://en.wikipedia.org/wiki/STL_(file_format)) |
+| Libreria 3D | resta **three.js** 0.186.1 con `@react-three/fiber` 9.8.1; si aggiunge **drei** per `<Outlines>` (scafo rovesciato anche su `skinnedMesh`, https://drei.docs.pmnd.rs/abstractions/outlines) | la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md`, fase 2); `apps/web/game/` ha 2.348 righe scritte per three.js; nessun confronto trovato con fotogrammi misurati fra three.js, Babylon.js e PlayCanvas |
+| Contorno (passo 8) | tre prove sullo stesso personaggio: drei `<Outlines>`, `OutlineEffect` di three.js, contorno a schermo di `postprocessing` | sezione 3 e sezione 1 (Guilty Gear Xrd) |
+| Pose tenute | no | sezione 7 |
+
+**Punti da implementare nella chat nuova**, in ordine, ognuno chiuso da immagini e dal sì di
+Tancredi (sezione 4):
+
+1. Brief in un'immagine: le tre parole, i vincoli in numeri (56 px, 150 chiamate, budget triangoli
+   come riferimento), la tavola delle regole della sezione 9.
+2. Foglio del carattere: nome, passato, ego in una riga, tratto principale (proposta: cresta di
+   capelli a zig-zag), forma dominante (triangolo).
+3. 12-20 silhouette in SVG, in piedi e in posa (tiro, esultanza, attesa), a 56 e 400 px; prova di
+   lettura in mezzo ai 9 prototipi di `/partita`.
+4. La silhouette scelta a 3, 3,5 e 4,5 teste, come bozza 3D in Blender, foto in partita e da vicino.
+5. Studio in grigi e poi colori Fulmini Rossi, ombra blu-viola a gradino.
+6. Faccia: occhi, sopracciglia, naso, bocca, 8 espressioni a 128 e 20 px, parti con valori continui.
+7. Foglio del modello (davanti, tre quarti, lato, dietro) reso da Blender con Eevee e Freestyle.
+8. Prototipo nel gioco: modello Blender in glTF contro campo di distanza in TypeScript (ed
+   eventuale modello da immagine in GLB), tre contorni, 2 e 3 toni; foto affiancate con triangoli e
+   chiamate di disegno; `/bench` da misurare sul portatile di Tancredi.
+9. Guida di stile in `docs/` (spessori, ombre, proporzioni, triangoli, regole per capelli e divisa),
+   misure in `docs/DETTAGLI.md`, voce in `DIARIO.md`, pull request unita su `main`.
+
+**Ambiente** (sezione 10): `bpy` si installa con `pip install bpy==5.2.3` in un ambiente a parte
+(circa 6 minuti, 1 GB); Eevee nel contenitore vuole prima `apt-get update` e
+`apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri`; Freestyle disegna solo dopo aver creato
+un insieme di linee con il suo stile (`freestyle_settings.linesets.new`, `linestyle`).
+
+## 12. Prompt per l'immagine di riferimento (Tancredi lo usa su un generatore di immagini)
+
+Non allegare al generatore l'immagine di Battle League: porterebbe nel risultato i colori e lo
+stemma di un personaggio che esiste.
+
+```
+Full-body character illustration of an ORIGINAL football (soccer) striker for an arcade
+football video game. Comic-book style: bold black ink outlines with varying line weight,
+thicker on the outer silhouette and thinner on inner details, like the official
+illustrations of Mario Strikers: Battle League, with a Japanese manga influence: Akira
+Toriyama's simple readable shapes, the intense detailed eyes of Blue Lock (Yusuke Nomura),
+the rough hand-inked texture of Dorohedoro (Q Hayashida), Naoki Urasawa's characterful
+noses and faces. Flat cel shading: two tones per colour with hard edges, solid black for
+the darkest areas, shadows tinted blue-violet (never grey). No soft gradients, no glossy
+highlights, no airbrush.
+
+Character: lanky, wiry young man, about 3.5 heads tall, long thin arms that reach his
+knees, narrow waist, oversized hands in padded white sport gloves, big chunky boots.
+Angular face, long pointed chin, sharp cheekbones, a short hooked nose, thick angular
+eyebrows, narrowed eyes staring at the viewer, a cocky sneer showing gritted teeth.
+Signature trait: a tall jagged crest of black hair shaped like a zig-zag lightning bolt.
+
+Pose: wide athletic crouch facing the viewer, knees bent outward, weight low, arms hanging
+with clenched fists, ready to sprint.
+
+Kit: short-sleeved red jersey (#e23b2e) with cream (#f2f0e6) collar and cuffs, an invented
+round crest with a lightning bolt on the chest, cream shorts, red socks pulled up over the
+knees with two cream stripes, black and red football boots with thick soles.
+
+Full body visible including both feet, centred, plain flat warm-orange background, no text.
+
+Avoid: Waluigi, Wario, Mario or any existing Nintendo or anime character, letters or
+logos on cap and gloves, purple, moustache, cap, photorealism, 3D render look,
+soft shading, extra fingers, cropped feet.
+```
+
+Foglio per il modello da immagine (dopo il sì sull'illustrazione):
+
+```
+Character turnaround model sheet of the same character: front, three-quarter, side and back
+views side by side, same scale and aligned at the feet, standing in a relaxed A-pose (arms
+45 degrees away from the body, legs slightly apart), neutral expression, orthographic view,
+even flat lighting, same ink outlines and two-tone cel shading, plain white background,
+no ground shadow, no text.
+```
+
+## 13. Messaggio da incollare nella chat nuova (25/10/2026)
+
+```
+Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
+poi e docs/STUDIO-PERSONAGGI.md per intero (le sezioni 9-13 sono della chat del 22-25/10). Parti
+da main; i movimenti a metà restano nella storia al commit ac0cd0d e non si toccano.
+
+Il compito è uno solo: il character design del primo personaggio, l'attaccante nuovo dei Fulmini
+Rossi, fino a un personaggio finito che fissi lo stile di tutti gli altri. Non fare altri
+personaggi, movimenti, campi o interfaccia.
+
+Le decisioni sono nella sezione 11 dello studio (personaggio, brief, schizzi, strumenti, three.js
+con drei per il contorno, niente pose tenute): seguile. Fai i 9 punti della sezione 11 in ordine;
+ogni punto finisce con immagini da mostrarmi e si va avanti solo con il mio sì. L'immagine di
+riferimento generata con il prompt della sezione 12 te la mando io, quando ce l'ho; se non c'è
+ancora, comincia dai punti 1 e 2.
+
+Alla fine: guida di stile e misure in docs/, voce in DIARIO.md, commit, pull request e merge su
+main. Scrivimi sempre in italiano.
+```

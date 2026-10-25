@@ -354,3 +354,23 @@ Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONA
   https://github.com/TankDrugo/Fifa-Tenkaichi-3/branches.
 
 Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONAGGI.md`, sezione 8.
+
+## 2026-10-25 — character design: ricerca sui quattro manga e decisioni
+
+- `docs/STUDIO-PERSONAGGI.md`, sezione 9: il segno di Toriyama (pennino G, neri pieni al posto dei
+  retini, colori separati), Nomura (occhi e aura), Hayashida (texture a mano, maschere; l'anime di
+  MAPPA con disegno sopra il 3D), Urasawa (naso per primo, scheletro e postura prima della penna),
+  con le fonti e la tabella di cosa si prende per il primo personaggio. I libri e le slide
+  annunciati non sono arrivati; le tavole sui siti dei fan rispondono 403 dalla rete della chat.
+- Sezione 10, strumenti provati: `bpy` 5.2.3 installato in 5 min 45 s (1 GB); figura di prova di
+  4.092 triangoli a 400 × 400 resa con Cycles in 1,4-2,4 s e con Eevee in 12,7-38,1 s (dopo Mesa con
+  `apt-get`), ombra a gradino solo in Eevee, contorno Freestyle; glTF di 30.668 byte.
+- Sezione 11, decisioni prese dalla chat su delega di Tancredi: personaggio nuovo, attaccante dei
+  Fulmini Rossi; brief «veloce, sfrontato, a fumetto»; niente schizzi a mano, riferimento generato
+  da Tancredi; Blender per il modello, three.js per la resa, drei `<Outlines>` da provare al passo 8;
+  modelli da immagine solo in GLB e dal nostro foglio del modello. Misura sul riferimento di Battle
+  League mandato da Tancredi: 3,3 teste in posa accovacciata.
+- Sezioni 12 e 13: il prompt per l'immagine di riferimento e il messaggio per la chat nuova.
+- Nessun codice cambiato; `web/` invariato.
+
+Resta: i 9 punti della sezione 11 nella chat nuova; la misura di `/bench` sul portatile per la fase 2.
