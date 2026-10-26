@@ -422,3 +422,19 @@ Resta: provare `blender-image-to-3d` con Blender sul PC di Tancredi o con `bpy` 
 Resta: misura dei fotogrammi sul portatile di Tancredi con `?modello=fulmine`; clip per scivolata,
 colpo preso, spallata, palla in mano, esultanza e tiro caricato (Mixamo, poi Meshy se serve);
 budget del piano (8,9 volte i triangoli, 152 chiamate su 150); resa a fumetto nel gioco (punto 4).
+
+## 2026-10-26 — skill graphify
+
+- Tancredi ha chiesto di installare la skill di https://github.com/Graphify-Labs/graphify. CLI
+  `graphifyy` 0.9.96 da PyPI (`uv tool install graphifyy`), poi `graphify install --project
+  --platform claude`: 10 file in `.claude/skills/graphify/` (95.883 byte), `.claude/CLAUDE.md`
+  con il comando `/graphify`, sezione «graphify» in coda a `CLAUDE.md`, due hook `PreToolUse` in
+  `.claude/settings.json`.
+- Modifica nostra agli hook: `command -v graphify >/dev/null && graphify hook-guard … || true`.
+  In una chat cloud nuova il CLI non c'è (il container riparte vuoto) e il comando nudo uscirebbe
+  con 127 a ogni Read, Bash, Grep e Glob; così esce con 0. Il CLI lo reinstalla la skill stessa
+  (`SKILL.md:87-92`) al primo `/graphify`.
+- Il grafo (`graphify-out/`) non è stato generato: le regole della sezione in `CLAUDE.md` valgono
+  solo quando `graphify-out/graph.json` esiste.
+
+Resta: decidere se lanciare `/graphify .` e se mettere `graphify-out/` nel repository.
