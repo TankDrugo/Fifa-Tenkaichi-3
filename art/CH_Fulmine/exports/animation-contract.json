@@ -1,0 +1,37 @@
+{
+  "asset": "CH_Fulmine_HD",
+  "fps": 30,
+  "time_unit": "seconds from clip start",
+  "clips": [
+    {
+      "name": "idle",
+      "fps": 30,
+      "frame_start": 0,
+      "frame_end": 60,
+      "length_s": 2.0,
+      "loop": true,
+      "events_s": {}
+    },
+    {
+      "name": "kick",
+      "fps": 30,
+      "frame_start": 0,
+      "frame_end": 18,
+      "length_s": 0.6,
+      "loop": false,
+      "events_s": {
+        "contact": 0.2667
+      }
+    },
+    {
+      "name": "run",
+      "fps": 30,
+      "frame_start": 0,
+      "frame_end": 20,
+      "length_s": 0.6667,
+      "loop": true,
+      "events_s": {}
+    }
+  ],
+  "note": "events come from pose markers on each action; loop/speed/root_motion from action custom properties"
+}

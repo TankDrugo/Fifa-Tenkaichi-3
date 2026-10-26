@@ -9,6 +9,7 @@
 // leans the body into the curve, the head turns toward the ball. The moves of section 4.7 are
 // keyed clips layered on top (moves.ts).
 import { Euler, Matrix4, Quaternion, Vector3 } from "three";
+import type { PlayerMotion } from "./appearance";
 import { hipHeight, type Body } from "./body";
 import { CHARACTER_HEIGHT } from "./style";
 
@@ -47,24 +48,8 @@ export const newJoints = (): Joints => new Float32Array(J.count);
 export const arm = (side: number, k: number): number => J.arm + side * 5 + k;
 export const leg = (side: number, k: number): number => J.leg + side * 5 + k;
 
-export interface PoseInput {
-  x: number; z: number; fx: number; fz: number;
-  height: number;
-  speed: number;
-  gait: "walk" | "run" | "sprint";
-  phase: number;            // 0..1 along the stride (packages/sim, Player.phase)
-  turnRate: number;         // rad/s of the facing, + to the left
-  lookYaw: number;          // rad, where the ball is from the facing, + to the left
-  time: number;             // s, for breathing when still
-  // states of packages/sim, -1 or 0 when off
-  kick: number;             // 0..1 through a kick, -1 off
-  slide: number;            // 0..1 through a slide and getting up, -1 off
-  react: number;            // seconds left of a hit taken
-  lunge: boolean;           // throwing a shoulder
-  hold: boolean;            // a keeper with the ball in his hands
-  celebrate: number;        // seconds into a celebration, -1 off
-  charge: number;           // 0..1 of a shot being charged, -1 off
-}
+// What the simulation says a player is doing (appearance.ts, the player look layer).
+export type PoseInput = PlayerMotion;
 
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 const ease = (u: number) => u * u * (3 - 2 * u);

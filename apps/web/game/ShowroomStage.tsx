@@ -1,9 +1,10 @@
 "use client";
 // The canvas of the showroom (showroom.ts), drawn only in the browser.
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo } from "react";
-import type { PerspectiveCamera } from "three";
+import { Suspense, useEffect, useMemo } from "react";
+import type { Object3D, PerspectiveCamera } from "three";
 import { ShowroomLoop, type ShowroomOptions } from "./showroom";
+import { useModel } from "./useModel";
 
 declare global {
   interface Window {
@@ -14,9 +15,13 @@ declare global {
   }
 }
 
-function World({ options }: { options: ShowroomOptions }) {
+function WithModel({ options }: { options: ShowroomOptions }) {
+  return <World options={options} model={useModel(options.model)} />;
+}
+
+function World({ options, model }: { options: ShowroomOptions; model?: Object3D }) {
   const { gl, scene, camera, size } = useThree();
-  const loop = useMemo(() => new ShowroomLoop(gl, scene, camera as PerspectiveCamera, options), [gl, scene, camera, options]);
+  const loop = useMemo(() => new ShowroomLoop(gl, scene, camera as PerspectiveCamera, options, model), [gl, scene, camera, options, model]);
   useEffect(() => {
     const start = performance.now();
     window.__ft3show = {
@@ -38,7 +43,9 @@ function World({ options }: { options: ShowroomOptions }) {
 export function ShowroomStage({ options }: { options: ShowroomOptions }) {
   return (
     <Canvas dpr={[1, 1.5]} shadows="percentage" flat gl={{ antialias: false, powerPreference: "high-performance", stencil: false }} camera={{ fov: 26, near: 0.5, far: 400 }} style={{ position: "absolute", inset: 0 }}>
-      <World options={options} />
+      <Suspense fallback={null}>
+        {options.model ? <WithModel options={options} /> : <World options={options} />}
+      </Suspense>
     </Canvas>
   );
 }

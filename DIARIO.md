@@ -378,3 +378,47 @@ Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONA
 - Nessun codice cambiato; `web/` invariato.
 
 Resta: gli 8 punti della sezione 11 nella chat nuova; la misura di `/bench` sul portatile per la fase 2.
+
+## 2026-10-26 — skill three.js e Blender nel repository
+
+- 68 skill copiate in `.claude/skills/` da 5 repository MIT (provenienza e commit in
+  `.claude/skills/SOURCES.md`): 13 `threejs-*`, `blender-image-to-3d`, 22 di cs68614-hash, 30 di
+  RobLe3 (due rinominate `cc-` per nome doppio), `lowpoly-humanoid` e `humanoid-rig-animation`;
+  3,6 MB. Nel repository e non con `-g`, perché il contenitore cloud si cancella a fine chat.
+- `docs/SKILL-3D.md`: quale skill per quale lavoro e come provare a creare un giocatore.
+- `CLAUDE.md`, sezione «Skills for 3D work»: l'obiettivo (il gioco di `main` in three.js con
+  giocatori 3D e animazioni dai GLB di Tancredi) e il promemoria delle skill.
+- Provato: `lowpoly-humanoid/lpm.py` dà un GLB di 32.552 byte, 29 parti, 828 triangoli, controlli
+  passati (serve anche `networkx`). Non provato: le skill che chiamano Blender; lo scaricamento
+  del binario 4.2 è stato bloccato dal controllo dei permessi della chat.
+- Nessun codice del gioco cambiato; `web/` invariato.
+
+Resta: provare `blender-image-to-3d` con Blender sul PC di Tancredi o con `bpy` in una chat cloud.
+
+## 2026-10-26 — CH_Fulmine dall'immagine di Tancredi, nel gioco con colori e clip
+
+- Il branch aveva il lavoro di un'altra chat (`5bbff1b`, strato «aspetto del giocatore»): con il via
+  di Tancredi il commit delle skill è andato sopra, con i controlli `pnpm` passati (34 prove).
+- Blender 4.5.3 scaricato e usato senza schermo (377 MB, più `libegl1 libegl-mesa0
+  libgl1-mesa-dri` per le viste).
+- Prima versione a pezzi semplici (`art/CH_Fulmine/build/`): 7.514 triangoli, IoU 0,477 contro
+  l'immagine. Tancredi: «non saremmo giunti a nessun risultato», da rifare il più definita possibile
+  senza badare ai poligoni.
+- Versione dettagliata (`art/CH_Fulmine/build_hd/`, fasi 10-18, da capo in circa 2 minuti): corpo a
+  metaball scolpito, vestiti con spessore, orli e pieghe, viso scolpito con occhi, palpebre, denti,
+  capelli a ciocche con la cresta a fulmine, guanti a pugno, scarpe con tacchetti, lacci e strisce;
+  gambe +10 cm per la proporzione dell'immagine. 2,1 milioni di triangoli nel file Blender; GLB
+  dettagliato 864.991 triangoli (27,9 MB), GLB del gioco 135.803 (5,1 MB, 6 materiali), FBX per
+  Mixamo. Confronto nella posa dell'immagine con resa a fumetto: IoU 0,558. Foto in
+  `docs/fase3/fulmine/`.
+- Gioco nuovo: registro `apps/web/game/models.ts`, `?modello=fulmine` su `/partita` e
+  `/personaggi`, colori di squadra sui materiali con nome, altezza dagli extras, clip `idle`, `run`
+  (alla fase del passo) e `kick` guidate dalla simulazione; Dockerfile copia `public/`. `pnpm test`
+  37 prove. `renderer.info` a 1.800 passi: senza modello 40 chiamate e 222.715 triangoli come prima;
+  con il modello 152 chiamate e 2.679.386 triangoli.
+- `docs/DETTAGLI.md` («CH_Fulmine dal riferimento»), `docs/SKILL-3D.md` (come rifarlo, Mixamo prima
+  di Meshy), `CLAUDE.md` (memoria).
+
+Resta: misura dei fotogrammi sul portatile di Tancredi con `?modello=fulmine`; clip per scivolata,
+colpo preso, spallata, palla in mano, esultanza e tiro caricato (Mixamo, poi Meshy se serve);
+budget del piano (8,9 volte i triangoli, 152 chiamate su 150); resa a fumetto nel gioco (punto 4).

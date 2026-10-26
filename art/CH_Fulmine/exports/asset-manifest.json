@@ -1,0 +1,120 @@
+{
+  "asset": "CH_Fulmine_HD",
+  "generated": "2026-10-26T14:55:49",
+  "blender": "4.5.3 LTS",
+  "source": "/tmp/claude-0/-home-user-Fifa-tenkaichi-3/ff92eb9a-e7df-57b3-b4a2-ff518654b393/scratchpad/hd/exports/hd/CH_Fulmine_hd_delivery.blend",
+  "target_engine": "three.js 0.186.1",
+  "units": {
+    "system": "METRIC",
+    "scale_length": 1.0,
+    "authoring_up": "Z",
+    "authoring_forward": "-Y",
+    "export_up": "Y",
+    "export_forward": "+Z",
+    "note": "glTF converts Z up to Y up; a subject facing -Y in Blender faces +Z in glTF"
+  },
+  "target_height_m": 1.9,
+  "bounds_m": {
+    "min": [
+      -0.7946,
+      -0.252,
+      0.0
+    ],
+    "max": [
+      0.7946,
+      0.1901,
+      2.1431
+    ],
+    "size": [
+      1.5893,
+      0.4421,
+      2.1431
+    ]
+  },
+  "files": {
+    "all": "/tmp/claude-0/-home-user-Fifa-tenkaichi-3/ff92eb9a-e7df-57b3-b4a2-ff518654b393/scratchpad/hd/exports/hd/CH_Fulmine_HD.glb"
+  },
+  "lods": [
+    {
+      "level": 0,
+      "objects": [
+        "CH_Fulmine_Body_LOD0"
+      ],
+      "tris": 864976
+    }
+  ],
+  "materials": [
+    "bocca",
+    "calzettoni",
+    "capelli",
+    "capelli_riflesso",
+    "denti",
+    "guanti",
+    "guanti_dettagli",
+    "iride",
+    "maglia",
+    "maglia2",
+    "occhi",
+    "pantaloncini",
+    "pelle",
+    "pelle_rossore",
+    "pupilla",
+    "scarpe",
+    "sopracciglia"
+  ],
+  "textures": [],
+  "texture_contract": {
+    "basecolor": "sRGB",
+    "normal": "Non-Color, tangent space, OpenGL +Y",
+    "roughness": "Non-Color",
+    "metallic": "Non-Color",
+    "ao": "Non-Color",
+    "packed_channels": "none by default; document any ORM packing here"
+  },
+  "skeleton": [
+    {
+      "armature": "CH_Fulmine_Armature",
+      "bones": 23,
+      "deform_bones": [
+        "mixamorig:Hips",
+        "mixamorig:Spine",
+        "mixamorig:Spine1",
+        "mixamorig:Spine2",
+        "mixamorig:Neck",
+        "mixamorig:Head",
+        "mixamorig:LeftShoulder",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftHand",
+        "mixamorig:RightShoulder",
+        "mixamorig:RightArm",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightHand",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftToeBase",
+        "mixamorig:RightUpLeg",
+        "mixamorig:RightLeg",
+        "mixamorig:RightFoot",
+        "mixamorig:RightToeBase"
+      ],
+      "roots": [
+        "mixamorig:Hips"
+      ],
+      "rest_pose": "as exported"
+    }
+  ],
+  "sockets": [],
+  "colliders": [],
+  "animation_contract": "animation-contract.json",
+  "inferred_from_no_reference": [
+    "back and sides of the head and hair",
+    "crest depth",
+    "soles",
+    "palms of the gloves",
+    "standing proportions",
+    "leg length (stretched 10 cm to the concept's ratio)"
+  ],
+  "dependencies": []
+}

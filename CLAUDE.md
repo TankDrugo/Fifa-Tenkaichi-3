@@ -131,6 +131,28 @@ Exit 0 = clean, exit 1 = violations listed on stderr.
 - **Animations** come from the sheets that exist (`POSE` in `web/js/skills.js`); Tancredi said no to
   new Blender renders on 20/10/2026.
 
+## Skills for 3D work (memory, 26/10/2026)
+
+- **Goal** (Tancredi, 26/10/2026): the same game that is on `main` (`web/`), rebuilt in three.js
+  with 3D players and animations. Tancredi supplies the players as `.glb` files with clips; the
+  contract for those files is `docs/STUDIO-PERSONAGGI.md`, section 11.
+- 68 skills are vendored in `.claude/skills/` (sources and commits: `.claude/skills/SOURCES.md`;
+  usage in Italian: `docs/SKILL-3D.md`). Remind Tancredi of them when a task fits:
+  - three.js / `@react-three/fiber` work in `apps/web`: `threejs-react-three-fiber`,
+    `threejs-loaders` and `threejs-animation` (GLB + `AnimationMixer`), `threejs-performance`;
+  - player from an image: `/blender-image-to-3d <image> "<brief>"`; clips on an existing model:
+    `blender-character-rigging` + `blender-animation`; low-poly body without Blender:
+    `python3 .claude/skills/lowpoly-humanoid/lpm.py --out <dir>/<name> --gioi nam --cao 1.80`
+    (needs `pip install numpy scipy trimesh pillow networkx`).
+- First player done with them: CH_Fulmine, `art/CH_Fulmine/build_hd/` (phases 10-18, rebuild in
+  about 2 minutes) from `art/CH_Fulmine/ref/`; the game loads it with `?modello=fulmine`
+  (`apps/web/game/models.ts`). New players follow the same phases.
+- Blender skills call `blender --background --python`. A cloud chat has no Blender binary and the
+  download from download.blender.org was refused once and then allowed after Tancredi's go-ahead
+  (26/10/2026: Blender 4.5.3, 377 MB; EEVEE and Workbench also need
+  `apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri`); `pip install bpy==5.2.3` worked on
+  22/10/2026 (about 6 min, 1 GB).
+
 ## Working on the new game (docs/PIANO-3D-ONLINE.md)
 
 - **Where**: `apps/web` (Next.js: pages, API, later the 3D scene), `apps/realtime` (matches over
