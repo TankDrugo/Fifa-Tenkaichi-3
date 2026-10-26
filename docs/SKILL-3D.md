@@ -28,11 +28,44 @@ dall'immagine, `blender-character-rigging` e `blender-animation` per le clip da 
   repository: senza, `trimesh` si ferma) produce un GLB di 32.552 byte, 29 parti, 828 triangoli,
   controlli automatici tutti passati. Il corpo non ha scheletro né clip: quelli li fa
   `humanoid-rig-animation`, che chiede Blender. `--gioi nam|nu` è maschio/femmina, `--cao` l'altezza.
-- Blender: lo scaricamento del binario 4.2 da download.blender.org è stato bloccato dal controllo
-  dei permessi della chat. La strada già misurata è `pip install bpy==5.2.3` (5 min 45 s, 1 GB,
-  `docs/STUDIO-PERSONAGGI.md:432`); le skill chiamano `blender --background --python`, quindi con
-  il modulo `bpy` gli script vanno lanciati con `python3` e gli argomenti dopo `--` vanno
-  controllati script per script. Non provato.
+- Blender: il 26/10/2026, dopo il via di Tancredi, Blender 4.5.3 LTS è sceso da download.blender.org
+  (377 MB) e gira senza schermo nella chat cloud; per le viste Workbench ed EEVEE servono
+  `apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri`. Una foto EEVEE 500 × 750 del modello
+  dettagliato (2,4 milioni di triangoli) richiede circa 40 s.
+
+## Il primo giocatore: CH_Fulmine (26/10/2026)
+
+Dall'immagine di Tancredi (`art/CH_Fulmine/ref/concept_front.webp`) con `blender-image-to-3d`,
+in due versioni. I numeri e il perché di ogni scelta stanno in `docs/DETTAGLI.md`, sezione
+«CH_Fulmine dal riferimento».
+
+| Versione | Dove | Triangoli | Confronto con l'immagine (IoU della sagoma nella sua posa) |
+|---|---|---|---|
+| prima, a pezzi semplici | `art/CH_Fulmine/build/` | 7.514 | 0,477 |
+| dettagliata, scolpita | `art/CH_Fulmine/build_hd/` | 2,1 milioni nel file Blender; 864.991 nel GLB dettagliato, 135.803 in quello del gioco | 0,558 |
+
+Rifare tutto, dalla cartella `art/CH_Fulmine`, con `B` = percorso di Blender e `M` = file .blend:
+
+    for ph in 10_body 11_clothes 12_head 13_hair 14_gear 15_stretch 16_rig; do
+      $B --background --python build_hd/$ph.py -- --master $M; done
+    $B --background --python build_hd/17_export.py -- --master $M --out exports --level hd
+    $B --background --python build_hd/17_export.py -- --master $M --out exports --level game
+
+Il file .blend va prima creato con `init_master.py` della skill (80 s le fasi, 30 s ogni
+esportazione). Una fase si rifà da sola: ognuna cancella e ricostruisce solo le sue parti.
+
+## Animazioni: Mixamo prima di Meshy
+
+Il GLB ha già 3 clip fatte nel codice (`idle`, `run`, `kick`, `art/CH_Fulmine/build/08_anim.py`)
+che il gioco muove con la simulazione. Mancano le clip per gli altri stati della simulazione:
+scivolata, colpo preso, spallata, palla in mano, esultanza, tiro caricato
+(`apps/web/game/appearance.ts:22-30`). Mixamo (https://www.mixamo.com) fa rig automatico e clip
+gratis con un account Adobe; accetta FBX, OBJ o ZIP, non GLB, e per questo c'è
+`art/CH_Fulmine/exports/CH_Fulmine_mixamo.fbx` (la mesh del gioco, 135.787 triangoli, 2,7 MB, in
+posa A, senza scheletro; si rifà con `build_hd/18_mixamo.py`). Le ossa del GLB hanno già i nomi di
+Mixamo (`mixamorig:Hips` ...), quindi le clip scaricate si riportano sul nostro scheletro in
+Blender. Consiglio: provare prima Mixamo, perché non costa nulla; i 10 euro di Meshy servono
+solo se il rig automatico di Mixamo sbaglia su guanti grandi e cresta.
 
 ## Come provare a creare un giocatore
 

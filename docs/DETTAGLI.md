@@ -1175,3 +1175,72 @@ Ambiente della chat (25/10/2026): Playwright 1.56.1 cerca Chromium 1194, la chat
 `chromium_headless_shell-1194/chrome-linux/headless_shell` come collegamento a
 `/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell`
 e il file vuoto `INSTALLATION_COMPLETE`. `bench3d.ts` dura 8 min 45 s.
+
+## Gioco nuovo · CH_Fulmine dal riferimento, registro dei modelli, clip (26/10/2026)
+
+Il primo personaggio fatto da un'immagine di Tancredi (`art/CH_Fulmine/ref/concept_front.webp`,
+attaccante dei Fulmini Rossi) con la skill `blender-image-to-3d` e Blender 4.5.3 senza schermo, e
+i pezzi del gioco che lo caricano. Guida per Tancredi: `docs/SKILL-3D.md`.
+
+### Il modello
+
+- **Scheda** (`art/CH_Fulmine/asset-brief.md`): l'immagine è un concept di fronte, in prospettiva e
+  accovacciato, quindi serve per sagoma e dettagli, non per le misure; proporzioni in piedi dedotte
+  e corrette a ogni confronto.
+- **Prima versione** (`art/CH_Fulmine/build/`, pezzi semplici): 7.514 triangoli, IoU 0,477 nel
+  confronto con l'immagine. Tancredi l'ha scartata: «non saremmo giunti a nessun risultato».
+- **Versione dettagliata** (`art/CH_Fulmine/build_hd/`, 8 fasi):
+
+| Fase | Come | Triangoli |
+|---|---|---|
+| 10 corpo | metaball per le masse (bacino, torace, deltoidi, bicipiti, ginocchia, polpacci), voxel 3 mm, pennelli in numpy; la pelle sotto maglia e pantaloncini rientra di 1,4 cm | 473.696 |
+| 11 vestiti | volumi larghi, pieghe, spessore 4,5 mm, booleane per orlo, collo e maniche; colletto, polsini, stemma, calzettoni a coste con 2 righe | 432.420 maglia, 273.562 pantaloncini |
+| 12 testa | sfera a quadrati di livello 7 (maglia di 1,8 mm), mascella a V, naso, zigomi, ghigno incavato; occhi con iride e palpebre a mandorla, sopracciglia, 24 denti, orecchie | 278.448 |
+| 13 capelli | cresta dal contorno dell'immagine (1 px = 1,2 mm) estrusa e arrotondata con la distanza dal bordo, 58 ciocche a lama, voxel 1,6 mm, solchi; striscia viola | 504.964 |
+| 14 guanti e scarpe | pugni a metaball con pollice e 4 dita, polsino e fascia; tomaia a 40 sezioni, suola, 8 tacchetti, 3 strisce per lato, 6 lacci | 418.488 |
+| 15 gambe | +10 cm fra caviglia e anca: nell'immagine le gambe sotto i pantaloncini sono 0,43 dell'altezza, nel modello erano 0,29 | — |
+| 16 scheletro | le 23 ossa Mixamo e le clip della prima versione; calore delle ossa su un corpo ridotto a 21.316 triangoli, pesi copiati dai 6 vertici più vicini | — |
+| 17 esportazione | pelle nascosta tolta (172.575 vertici su 236.850), decimazione, una sola mesh | 864.991 (GLB dettagliato, 27,9 MB); 135.803 (gioco, 5,1 MB) |
+
+- **Confronto con l'immagine** nella sua posa (`ref_crouch`, telecamera di fronte a 12°, 50 mm),
+  resa a fumetto (due gradini, ombre viola, contorno): IoU della sagoma 0,558 (prima versione
+  0,477). Le fasce di larghezza che restano fuori dal 5 %: testa e spalle −0,15, ginocchia −0,11,
+  piedi −0,10. L'immagine disegna i piedi in prospettiva forte, più grandi della testa; il modello
+  no.
+- **Dedotto, non visto nell'immagine**: schiena, nuca e ciocche dietro, profondità della cresta,
+  suole, palmi dei guanti, proporzioni in piedi, lunghezza delle gambe.
+- **Errori trovati e corretti**: `ray_cast` legge una copia del mesh di prima dei pennelli (il naso
+  non cresceva): la superficie si cerca con numpy; `Mesh.materials.clear()` cancella anche l'indice
+  del materiale delle facce (il GLB del gioco usciva con un solo materiale); l'esportatore segnalava
+  «Mesh is not valid» finché non si chiama `validate()` dopo l'unione.
+
+### Il gioco
+
+- **Registro** (`apps/web/game/models.ts`): `fulmine` → `/models/fulmine.glb`; `/partita?modello=fulmine`
+  e `/personaggi?modello=fulmine` disegnano tutti i giocatori con il GLB (`game/useModel.ts`, Suspense
+  di `@react-three/fiber`). Il Dockerfile copia `apps/web/public`, che l'uscita `standalone` lascia
+  fuori.
+- **Colori di squadra** (`modelAppearance.ts`): i materiali `maglia`, `maglia2`, `pantaloncini`,
+  `calzettoni`, `scarpe` prendono i colori del completo; un materiale per parte e colore, condiviso.
+- **Altezza**: `extras.height` del GLB (1,90 m, cima della calotta dei capelli) al posto del
+  riquadro, così la cresta non accorcia il giocatore.
+- **Clip guidate dalla simulazione**: `run` alla fase del passo (`Player.phase`), mescolata con
+  `idle` in proporzione alla velocità fino a 3,2 m/s (`RUN_ABOVE`); `kick` dal suo avanzamento. Il
+  mixer non avanza da solo: tempi e pesi vengono dalla simulazione a ogni fotogramma.
+
+| Misura (1280 × 720, `/partita` dopo 1.800 passi, `renderer.info`) | Chiamate di disegno | Triangoli |
+|---|---|---|
+| senza modello (come prima) | 40 | 222.715 |
+| `modello=fulmine`, prima versione | 152 | 242.199 |
+| `modello=fulmine`, versione dettagliata ridotta per il gioco | 152 | 2.679.386 |
+
+Il piano mette il tetto a 150 chiamate e 300.000 triangoli (sezione 4.6): con il modello
+dettagliato i triangoli sono 8,9 volte il tetto. Tancredi ha detto di non badare al limite; i
+fotogrammi al secondo vanno misurati sul suo portatile. `pnpm test`: 37 prove, 3 nuove in
+`game/appearance.test.ts` (colori di squadra, altezza dagli extras, clip guidate).
+
+### Ambiente della chat
+
+Blender 4.5.3 LTS da download.blender.org (377 MB); Workbench ed EEVEE chiedono
+`libegl1 libegl-mesa0 libgl1-mesa-dri`. Playwright 1.56.1 si lancia con `executablePath` sul
+`chrome-headless-shell` 1243 di `/opt/pw-browsers`.

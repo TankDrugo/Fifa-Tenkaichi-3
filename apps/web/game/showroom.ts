@@ -2,7 +2,7 @@
 // characters' style on (scripts/photos3.ts) and for the contact sheets of the moves. Same stadium,
 // same materials and finish as the match (loop.ts, createLook); the sun is in front of the line so
 // the faces are lit, as on a team's presentation screen.
-import { Group, type PerspectiveCamera, type Scene, type WebGLRenderer } from "three";
+import { Group, type Object3D, type PerspectiveCamera, type Scene, type WebGLRenderer } from "three";
 import { clubById, clubSquad, type Club } from "@ft3/sim";
 import { createAppearance, newFrame, type Appearance } from "./appearance";
 import { buildArena } from "./arena";
@@ -16,6 +16,7 @@ export interface ShowroomOptions {
   style: Style;
   back: boolean;              // seen from behind: the numbers
   expression: Expression | "";
+  model: string;              // a model of game/models.ts, "" for the pieces in code
 }
 
 export function teamDesigns(club: Club, style: Style): Design[] {
@@ -37,12 +38,12 @@ export class ShowroomLoop {
   private options: ShowroomOptions;
   private pose = newFrame();
 
-  constructor(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, options: ShowroomOptions) {
+  constructor(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, options: ShowroomOptions, model?: Object3D) {
     this.gl = gl; this.camera = camera; this.options = options;
     const club = clubById(options.team) ?? clubById("fulmini")!;
     this.root.add(buildArena().group);
     this.designs = teamDesigns(club, options.style);
-    this.players = createAppearance(this.designs);
+    this.players = createAppearance(this.designs, model);
     this.root.add(this.players.object);
     this.look = createLook(gl, scene, camera, this.root);
     const sun = this.look.sun, z = options.back ? -1 : 1;

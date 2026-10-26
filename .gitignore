@@ -7,3 +7,5 @@ apps/*/dist/
 *.tsbuildinfo
 infra/.env
 apps/web/next-env.d.ts
+# the Blender build scripts of art/ import each other
+__pycache__/

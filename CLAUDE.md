@@ -144,9 +144,14 @@ Exit 0 = clean, exit 1 = violations listed on stderr.
     `blender-character-rigging` + `blender-animation`; low-poly body without Blender:
     `python3 .claude/skills/lowpoly-humanoid/lpm.py --out <dir>/<name> --gioi nam --cao 1.80`
     (needs `pip install numpy scipy trimesh pillow networkx`).
+- First player done with them: CH_Fulmine, `art/CH_Fulmine/build_hd/` (phases 10-18, rebuild in
+  about 2 minutes) from `art/CH_Fulmine/ref/`; the game loads it with `?modello=fulmine`
+  (`apps/web/game/models.ts`). New players follow the same phases.
 - Blender skills call `blender --background --python`. A cloud chat has no Blender binary and the
-  download from download.blender.org was refused by the permission check (26/10/2026); `pip install
-  bpy==5.2.3` worked on 22/10/2026 (about 6 min, 1 GB).
+  download from download.blender.org was refused once and then allowed after Tancredi's go-ahead
+  (26/10/2026: Blender 4.5.3, 377 MB; EEVEE and Workbench also need
+  `apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri`); `pip install bpy==5.2.3` worked on
+  22/10/2026 (about 6 min, 1 GB).
 
 ## Working on the new game (docs/PIANO-3D-ONLINE.md)
 

@@ -2,9 +2,10 @@
 // the camera's photos pitch (degrees down), fov (vertical, degrees), span (metres across the
 // middle of the screen), aim (metres across the pitch the camera aims at, + toward it), skip (steps
 // played before the first frame), focus (a player 0-9 to look at), paused=1, post=0; style=A or B,
-// the characters' style (game/looks.ts).
+// the characters' style (game/looks.ts); modello=<id>, every player drawn by that GLB (game/models.ts).
 import { clubById } from "@ft3/sim";
 import type { Style } from "./looks";
+import { modelUrl } from "./models";
 import { CAMERA, STYLE } from "./style";
 
 export interface StageOptions {
@@ -22,9 +23,11 @@ export interface StageOptions {
   paused: boolean;
   post: boolean;
   style: Style;
+  // a model of game/models.ts, "" for the pieces in code
+  model: string;
 }
 
-export const DEFAULT_STAGE: StageOptions = { home: "fulmini", away: "marea", seed: 7, pitchDeg: CAMERA.pitchDeg, fovDeg: CAMERA.fovDeg, spanM: CAMERA.spanM, aimZ: CAMERA.aimZ, focus: -1, skip: 0, paused: false, post: true, style: STYLE };
+export const DEFAULT_STAGE: StageOptions = { home: "fulmini", away: "marea", seed: 7, pitchDeg: CAMERA.pitchDeg, fovDeg: CAMERA.fovDeg, spanM: CAMERA.spanM, aimZ: CAMERA.aimZ, focus: -1, skip: 0, paused: false, post: true, style: STYLE, model: "" };
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -45,5 +48,6 @@ export function stageOptions(sp: Params): StageOptions {
     paused: one("paused") === "1",
     post: one("post") !== "0",
     style: one("style") === "A" ? "A" : one("style") === "B" ? "B" : DEFAULT_STAGE.style,
+    model: modelUrl(one("modello") ?? "") ? one("modello")! : "",
   };
 }

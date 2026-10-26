@@ -66,13 +66,14 @@ export class StageLoop {
   private options: StageOptions;
   private stats: FrameStats;
 
-  constructor(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, options: StageOptions, stats: FrameStats) {
+  // model: the GLB every player is drawn with (game/models.ts), none for the pieces in code
+  constructor(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, options: StageOptions, stats: FrameStats, model?: Object3D) {
     this.gl = gl; this.scene = scene; this.camera = camera; this.options = options; this.stats = stats;
     this.driver = new Driver(options.home, options.away, options.seed);
     this.driver.skip(options.skip);
     this.root.add(buildArena().group);
     const m = this.driver.match;
-    this.actors = buildActors(matchDesigns(m, teamKits(this.driver.colours[0], this.driver.colours[1]), [options.home, options.away], options.style));
+    this.actors = buildActors(matchDesigns(m, teamKits(this.driver.colours[0], this.driver.colours[1]), [options.home, options.away], options.style), model);
     this.root.add(this.actors.group);
     // the sun high behind the far side, so the shadows fall toward the camera as in the reference
     this.look = createLook(gl, scene, camera, this.root);

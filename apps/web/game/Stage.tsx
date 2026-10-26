@@ -9,9 +9,10 @@
 // 29 degrees through a long lens, the sun high behind the far side so the shadows fall toward the
 // camera, light bloom on the lights.
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo } from "react";
-import type { PerspectiveCamera } from "three";
+import { Suspense, useEffect, useMemo } from "react";
+import type { Object3D, PerspectiveCamera } from "three";
 import { StageLoop } from "./loop";
+import { useModel } from "./useModel";
 import type { FrameStats } from "./stats";
 import type { StageOptions } from "./options";
 
@@ -25,14 +26,23 @@ export function Stage({ options, stats, onLoop }: { options: StageOptions; stats
       camera={{ fov: options.fovDeg, near: 2, far: 400, position: [0, 15, 27] }}
       style={{ position: "absolute", inset: 0 }}
     >
-      <World options={options} stats={stats} onLoop={onLoop} />
+      <Suspense fallback={null}>
+        {options.model ? <WithModel options={options} stats={stats} onLoop={onLoop} /> : <World options={options} stats={stats} onLoop={onLoop} />}
+      </Suspense>
     </Canvas>
   );
 }
 
-function World({ options, stats, onLoop }: { options: StageOptions; stats: FrameStats; onLoop?: (l: StageLoop) => void }) {
+type WorldProps = { options: StageOptions; stats: FrameStats; onLoop?: (l: StageLoop) => void; model?: Object3D };
+
+// the match waits for the GLB (Suspense) and is then built with it
+function WithModel(props: WorldProps) {
+  return <World {...props} model={useModel(props.options.model)} />;
+}
+
+function World({ options, stats, onLoop, model }: WorldProps) {
   const { gl, scene, camera, size } = useThree();
-  const loop = useMemo(() => new StageLoop(gl, scene, camera as PerspectiveCamera, options, stats), [gl, scene, camera, options, stats]);
+  const loop = useMemo(() => new StageLoop(gl, scene, camera as PerspectiveCamera, options, stats, model), [gl, scene, camera, options, stats, model]);
   useEffect(() => { onLoop?.(loop); return () => loop.dispose(); }, [loop, onLoop]);
   useEffect(() => { loop.resize(size.width, size.height); }, [loop, size]);
   useFrame((state, delta) => loop.frame(state.clock.elapsedTime, delta), 1);
