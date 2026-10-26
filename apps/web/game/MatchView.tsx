@@ -1,7 +1,8 @@
 "use client";
 // The page around the 3D match: the score and the clock on top, and on /bench the numbers
-// Tancredi reads on his laptop (docs/PIANO-3D-ONLINE.md, section 4.6). The scene itself is drawn
-// only in the browser (WebGL), so it is loaded without server rendering.
+// Tancredi reads on his laptop (docs/PIANO-3D-ONLINE.md, section 4.6); on /prova the goals and the
+// controls of the practice (practice.ts, input.ts). The scene itself is drawn only in the browser
+// (WebGL), so it is loaded without server rendering.
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fingerprint } from "@ft3/sim";
@@ -66,7 +67,18 @@ export function MatchView({ options, bench }: { options: StageOptions; bench: bo
   return (
     <div style={{ position: "fixed", inset: 0, background: "#000", overflow: "hidden" }}>
       <Stage options={options} stats={stats} onLoop={onLoop} />
-      {hud && (
+      {hud && options.practice && (
+        <>
+          <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", padding: "8px 18px", background: "rgba(10,14,28,0.82)", color: "#fff", borderRadius: 10, font: "700 18px/1.2 system-ui, sans-serif", whiteSpace: "nowrap" }}>
+            Prova libera · gol {hud.score.split(" - ")[0]}
+          </div>
+          <div style={{ position: "absolute", left: "50%", bottom: 12, transform: "translateX(-50%)", padding: "8px 14px", background: "rgba(10,14,28,0.78)", color: "#e8ecf6", borderRadius: 10, font: "14px/1.5 system-ui, sans-serif", textAlign: "center", maxWidth: "calc(100% - 24px)" }}>
+            <div><b>Tastiera</b>: WASD o frecce per correre, Maiusc scatto, K tiro (tieni premuto per caricarlo), J passaggio, L finta, Spazio speciale</div>
+            <div><b>Pad</b>: levetta o croce, X tiro, A passaggio, B finta, RT scatto, Y speciale</div>
+          </div>
+        </>
+      )}
+      {hud && !options.practice && (
         <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 16, alignItems: "center", padding: "8px 18px", background: "rgba(10,14,28,0.82)", color: "#fff", borderRadius: 10, font: "700 18px/1.2 system-ui, sans-serif", whiteSpace: "nowrap" }}>
           <span>{hud.home}</span>
           <span style={{ fontSize: 24 }}>{hud.score}</span>

@@ -11,9 +11,11 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { C } from "@ft3/sim";
 import { buildArena } from "./arena";
 import { Driver } from "./driver";
+import { createInput, type Input } from "./input";
 import { crowdTime } from "./materials";
 import { buildActors, matchDesigns, teamKits, type Actors } from "./players";
 import type { StageOptions } from "./options";
+import { PRACTICE_PLAYER, practiceDriver } from "./practice";
 import type { FrameStats } from "./stats";
 import { DAY } from "./style";
 
@@ -65,15 +67,20 @@ export class StageLoop {
   private camera: PerspectiveCamera;
   private options: StageOptions;
   private stats: FrameStats;
+  // the person's keyboard and pad, in the practice of /prova
+  private input?: Input;
 
   // model: the GLB every player is drawn with (game/models.ts), none for the pieces in code
   constructor(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, options: StageOptions, stats: FrameStats, model?: Object3D) {
     this.gl = gl; this.scene = scene; this.camera = camera; this.options = options; this.stats = stats;
-    this.driver = new Driver(options.home, options.away, options.seed);
+    if (options.practice) {
+      this.input = createInput(window);
+      this.driver = practiceDriver(options.home, options.away, options.seed, this.input);
+    } else this.driver = new Driver(options.home, options.away, options.seed);
     this.driver.skip(options.skip);
     this.root.add(buildArena().group);
     const m = this.driver.match;
-    this.actors = buildActors(matchDesigns(m, teamKits(this.driver.colours[0], this.driver.colours[1]), [options.home, options.away], options.style), model);
+    this.actors = buildActors(matchDesigns(m, teamKits(this.driver.colours[0], this.driver.colours[1]), [options.home, options.away], options.style), model, options.practice ? PRACTICE_PLAYER : undefined);
     this.root.add(this.actors.group);
     // the sun high behind the far side, so the shadows fall toward the camera as in the reference
     this.look = createLook(gl, scene, camera, this.root);
@@ -83,6 +90,10 @@ export class StageLoop {
   }
 
   resize(width: number, height: number): void { this.look.composer.setSize(width, height); }
+
+  // the person's keyboard in the practice, while the scene is on the page (Stage.tsx); the
+  // function returned stops listening
+  listen(): () => void { return this.input ? this.input.listen() : () => {}; }
 
   frame(time: number, delta: number): void {
     const o = this.options;

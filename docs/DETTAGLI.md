@@ -1244,3 +1244,88 @@ fotogrammi al secondo vanno misurati sul suo portatile. `pnpm test`: 37 prove, 3
 Blender 4.5.3 LTS da download.blender.org (377 MB); Workbench ed EEVEE chiedono
 `libegl1 libegl-mesa0 libgl1-mesa-dri`. Playwright 1.56.1 si lancia con `executablePath` sul
 `chrome-headless-shell` 1243 di `/opt/pw-browsers`.
+
+## Gioco nuovo · Golden Striker da Meshy e partita di prova (26/10/2026)
+
+Il GLB fatto da Tancredi con Meshy (`art/CH_GoldenStriker/ref/meshy_golden_striker.glb`, 284.068
+byte) nel gioco, con scheletro e clip, e la pagina `/prova` per vederlo correre e tirare con la
+palla. Foto in `docs/fase3/golden/`.
+
+### Il file di partenza
+
+- Una mesh con le sole posizioni: niente normali, materiali, texture, scheletro né clip; 7.945
+  vertici, 15.667 triangoli, alta 0,952 unità, guarda verso +Z, scritta da `trimesh`; 14 pezzi
+  staccati, il corpo di 7.169 vertici e 13 da 58-71 vertici.
+- Posa: gambe aperte (caviglie a x −0,145 e +0,138), braccio destro lungo il fianco, mano sinistra
+  sul fianco; il bacino sta 0,025 unità verso la sua sinistra (cavallo a x 0,033).
+- Rispetto alla guida di `docs/STUDIO-PERSONAGGI.md`, sezione 11, mancano i materiali con nome e
+  lo scheletro. Meshy fa anche il rig, con corsa e camminata a richiesta, sui modelli umanoidi con
+  texture (https://docs.meshy.ai/en/api/rigging, e https://docs.meshy.ai/en/api/animation per le
+  altre clip): un file così salterebbe i passi 2-5 qui sotto; il gioco cerca le clip per nome,
+  `idle`, `run` e `kick` (`apps/web/game/modelAppearance.ts`).
+
+### Lo script (`art/CH_GoldenStriker/build/rig.py`)
+
+Blender 4.5.3 senza schermo, 3,4 s; due esecuzioni danno lo stesso GLB (stesso md5).
+
+| Passo | Come | Numeri |
+|---|---|---|
+| 1 importazione | 1,80 m, piedi a terra, bacino sull'origine, vertici doppi uniti | 7.921 vertici |
+| 2 scheletro | le 23 ossa di CH_Fulmine con i nomi di Mixamo, sulle articolazioni misurate con sezioni orizzontali dei triangoli e con le viste di fronte e di lato (anche a y −0,025, ginocchia −0,172, caviglie −0,405, spalle 0,205 unità del file); pesi col calore delle ossa | 0 vertici senza peso |
+| 3 mano sul fianco | i vertici del corpo perdono i pesi di avambraccio e mano, quelli di avambraccio e mano i pesi del corpo; le facce che univano la mano alla maglia tagliate, i due lati richiusi ciascuno con i suoi vertici | 493 vertici, 62 facce tolte, 213 triangoli di chiusura |
+| 4 materiali | dall'osso che comanda la faccia e dagli orli misurati sul file (maglia sopra y = 0,045 + 0,13·x, calzettoni sotto −0,21, scarpe sotto −0,37), poi due passate di voto fra facce vicine | maglia 1.582, pantaloncini 880, calzettoni 308, scarpe 3.271, pelle 4.683, capelli 5.094 facce |
+| 5 posa A | gambe dritte sotto le anche, braccia 40° sotto l'orizzontale (la posa di CH_Fulmine), fatta posa di riposo, pesi rifatti | altezza 1,841 m (`extras.height`) |
+| 6 clip | `idle`, `run`, `kick` con gli aiuti di `art/CH_Fulmine/build/08_anim.py`; anche e caviglie prese da questo scheletro (caviglia a 0,205 m, piede a 0,117 m dal centro) | 2,0 s, 0,667 s (un passo intero), 0,6 s (contatto a 0,267 s) |
+
+GLB: 613.272 byte, 15.815 triangoli, 6 materiali, 22 ossa che deformano.
+
+- **Il lembo**: senza il passo 3 la posa A tirava un velo di maglia dal fianco alla mano
+  (`docs/fase3/golden/lembo_prima_del_taglio.jpg`). La sola separazione dei pesi non bastava: la
+  mano e la maglia sono una superficie unica nel file.
+- **Visibile nelle foto**: un cuneo bianco nella maglia sul fianco sinistro, dove stava la mano;
+  orli di maglia e calzettoni a dente di sega, perché i triangoli del busto sono grandi (40-90
+  vertici per fetta di 1,2 cm contro i 200-370 della testa); occhi e bocca del colore della pelle,
+  perché il file non ha colori; la testa china in avanti, com'è nel file.
+
+### Il gioco
+
+- **Registro** (`apps/web/game/models.ts`): `golden` → `/models/golden.glb`;
+  `/partita?modello=golden` e `/personaggi?modello=golden` disegnano tutti con questo modello.
+- **`/prova`** (`app/prova/page.tsx`, `game/practice.ts`, `game/input.ts`): una persona con un
+  solo calciatore e la palla. La simulazione gioca sempre cinque contro cinque, quindi gli altri
+  nove stanno nell'angolo (−13,5; −7,5) a ogni passo, fermi e con `pickupLock` a 1e9 perché non
+  prendano la palla, e la scena disegna solo il giocatore 4 (`players.ts`, `only`). Impostazioni
+  dell'allenamento del vecchio gioco (`web/js/modes.js`): avversari fermi, portiere compreso, 999
+  minuti; ogni calcio d'inizio è suo, così dopo un gol la palla gli torna ai piedi. Telecamera sul
+  giocatore con 9 m di campo nel mezzo dello schermo (`span` la cambia). Tasti e pad del vecchio
+  gioco (`web/js/input.js`, disposizione «classico»).
+- **`Stage.tsx`**: il ciclo della scena nasce in un effetto e non più in `useMemo`. In `pnpm dev`
+  React esegue due volte gli effetti al primo montaggio: la pulizia smontava giocatori e
+  post-elaborazione del ciclo che restava in uso, e la tela restava ferma al primo fotogramma
+  (anche su `/partita`). La versione compilata non aveva il problema.
+
+| Misura (1280 × 720, `renderer.info`, massimo su 5 s, versione compilata) | Chiamate di disegno | Triangoli |
+|---|---|---|
+| `/partita` senza modello (come prima) | 40 | 222.715 |
+| `/partita?modello=golden`, 10 giocatori | 146 | 384.103 |
+| `/prova` senza modello | 39 | 110.265 |
+| `/prova?modello=golden` | 49 | 129.943 |
+
+Con 10 copie il modello sta sotto le 150 chiamate del piano e a 1,28 volte i 300.000 triangoli
+(sezione 4.6); CH_Fulmine sta a 152 chiamate e 2.679.386 triangoli. `pnpm test`: 39 prove, 2 nuove
+in `game/practice.test.ts` (corsa con la palla e gli altri parcheggiati; tiro, gol e palla di
+nuovo ai piedi).
+
+- **Prova nel browser** (Chromium senza schermo, tastiera di Playwright): corsa a 4,69 m/s,
+  scatto a 6,33 m/s, tiro con `kickClip` `shot`, gol e ripartenza con la palla al giocatore;
+  `docs/fase3/golden/corsa_tiro.jpg` ha 6 fotogrammi di corsa e 6 del tiro, a partita ferma e
+  mandata avanti a mano.
+- **Link di prova**: https://claude.ai/artifact/SnPdj1vm8hNn6ZwGNwXVDz, la stessa pagina impacchettata
+  con esbuild in un solo script di 2.232.200 byte con il GLB dentro; serve un clic sulla pagina
+  prima della tastiera.
+
+### Cosa non è provato
+
+- Fotogrammi al secondo sul portatile di Tancredi.
+- Un pad vero: il codice legge la mappatura standard dell'API Gamepad, la chat non ha un pad; dentro
+  l'artifact il browser può negare l'accesso al pad.

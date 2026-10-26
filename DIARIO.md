@@ -422,3 +422,27 @@ Resta: provare `blender-image-to-3d` con Blender sul PC di Tancredi o con `bpy` 
 Resta: misura dei fotogrammi sul portatile di Tancredi con `?modello=fulmine`; clip per scivolata,
 colpo preso, spallata, palla in mano, esultanza e tiro caricato (Mixamo, poi Meshy se serve);
 budget del piano (8,9 volte i triangoli, 152 chiamate su 150); resa a fumetto nel gioco (punto 4).
+
+## 2026-10-26 — Golden Striker di Meshy nel gioco, partita di prova `/prova`
+
+- Il GLB di Tancredi (Meshy, 284.068 byte) aveva solo la geometria: 15.667 triangoli, niente
+  materiali, scheletro o clip, mano sinistra sul fianco. `art/CH_GoldenStriker/build/rig.py`
+  (Blender 4.5.3, 3,4 s): le 23 ossa di CH_Fulmine sulle articolazioni misurate, pesi col calore
+  delle ossa, mano staccata dal fianco (62 facce tagliate, 213 triangoli di chiusura), 6 materiali
+  (maglia, pantaloncini, calzettoni, scarpe con i colori di squadra; pelle; capelli dorati), posa A,
+  clip `idle`, `run`, `kick`. GLB del gioco: `apps/web/public/models/golden.glb`, 613.272 byte,
+  15.815 triangoli.
+- `/prova?modello=golden`: un calciatore solo con la palla, tastiera o pad, gli altri nove
+  parcheggiati e non disegnati (`game/practice.ts`, `game/input.ts`); dopo un gol la palla torna ai
+  piedi. Nel browser: corsa 4,69 m/s, scatto 6,33 m/s, tiro e gol. 49 chiamate di disegno, 129.943
+  triangoli; `/partita?modello=golden` 146 e 384.103 (senza modello 40 e 222.715, come prima).
+- `Stage.tsx`: il ciclo della scena nasce in un effetto; in `pnpm dev` la tela restava ferma al
+  primo fotogramma e i giocatori sparivano.
+- `pnpm test` 39 prove (2 nuove); typecheck, lint e build passati. Foto in `docs/fase3/golden/`,
+  numeri in `docs/DETTAGLI.md` («Golden Striker da Meshy»).
+- Link per giocare la prova: https://claude.ai/artifact/SnPdj1vm8hNn6ZwGNwXVDz (artifact a parte;
+  quello del gioco vecchio non è cambiato, `web/` invariato).
+
+Resta: il sì di Tancredi su corsa e tiro; la prova con un pad vero; fotogrammi sul portatile; il
+cuneo bianco sul fianco e gli orli a dente di sega (vedi `docs/DETTAGLI.md`); per i prossimi modelli
+di Meshy, rig e clip fatti da Meshy o Mixamo al posto dello script.
