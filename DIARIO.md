@@ -378,3 +378,19 @@ Resta: la chat nuova, aperta su `main`, con il messaggio di `docs/STUDIO-PERSONA
 - Nessun codice cambiato; `web/` invariato.
 
 Resta: gli 8 punti della sezione 11 nella chat nuova; la misura di `/bench` sul portatile per la fase 2.
+
+## 2026-10-26 — skill three.js e Blender nel repository
+
+- 68 skill copiate in `.claude/skills/` da 5 repository MIT (provenienza e commit in
+  `.claude/skills/SOURCES.md`): 13 `threejs-*`, `blender-image-to-3d`, 22 di cs68614-hash, 30 di
+  RobLe3 (due rinominate `cc-` per nome doppio), `lowpoly-humanoid` e `humanoid-rig-animation`;
+  3,6 MB. Nel repository e non con `-g`, perché il contenitore cloud si cancella a fine chat.
+- `docs/SKILL-3D.md`: quale skill per quale lavoro e come provare a creare un giocatore.
+- `CLAUDE.md`, sezione «Skills for 3D work»: l'obiettivo (il gioco di `main` in three.js con
+  giocatori 3D e animazioni dai GLB di Tancredi) e il promemoria delle skill.
+- Provato: `lowpoly-humanoid/lpm.py` dà un GLB di 32.552 byte, 29 parti, 828 triangoli, controlli
+  passati (serve anche `networkx`). Non provato: le skill che chiamano Blender; lo scaricamento
+  del binario 4.2 è stato bloccato dal controllo dei permessi della chat.
+- Nessun codice del gioco cambiato; `web/` invariato.
+
+Resta: provare `blender-image-to-3d` con Blender sul PC di Tancredi o con `bpy` in una chat cloud.
