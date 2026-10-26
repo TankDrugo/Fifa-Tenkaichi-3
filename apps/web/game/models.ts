@@ -4,6 +4,8 @@
 export const MODELS: Record<string, string> = {
   // CH_Fulmine, built from Tancredi's reference by art/CH_Fulmine/build (26/10/2026)
   fulmine: "/models/fulmine.glb",
+  // Golden Striker, Tancredi's Meshy model rigged by art/CH_GoldenStriker/build/rig.py (26/10/2026)
+  golden: "/models/golden.glb",
 };
 
 export const modelUrl = (id: string): string | undefined => (Object.hasOwn(MODELS, id) ? MODELS[id] : undefined);

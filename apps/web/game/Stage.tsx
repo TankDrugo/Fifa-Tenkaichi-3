@@ -9,8 +9,8 @@
 // 29 degrees through a long lens, the sun high behind the far side so the shadows fall toward the
 // camera, light bloom on the lights.
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo } from "react";
-import type { Object3D, PerspectiveCamera } from "three";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Group, type Object3D, type PerspectiveCamera } from "three";
 import { StageLoop } from "./loop";
 import { useModel } from "./useModel";
 import type { FrameStats } from "./stats";
@@ -40,11 +40,26 @@ function WithModel(props: WorldProps) {
   return <World {...props} model={useModel(props.options.model)} />;
 }
 
+// The loop is made in an effect, not in a memo: React's development mode runs every effect twice
+// on the first mount, and a memoised loop went on drawing after its cleanup had disposed of its
+// players and its post-processing (the canvas stood still, the players were gone). The scene
+// holds a group that takes the root of whichever loop is alive.
 function World({ options, stats, onLoop, model }: WorldProps) {
   const { gl, scene, camera, size } = useThree();
-  const loop = useMemo(() => new StageLoop(gl, scene, camera as PerspectiveCamera, options, stats, model), [gl, scene, camera, options, stats, model]);
-  useEffect(() => { onLoop?.(loop); return () => loop.dispose(); }, [loop, onLoop]);
-  useEffect(() => { loop.resize(size.width, size.height); }, [loop, size]);
-  useFrame((state, delta) => loop.frame(state.clock.elapsedTime, delta), 1);
-  return <primitive object={loop.root} />;
+  const get = useThree((s) => s.get);
+  const holder = useMemo(() => new Group(), []);
+  const loop = useRef<StageLoop | null>(null);
+  useEffect(() => {
+    const l = new StageLoop(gl, scene, camera as PerspectiveCamera, options, stats, model);
+    const now = get().size;
+    l.resize(now.width, now.height);
+    holder.add(l.root);
+    loop.current = l;
+    const stop = l.listen();
+    onLoop?.(l);
+    return () => { stop(); holder.remove(l.root); loop.current = null; l.dispose(); };
+  }, [gl, scene, camera, options, stats, model, onLoop, get, holder]);
+  useEffect(() => { loop.current?.resize(size.width, size.height); }, [size]);
+  useFrame((state, delta) => loop.current?.frame(state.clock.elapsedTime, delta), 1);
+  return <primitive object={holder} />;
 }

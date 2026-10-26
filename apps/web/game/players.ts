@@ -63,10 +63,11 @@ export interface Actors {
   dispose(): void;
 }
 
-// model: the GLB to draw every player with; without it, the pieces in code
-export function buildActors(designs: Design[], model?: Object3D): Actors {
+// model: the GLB to draw every player with; without it, the pieces in code. only: the one player
+// drawn, the others left out (the practice of /prova, practice.ts)
+export function buildActors(designs: Design[], model?: Object3D, only?: number): Actors {
   const group = new Group();
-  const players = createAppearance(designs, model);
+  const players = createAppearance(only === undefined ? designs : [designs[only]!], model);
   group.add(players.object);
 
   const ball = new Mesh(new SphereGeometry(C.ballRadius, 28, 18), standardMaterial({ map: BALL_TEXTURE(), roughness: 0.35, rim: 0.3 }));
@@ -85,6 +86,7 @@ export function buildActors(designs: Design[], model?: Object3D): Actors {
       const a = driver.alpha, A = driver.before, B = driver.after, m = driver.match;
       const bx = A.ballX + (B.ballX - A.ballX) * a, bz = A.ballZ + (B.ballZ - A.ballZ) * a;
       m.players.forEach((p, i) => {
+        if (only !== undefined && i !== only) return;
         const x = A.x[i]! + (B.x[i]! - A.x[i]!) * a, z = A.z[i]! + (B.z[i]! - A.z[i]!) * a;
         let fx = A.fx[i]! + (B.fx[i]! - A.fx[i]!) * a, fz = A.fz[i]! + (B.fz[i]! - A.fz[i]!) * a;
         const fl = Math.hypot(fx, fz) || 1; fx /= fl; fz /= fl;
@@ -110,7 +112,7 @@ export function buildActors(designs: Design[], model?: Object3D): Actors {
         pose.celebrate = p.celebrate;
         pose.charge = p.charge >= 0 ? p.charge / C.shotCharge : -1;
         pose.expression = expressionOf(p, m, time, i);
-        players.set(i, pose);
+        players.set(only === undefined ? i : 0, pose);
       });
       players.commit(time);
       // the ball, rolling on the ground by the way it moves

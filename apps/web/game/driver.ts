@@ -2,7 +2,7 @@
 // (Match.update), the scene draws at the screen's rate between the last two steps. For each player
 // the driver keeps where he was before the last step, so a 144 Hz screen sees him move between
 // steps instead of in jumps of 1/60 s.
-import { awayKit, clubById, clubSquad, defaultSettings, DT, Match, type Club, type Settings } from "@ft3/sim";
+import { awayKit, clubById, clubSquad, defaultSettings, DT, Match, type Club, type MatchOptions, type Settings } from "@ft3/sim";
 
 export interface Snapshot {
   x: Float64Array;
@@ -31,13 +31,14 @@ export class Driver {
   private cur = snapshot(10);
   private steps = 0;
 
-  constructor(homeId: string, awayId: string, seed: number, settings?: Partial<Settings>) {
+  // humans: the people who play (practice.ts), none for a match of the AI
+  constructor(homeId: string, awayId: string, seed: number, settings?: Partial<Settings>, humans: MatchOptions["humans"] = []) {
     this.home = clubById(homeId)!;
     this.away = clubById(awayId)!;
     const away = awayKit(this.home, this.away);
     const side = (c: Club, kit: string) => ({ club: c, squad: clubSquad(c), kit, kit2: null, pattern: 0, formation: c.formation || "rombo" });
     const s = Object.assign(defaultSettings(), { minutes: 4, difficulty: 1, goldenGoal: false, aiHits: true, opponentAi: 0 }, settings);
-    this.match = new Match({ home: side(this.home, this.home.kit), away: side(this.away, away.kit), humans: [], settings: s, seed });
+    this.match = new Match({ home: side(this.home, this.home.kit), away: side(this.away, away.kit), humans, settings: s, seed });
     // the shorts: the kit's second colour where it has one, else the other kit's colour
     this.colours = [
       { kit: this.home.kit, second: this.home.kit2 || this.home.alt },

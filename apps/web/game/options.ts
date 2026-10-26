@@ -3,9 +3,12 @@
 // middle of the screen), aim (metres across the pitch the camera aims at, + toward it), skip (steps
 // played before the first frame), focus (a player 0-9 to look at), paused=1, post=0; style=A or B,
 // the characters' style (game/looks.ts); modello=<id>, every player drawn by that GLB (game/models.ts).
+// /prova takes the same address and plays the practice (game/practice.ts): the camera follows the
+// person's footballer from closer, 9 m across the screen unless span says otherwise.
 import { clubById } from "@ft3/sim";
 import type { Style } from "./looks";
 import { modelUrl } from "./models";
+import { PRACTICE_PLAYER } from "./practice";
 import { CAMERA, STYLE } from "./style";
 
 export interface StageOptions {
@@ -25,13 +28,17 @@ export interface StageOptions {
   style: Style;
   // a model of game/models.ts, "" for the pieces in code
   model: string;
+  // the practice of /prova: one person with one footballer and the ball
+  practice: boolean;
 }
 
-export const DEFAULT_STAGE: StageOptions = { home: "fulmini", away: "marea", seed: 7, pitchDeg: CAMERA.pitchDeg, fovDeg: CAMERA.fovDeg, spanM: CAMERA.spanM, aimZ: CAMERA.aimZ, focus: -1, skip: 0, paused: false, post: true, style: STYLE, model: "" };
+export const DEFAULT_STAGE: StageOptions = { home: "fulmini", away: "marea", seed: 7, pitchDeg: CAMERA.pitchDeg, fovDeg: CAMERA.fovDeg, spanM: CAMERA.spanM, aimZ: CAMERA.aimZ, focus: -1, skip: 0, paused: false, post: true, style: STYLE, model: "", practice: false };
 
 type Params = Record<string, string | string[] | undefined>;
 
-export function stageOptions(sp: Params): StageOptions {
+const PRACTICE_SPAN = 9;
+
+export function stageOptions(sp: Params, practice = false): StageOptions {
   const one = (k: string) => { const v = sp[k]; return Array.isArray(v) ? v[0] : v; };
   const num = (k: string, d: number, lo: number, hi: number) => { const v = Number(one(k)); return Number.isFinite(v) && one(k) !== undefined ? Math.max(lo, Math.min(hi, v)) : d; };
   const club = (k: string, d: string) => { const v = one(k); return v && clubById(v) ? v : d; };
@@ -41,13 +48,14 @@ export function stageOptions(sp: Params): StageOptions {
     seed: Math.round(num("seed", DEFAULT_STAGE.seed, 1, 1e9)),
     pitchDeg: num("pitch", DEFAULT_STAGE.pitchDeg, 10, 89),
     fovDeg: num("fov", DEFAULT_STAGE.fovDeg, 5, 90),
-    spanM: num("span", DEFAULT_STAGE.spanM, 6, 60),
+    spanM: num("span", practice ? PRACTICE_SPAN : DEFAULT_STAGE.spanM, 6, 60),
     aimZ: num("aim", DEFAULT_STAGE.aimZ, -8, 8),
-    focus: Math.round(num("focus", -1, -1, 9)),
+    focus: practice ? PRACTICE_PLAYER : Math.round(num("focus", -1, -1, 9)),
     skip: Math.round(num("skip", 0, 0, 60 * 60 * 10)),
     paused: one("paused") === "1",
     post: one("post") !== "0",
     style: one("style") === "A" ? "A" : one("style") === "B" ? "B" : DEFAULT_STAGE.style,
     model: modelUrl(one("modello") ?? "") ? one("modello")! : "",
+    practice,
   };
 }

@@ -45,7 +45,7 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
 | `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
 | `package.json`, `pnpm-workspace.yaml` | workspace pnpm del gioco nuovo; `web/` ne resta fuori |
-| `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status`; `/partita` e `/bench`, la partita in 3D (`apps/web/game/`) |
+| `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status`; `/partita` e `/bench`, la partita in 3D (`apps/web/game/`); `/prova`, un calciatore solo con la palla per provare un modello |
 | `apps/realtime` | gioco nuovo, server delle partite: `/health` e WebSocket `/ws` |
 | `packages/shared` | gioco nuovo, schemi condivisi fra navigatore e server |
 | `packages/sim` | gioco nuovo, la simulazione in TypeScript (partita, IA, skill, carte), la stessa nel navigatore e sul server; `bench/` ha le prove e i banchi di `tools/` portati |
