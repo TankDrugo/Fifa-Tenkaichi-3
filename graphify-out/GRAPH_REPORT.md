@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 1771 nodes · 3777 edges · 87 communities (78 shown, 9 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 192 edges (avg confidence: 0.87)
+- 1785 nodes · 3791 edges · 93 communities (84 shown, 9 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 193 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `720d7eab`
+- Built from commit: `c456a160`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,8 +35,14 @@
 - Configurazione · dipendenze di apps/web
 - Gioco vecchio · telecronaca
 - Configurazione · integrazione continua
-- Partita · giocatore umano
+- Animazioni · forme dei pezzi del corpo
+- Personaggi · vetrina 3D
+- Prove · controlli di gioco (nuovo)
+- Documenti · mappa del gioco
+- Comandi · opzioni della scena e telecamera
+- Prove · controllo di fmath
 - Modelli 3D · manifesto e clip di Fulmine
+- Interfaccia · cornice delle pagine
 - Modelli 3D · testa e faccia di Fulmine
 - Ultimate Team · carte, pacchetti e rarità
 - Prove · scenari e confronto
@@ -49,7 +55,7 @@
 - Configurazione · dipendenze di apps/realtime
 - Gioco vecchio · carriera
 - Configurazione · radice del progetto
-- Personaggi · caricamento GLB e vetrina 3D
+- Interfaccia · scena della partita
 - Documenti · studio dei personaggi
 - Modelli 3D · strumenti Blender comuni
 - Modelli 3D · capelli di Fulmine
@@ -115,43 +121,43 @@
 ## Surprising Connections (you probably didn't know these)
 - `Ultimate Team` --references--> `record()`  [INFERRED]
   docs/DETTAGLI.md → web/js/ut.js
+- `Cosa c'è` --references--> `hypot()`  [INFERRED]
+  docs/DETTAGLI.md → packages/sim/src/fmath.ts
 - `Cosa c'è` --references--> `drawBoards()`  [INFERRED]
   docs/DETTAGLI.md → web/js/render.js
 - `Distribuzione (19/10/2026)` --references--> `push()`  [INFERRED]
   docs/DETTAGLI.md → art/CH_Fulmine/build_hd/hd.py
-- `Cosa cambia rispetto a `web/js/`` --references--> `Cue`  [INFERRED]
-  docs/DETTAGLI.md → packages/sim/src/types.ts
-- `Punto 1 · strato «aspetto del giocatore»` --references--> `PlayerFrame`  [INFERRED]
-  docs/DETTAGLI.md → apps/web/game/animation/appearance.ts
+- `Scelte di struttura` --references--> `timed()`  [INFERRED]
+  docs/DETTAGLI.md → packages/shared/src/status.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (87 total, 9 thin omitted)
+## Communities (93 total, 9 thin omitted)
 
 ### Community 0 - "Comandi · tastiera, joypad e opzioni (nuovo)"
-Cohesion: 0.13
-Nodes (14): createInput(), Input, KEYS, PAD, DEFAULT_STAGE, Params, park(), PRACTICE_PLAYER (+6 more)
+Cohesion: 0.18
+Nodes (8): SideColours, Snapshot, createInput(), Input, KEYS, PAD, PRACTICE_PLAYER, C
 
 ### Community 1 - "Partita · matematica identica ovunque (fmath)"
 Cohesion: 0.05
 Nodes (43): AT, ATANHI, ATANLO, C1, C2, C3, C4, C5 (+35 more)
 
 ### Community 2 - "Documenti · DETTAGLI, gioco vecchio"
-Cohesion: 0.11
-Nodes (18): Carriera, Come si gioca in locale, Cosa c'è, Distribuzione (19/10/2026), Gioco nuovo · fase 3a, prototipi dei personaggi (22/10/2026), Gioco nuovo · personaggi da modelli GLB (25/10/2026), Impostazioni, Passaggi (19/10/2026) (+10 more)
+Cohesion: 0.10
+Nodes (19): Carriera, Come si gioca in locale, Cosa c'è, Distribuzione (19/10/2026), Gioco nuovo · fase 3a, prototipi dei personaggi (22/10/2026), Gioco nuovo · personaggi da modelli GLB (25/10/2026), Impostazioni, Passaggi (19/10/2026) (+11 more)
 
 ### Community 3 - "Modelli 3D · Fulmine, corpo e vestiti"
 Cohesion: 0.13
 Nodes (23): elements(), sculpt(), collar(), cuffs(), emblem(), shirt(), shorts(), surface_ring() (+15 more)
 
 ### Community 4 - "Partita · simulazione (Match)"
-Cohesion: 0.11
-Nodes (10): Cosa cambia rispetto a `web/js/`, attackSign(), clamp(), interceptTime(), Match, stopped(), skill(), trySkill() (+2 more)
+Cohesion: 0.10
+Nodes (11): Cosa cambia rispetto a `web/js/`, attackSign(), clamp(), Match, shoulderRoot(), shoulderTimeAt(), stopped(), skill() (+3 more)
 
 ### Community 5 - "Partita · tipi della simulazione"
-Cohesion: 0.12
-Nodes (24): cardEffect(), AiPhase, LOOKS, makePlayer(), PassHow, SHOULDER_PATH, shoulderRoot(), shoulderTimeAt() (+16 more)
+Cohesion: 0.10
+Nodes (25): formationOf(), cardEffect(), AiPhase, interceptTime(), len(), LOOKS, makePlayer(), PassHow (+17 more)
 
 ### Community 6 - "Modelli 3D · esportazione GLB e telecronaca"
 Cohesion: 0.12
@@ -166,16 +172,16 @@ Cohesion: 0.08
 Nodes (49): Joypad, Joypad PS4, ufficiali e non (20/10/2026), Joypad PS5 (19/10/2026), Menu col joypad (19/10/2026), customProfile(), hatDirs(), labels(), layout() (+41 more)
 
 ### Community 9 - "Personaggi · aspetto e modelli GLB"
-Cohesion: 0.08
-Nodes (29): designs, kit, Copy, modelAppearance(), modelHeight(), start(), TEAM_MATERIALS, trianglesOf() (+21 more)
+Cohesion: 0.10
+Nodes (20): designs, BrowStyle, CHARACTER_HAIR, designFor(), draws(), Ears, EYE_COLOURS, EyeStyle (+12 more)
 
 ### Community 10 - "Interfaccia · pagine e HUD (nuovo)"
-Cohesion: 0.15
-Nodes (14): Bench(), metadata, metadata, metadata, Partita(), metadata, Prova(), stageOptions (+6 more)
+Cohesion: 0.21
+Nodes (13): Bench(), metadata, metadata, Partita(), metadata, Prova(), stageOptions, Hud (+5 more)
 
 ### Community 11 - "Partita · formazioni, ruoli e skill"
-Cohesion: 0.10
-Nodes (29): cardRoles(), defaultRole(), ROLES, skillOf(), C, CLIP_DURATION, DT, Formation (+21 more)
+Cohesion: 0.11
+Nodes (26): cardRoles(), defaultRole(), ROLES, rolesFor(), skillOf(), CLIP_DURATION, DT, Formation (+18 more)
 
 ### Community 12 - "Distribuzione · exe per Windows"
 Cohesion: 0.07
@@ -183,27 +189,27 @@ Nodes (15): handler(), main(), ours(), TestHandler(), TestUpdate(), waitForClose
 
 ### Community 13 - "Personaggi · vetrina e divise"
 Cohesion: 0.11
-Nodes (18): Appearance, createAppearance(), newFrame(), createLook(), Look, Style, Actors, BALL_TEXTURE() (+10 more)
+Nodes (27): Appearance, createAppearance(), newFrame(), PlayerFrame, PlayerMotion, kit, Copy, modelAppearance() (+19 more)
 
 ### Community 14 - "Prove · banchi IA e Tensione (nuovo)"
-Cohesion: 0.10
-Nodes (28): all, args, asJson, mins, oldPass, play(), res, shotD (+20 more)
+Cohesion: 0.13
+Nodes (19): all, args, asJson, mins, oldPass, play(), res, shotD (+11 more)
 
 ### Community 15 - "Partita · ciclo della scena 3D"
 Cohesion: 0.15
-Nodes (6): Driver, StageLoop, FrameInfo, FrameStats, Window, World()
+Nodes (6): Driver, park(), practiceDriver(), FrameInfo, FrameStats, Window
 
 ### Community 16 - "Prove · parità col gioco vecchio"
-Cohesion: 0.17
-Nodes (20): Matematica uguale in ogni motore, cases, r, special, u(), loadOldGame(), BUTTONS, commandScript() (+12 more)
+Cohesion: 0.22
+Nodes (17): Matematica uguale in ogni motore, loadOldGame(), BUTTONS, commandScript(), PRESS, SWEEPS, atan(), atan2() (+9 more)
 
 ### Community 17 - "Partita · funzioni di geometria"
-Cohesion: 0.18
-Nodes (11): Cosa c'è, Cosa non è provato, Gioco nuovo · fase 1, simulazione condivisa (21/10/2026), Il banco dell'IA e il compagno scelto, Misure, Partite simultanee per core, Versioni e perché, len() (+3 more)
+Cohesion: 0.29
+Nodes (7): Cosa c'è, Cosa non è provato, Gioco nuovo · fase 1, simulazione condivisa (21/10/2026), Il banco dell'IA e il compagno scelto, Misure, Partite simultanee per core, Versioni e perché
 
 ### Community 18 - "Configurazione · dipendenze di apps/web"
-Cohesion: 0.07
-Nodes (39): dependencies, @ft3/shared@workspace:*, @ft3/sim@workspace:*, next@16.4.2, pg@8.23.1, postprocessing@6.39.5, react-dom@19.3.1, redis@6.3.0 (+31 more)
+Cohesion: 0.06
+Nodes (40): dependencies, @ft3/shared@workspace:*, @ft3/sim@workspace:*, next@16.4.2, pg@8.23.1, postprocessing@6.39.5, react@19.3.1, react-dom@19.3.1 (+32 more)
 
 ### Community 19 - "Gioco vecchio · telecronaca"
 Cohesion: 0.43
@@ -212,6 +218,30 @@ Nodes (6): clip(), events(), italianVoice(), load(), say(), start()
 ### Community 20 - "Configurazione · integrazione continua"
 Cohesion: 0.06
 Nodes (41): name, runs-on, steps, name, runs-on, steps, concurrency, cancel-in-progress (+33 more)
+
+### Community 21 - "Animazioni · forme dei pezzi del corpo"
+Cohesion: 0.19
+Nodes (28): Add, buildParts(), facial(), foot(), gear(), hair(), hairline(), latheXY() (+20 more)
+
+### Community 22 - "Personaggi · vetrina 3D"
+Cohesion: 0.16
+Nodes (11): metadata, Personaggi(), Look, EXPRESSIONS, ShowroomLoop, ShowroomStage(), Window, WithModel() (+3 more)
+
+### Community 23 - "Prove · controlli di gioco (nuovo)"
+Cohesion: 0.17
+Nodes (13): cmd(), FOLLOW, freeze(), holder(), PassOpts, passTrials(), results, run() (+5 more)
+
+### Community 24 - "Documenti · mappa del gioco"
+Cohesion: 0.14
+Nodes (13): Audio e telecronaca, Comandi e joypad, IA, Interfaccia e menu, Mappa del gioco, Online e account, Partita, Personaggi e animazioni (+5 more)
+
+### Community 25 - "Comandi · opzioni della scena e telecamera"
+Cohesion: 0.28
+Nodes (7): DEFAULT_STAGE, Params, CAMERA, DAY, KEEPER_COLOURS, LOOK_COLOURS, STYLE
+
+### Community 26 - "Prove · controllo di fmath"
+Cohesion: 0.29
+Nodes (7): cases, r, special, u(), len(), hypot(), len()
 
 ### Community 27 - "Modelli 3D · manifesto e clip di Fulmine"
 Cohesion: 0.05
@@ -223,11 +253,11 @@ Nodes (14): bpy_flip(), brow(), ear(), eye(), face(), main(), quad_sphere(), sku
 
 ### Community 32 - "Ultimate Team · carte, pacchetti e rarità"
 Cohesion: 0.07
-Nodes (34): awayKit(), BODIES, BY_ID, cardById(), CHARS, Entry, entryKey(), extraCards (+26 more)
+Nodes (33): awayKit(), BODIES, BY_ID, cardById(), CHARS, Entry, entryKey(), extraCards (+25 more)
 
 ### Community 36 - "Prove · scenari e confronto"
-Cohesion: 0.20
-Nodes (16): SideColours, Snapshot, PassOpts, OldGame, repoRoot, Game, one, Scenario (+8 more)
+Cohesion: 0.24
+Nodes (13): OldGame, repoRoot, Game, one, Scenario, RoleDef, SkillDef, Card (+5 more)
 
 ### Community 42 - "Gioco vecchio · audio"
 Cohesion: 0.17
@@ -246,12 +276,12 @@ Cohesion: 0.07
 Nodes (30): runs-on, steps, concurrency, cancel-in-progress, group, environment, needs, runs-on (+22 more)
 
 ### Community 48 - "IA · squadra (nuovo)"
-Cohesion: 0.17
-Nodes (28): AiSkill, anchor(), ballAt(), carrierThink(), clamp(), control(), defend(), FAM_MARK (+20 more)
+Cohesion: 0.18
+Nodes (27): AiSkill, anchor(), ballAt(), carrierThink(), clamp(), control(), defend(), FAM_MARK (+19 more)
 
 ### Community 49 - "Animazioni · scheletro e pezzi del corpo"
-Cohesion: 0.06
-Nodes (69): ANKLE, arm, BONE, BoneName, bonePosition(), BONES_PER_PLAYER, clamp(), ea (+61 more)
+Cohesion: 0.07
+Nodes (41): pieceAppearance(), ANKLE, arm, BONE, BoneName, bonePosition(), BONES_PER_PLAYER, clamp() (+33 more)
 
 ### Community 54 - "Configurazione · dipendenze di apps/realtime"
 Cohesion: 0.10
@@ -265,9 +295,9 @@ Nodes (27): addResult(), copyCard(), endSeason(), fillStarters(), growth(), hubS
 Cohesion: 0.09
 Nodes (28): devDependencies, eslint@10.13.0, @eslint/js@10.0.1, eslint-plugin-react-hooks@7.1.1, globals@17.13.0, @next/eslint-plugin-next@16.4.2, typescript@6.0.3, typescript-eslint@8.72.0 (+20 more)
 
-### Community 68 - "Personaggi · caricamento GLB e vetrina 3D"
-Cohesion: 0.16
-Nodes (19): metadata, Personaggi(), MODELS, modelUrl(), useModel(), EXPRESSIONS, ShowroomStage(), WithModel() (+11 more)
+### Community 68 - "Interfaccia · scena della partita"
+Cohesion: 0.20
+Nodes (11): MODELS, modelUrl(), useModel(), StageLoop, Stage(), WithModel(), World(), WorldProps (+3 more)
 
 ### Community 78 - "Documenti · studio dei personaggi"
 Cohesion: 0.05
@@ -291,15 +321,15 @@ Nodes (13): ctx, FOLLOW, freeze(), fs, NONE, passTrials(), path, results (+5 mor
 
 ### Community 98 - "Online · server realtime e pagina di stato"
 Cohesion: 0.05
-Nodes (50): port, redis, onMessage(), rawText(), RealtimeOptions, RealtimeServer, send(), startRealtime() (+42 more)
+Nodes (49): port, redis, onMessage(), rawText(), RealtimeOptions, RealtimeServer, send(), startRealtime() (+41 more)
 
 ### Community 99 - "Animazioni · calciatore a pezzi e facce"
-Cohesion: 0.15
-Nodes (20): PlayerFrame, PlayerMotion, pieceAppearance(), newJoints(), Body, buildCast(), Cast, castMaterial() (+12 more)
+Cohesion: 0.14
+Nodes (17): Body, Build, Cast, castMaterial(), col, MAX_PLAYERS, top, Atlases (+9 more)
 
 ### Community 101 - "Documenti · fase 0 fondamenta"
-Cohesion: 0.29
-Nodes (7): Cosa c'è, Cosa non è provato, Docker nelle chat cloud, Gioco nuovo · fase 0, fondamenta (21/10/2026), Misure, Sul PC di Tancredi, Versioni e perché
+Cohesion: 0.25
+Nodes (8): Cosa c'è, Cosa non è provato, Docker nelle chat cloud, Gioco nuovo · fase 0, fondamenta (21/10/2026), Misure, Scelte di struttura, Sul PC di Tancredi, Versioni e perché
 
 ### Community 103 - "Documenti · piano 3D e online"
 Cohesion: 0.12
@@ -443,23 +473,23 @@ Nodes (4): context, dockerfile, build, build
 
 ## Knowledge Gaps
 - **6 isolated node(s):** `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+1 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 686 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 698 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Strike Legends nel browser — scelte e misure fino al 21/10/2026` connect `Documenti · DETTAGLI, gioco vecchio` to `Documenti · Fulmine nel gioco`, `Documenti · fase 0 fondamenta`, `Gioco vecchio · disegno degli sprite`, `Gioco vecchio · menu, HUD e joypad`, `Gioco vecchio · audio`, `Interfaccia · pagine e HUD (nuovo)`, `Documenti · fase 2 motore 3D`, `Partita · funzioni di geometria`, `Documenti · registro delle misure`, `Documenti · Golden Striker`?**
-  _High betweenness centrality (0.203) - this node is a cross-community bridge._
+- **Why does `Strike Legends nel browser — scelte e misure fino al 21/10/2026` connect `Documenti · DETTAGLI, gioco vecchio` to `Documenti · Fulmine nel gioco`, `Documenti · fase 0 fondamenta`, `Gioco vecchio · disegno degli sprite`, `Gioco vecchio · menu, HUD e joypad`, `Gioco vecchio · audio`, `Documenti · fase 2 motore 3D`, `Partita · funzioni di geometria`, `Documenti · registro delle misure`, `Documenti · Golden Striker`?**
+  _High betweenness centrality (0.233) - this node is a cross-community bridge._
 - **What connects `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` to the rest of the system?**
   _6 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Comandi · tastiera, joypad e opzioni (nuovo)` be split into smaller, more focused modules?**
-  _Cohesion score 0.13 - nodes in this community are weakly interconnected._
-- **Why does `Distribuzione (19/10/2026)` connect `Documenti · DETTAGLI, gioco vecchio` to `Modelli 3D · strumenti Blender comuni`?**
-  _High betweenness centrality (0.132) - this node is a cross-community bridge._
 - **Should `Partita · matematica identica ovunque (fmath)` be split into smaller, more focused modules?**
   _Cohesion score 0.045454545454545456 - nodes in this community are weakly interconnected._
-- **Why does `push()` connect `Modelli 3D · strumenti Blender comuni` to `Documenti · DETTAGLI, gioco vecchio`, `Modelli 3D · Fulmine, corpo e vestiti`, `Modelli 3D · testa e faccia di Fulmine`?**
-  _High betweenness centrality (0.132) - this node is a cross-community bridge._
+- **Why does `Distribuzione (19/10/2026)` connect `Documenti · DETTAGLI, gioco vecchio` to `Modelli 3D · strumenti Blender comuni`?**
+  _High betweenness centrality (0.153) - this node is a cross-community bridge._
 - **Should `Documenti · DETTAGLI, gioco vecchio` be split into smaller, more focused modules?**
-  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+- **Why does `push()` connect `Modelli 3D · strumenti Blender comuni` to `Documenti · DETTAGLI, gioco vecchio`, `Modelli 3D · Fulmine, corpo e vestiti`, `Modelli 3D · testa e faccia di Fulmine`?**
+  _High betweenness centrality (0.153) - this node is a cross-community bridge._
+- **Should `Modelli 3D · Fulmine, corpo e vestiti` be split into smaller, more focused modules?**
+  _Cohesion score 0.12762762762762764 - nodes in this community are weakly interconnected._
