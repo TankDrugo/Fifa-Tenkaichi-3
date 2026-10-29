@@ -74,12 +74,11 @@ al commit `53f3868`.
 
 I giocatori sono pezzi costruiti nel codice (`apps/web/game/render/parts.ts`) oppure modelli GLB in
 `apps/web/public/models/`, scelti con `?modello=<id>` (`apps/web/game/animation/models.ts`). Il gioco
-suona le clip di un GLB per nome: `idle`, `run`, `kick` (`apps/web/game/animation/modelAppearance.ts`);
-non legge i nomi delle ossa. Le animazioni nuove si fanno con Meshy; Mixamo si può usare ma non è
-obbligatorio, e il codice nuovo non presume uno scheletro Mixamo. I due modelli di oggi hanno ossa
-con i nomi di Mixamo (`mixamorig:Hips` …) date dagli script `art/CH_Fulmine/build_hd/16_rig.py` e
-`art/CH_GoldenStriker/build/rig.py`, e restano così. Obiettivo futuro: accettare le clip di Meshy
-con i loro nomi, senza la nomenclatura Mixamo.
+lega le clip di ogni GLB agli stati del gioco con una tabella per modello (fermo, camminata, corsa,
+tiro, passaggio, in `models.ts`) e non legge i nomi delle ossa. Tutte le animazioni si fanno con
+Meshy, sul rig di Meshy del personaggio, dalla sua libreria di animazioni: i 10 personaggi, i passi
+e gli script sono in `docs/PERSONAGGI.md`. I due modelli più vecchi (CH_Fulmine e Golden Striker)
+hanno ossa con i nomi di Mixamo e clip fatte nel codice, e restano così.
 
 ## Prove e misure
 
@@ -104,6 +103,8 @@ Playwright e un joypad finto che sostituisce `navigator.getGamepads`.
 - **Contenuti originali:** club, giocatori, leggende, stemmi e squadre leggendarie sono inventati;
   nessun nome di club o calciatore reale.
 - **Golden Striker:** modello fatto da Tancredi con Meshy (`art/CH_GoldenStriker/ref/`).
+- **I 10 personaggi** (`art/CH_Portiere1` … `art/CH_Giocatore10`): immagini di Tancredi; il modello
+  di `portiere1` fatto da Tancredi con Meshy, rig e clip dall'API di Meshy (`docs/PERSONAGGI.md`).
 - **fdlibm** (Sun Microsystems, 1993): seno, coseno, esponenziale e arcotangente della simulazione
   (`packages/sim/src/fmath.ts`), con l'avviso di copyright che la licenza chiede di conservare,
   copiato nel file.

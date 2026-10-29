@@ -4,14 +4,16 @@
 // any height, which the game brings to CHARACTER_HEIGHT times the card's height, the feet put on
 // the ground. The height is the model's box, or the number in a node's extras `height` when the
 // model has one (hair above the head does not make the player shorter). Materials named for the
-// team take the kit's colours (point 3). Clips named idle, run and kick, when the model has them,
-// follow the simulation (point 6): the run by the stride's phase, blended with idle by the speed,
-// the kick by its progress. The other actions and the faces' expressions belong to the pieces in
-// code.
+// team take the kit's colours (point 3). The model's table of clips (models.ts, in userData.clips;
+// without one, clips named idle, run and kick) says which clip plays each state, and the clips
+// follow the simulation (point 6): walk and run by the stride's phase, blended with idle and with
+// each other by the speed, the shot and the pass each by its kick's progress. The other actions and
+// the faces' expressions belong to the pieces in code.
 import { AnimationMixer, Box3, Group, LoopOnce, LoopRepeat, type AnimationAction, type Material, type Mesh, type Object3D } from "three";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import type { Appearance, PlayerFrame } from "./appearance";
 import type { Design, Kit } from "../render/looks";
+import { CODE_CLIPS, type ClipState, type ClipTable, type ClipUse } from "./models";
 import { CHARACTER_HEIGHT } from "../render/style";
 
 // The triangles of every mesh in an object.
@@ -40,35 +42,52 @@ export function modelHeight(model: Object3D, box: Box3): number {
   return h || box.max.y - box.min.y || 1;
 }
 
-// speed in m/s where the run clip has all the weight (the simulation runs above 3,2, RUN_ABOVE)
-const FULL_RUN = 3.2;
-const STILL = 0.3;
+// speeds in m/s: below STILL the player stands; with a walk clip, idle gives way to the walk by
+// WALKING and the walk to the run between WALK_UP and FULL_RUN (the simulation walks below 2,8 and
+// runs above 3,2, WALK_BELOW and RUN_ABOVE); without one, idle gives way to the run by FULL_RUN
+const STILL = 0.3, WALKING = 1.2, WALK_UP = 2.6, FULL_RUN = 3.2;
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+
+// A clip of the table, playing in one copy.
+interface Played { use: ClipUse; action: AnimationAction; duration: number }
 
 interface Copy {
   holder: Group;
   mixer?: AnimationMixer;
-  idle?: AnimationAction;
-  run?: AnimationAction;
-  kick?: AnimationAction;
+  states: Partial<Record<ClipState, Played>>;
+  // every action once, with the weight it gets this frame (shot and pass can share a clip)
+  actions: Map<AnimationAction, number>;
 }
 
-function start(mixer: AnimationMixer, model: Object3D, name: string, once = false): AnimationAction | undefined {
-  const clip = model.animations.find((c) => c.name === name);
-  if (!clip) return undefined;
-  const a = mixer.clipAction(clip);
-  a.setLoop(once ? LoopOnce : LoopRepeat, Infinity);
-  a.clampWhenFinished = once;
-  a.play();
-  // the time is set from the simulation every frame, never advanced by the mixer
-  a.paused = true;
-  a.setEffectiveWeight(0);
-  return a;
+const STATES: ClipState[] = ["idle", "walk", "run", "shot", "pass"];
+
+function start(copy: Copy, model: Object3D, table: ClipTable): void {
+  for (const state of STATES) {
+    const use = table[state];
+    const clip = use && model.animations.find((c) => c.name === use.clip);
+    if (!use || !clip) continue;
+    const a = copy.mixer!.clipAction(clip), once = state === "shot" || state === "pass";
+    if (!copy.actions.has(a)) {
+      a.setLoop(once ? LoopOnce : LoopRepeat, Infinity);
+      a.clampWhenFinished = once;
+      a.play();
+      // the time is set from the simulation every frame, never advanced by the mixer
+      a.paused = true;
+      a.setEffectiveWeight(0);
+      copy.actions.set(a, 0);
+    }
+    copy.states[state] = { use, action: a, duration: clip.duration };
+  }
 }
 
 export function modelAppearance(designs: Design[], model: Object3D): Appearance {
   const object = new Group();
+  // a copy made by SkeletonUtils.clone has its bones' world matrices still to compute, and the box
+  // of a skinned mesh is read through them
+  model.updateMatrixWorld(true);
   const box = new Box3().setFromObject(model, true);
   const tall = modelHeight(model, box);
+  const table = (model.userData.clips as ClipTable | undefined) ?? CODE_CLIPS;
   // one material per team part and colour, shared by the copies that wear it
   const kitMaterials = new Map<string, Material>();
   const dressed = (m: Material, kit: Kit): Material => {
@@ -95,9 +114,11 @@ export function modelAppearance(designs: Design[], model: Object3D): Appearance 
     });
     holder.add(copy);
     object.add(holder);
-    if (!model.animations.length) return { holder };
-    const mixer = new AnimationMixer(copy);
-    return { holder, mixer, idle: start(mixer, model, "idle"), run: start(mixer, model, "run"), kick: start(mixer, model, "kick", true) };
+    const c: Copy = { holder, states: {}, actions: new Map() };
+    if (!model.animations.length) return c;
+    c.mixer = new AnimationMixer(copy);
+    start(c, model, table);
+    return c;
   });
   const each = trianglesOf(model);
   return {
@@ -112,21 +133,32 @@ export function modelAppearance(designs: Design[], model: Object3D): Appearance 
       h.rotation.set(0, Math.atan2(f.fx, f.fz), 0);
       h.scale.setScalar((CHARACTER_HEIGHT * f.height) / tall);
       if (!c.mixer) return;
-      const kicking = f.kick >= 0 && c.kick !== undefined;
-      const run = kicking || f.speed < STILL ? 0 : Math.min(1, f.speed / FULL_RUN);
-      if (c.kick) {
-        c.kick.setEffectiveWeight(kicking ? 1 : 0);
-        c.kick.time = kicking ? f.kick * c.kick.getClip().duration : 0;
+      const st = c.states;
+      for (const a of c.actions.keys()) c.actions.set(a, 0);
+      const weigh = (p: Played | undefined, w: number) => { if (p && w > 0) c.actions.set(p.action, c.actions.get(p.action)! + w); };
+      // a stride clip at the simulation's phase, its left foot ahead at phase 0
+      const stride = (p: Played | undefined) => { if (p) p.action.time = ((f.phase + (p.use.offset ?? 0)) % 1) * p.duration; };
+      const kick = f.kick >= 0 ? st[f.kickKind] : undefined;
+      if (kick) {
+        const from = kick.use.from ?? 0, to = Math.min(kick.use.to ?? kick.duration, kick.duration);
+        kick.action.time = from + f.kick * (to - from);
+        weigh(kick, 1);
+      } else {
+        const moving = f.speed < STILL ? 0 : 1;
+        if (st.walk) {
+          const go = moving * clamp01(f.speed / WALKING), run = st.run ? clamp01((f.speed - WALK_UP) / (FULL_RUN - WALK_UP)) : 0;
+          weigh(st.idle, 1 - go); weigh(st.walk, go * (1 - run)); weigh(st.run, go * run);
+        } else {
+          const run = st.run ? moving * Math.min(1, f.speed / FULL_RUN) : 0;
+          weigh(st.idle, 1 - run); weigh(st.run, run);
+        }
+        stride(st.walk); stride(st.run);
+        if (st.idle) {
+          const d = st.idle.duration;
+          st.idle.action.time = ((f.time % d) + d) % d;
+        }
       }
-      if (c.run) {
-        c.run.setEffectiveWeight(run);
-        c.run.time = f.phase * c.run.getClip().duration;
-      }
-      if (c.idle) {
-        c.idle.setEffectiveWeight(kicking ? 0 : 1 - run);
-        const d = c.idle.getClip().duration;
-        c.idle.time = ((f.time % d) + d) % d;
-      }
+      for (const [a, w] of c.actions) a.setEffectiveWeight(w);
     },
     commit() {
       for (const c of copies) c.mixer?.update(0);

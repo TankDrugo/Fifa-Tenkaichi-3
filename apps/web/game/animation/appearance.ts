@@ -21,6 +21,7 @@ export interface PlayerMotion {
   time: number;             // s, for breathing when still
   // states of packages/sim, -1 or 0 when off
   kick: number;             // 0..1 through a kick, -1 off
+  kickKind: "shot" | "pass"; // which kick: each has its clip on a model (models.ts)
   slide: number;            // 0..1 through a slide and getting up, -1 off
   react: number;            // seconds left of a hit taken
   lunge: boolean;           // throwing a shoulder
@@ -35,7 +36,7 @@ export interface PlayerFrame extends PlayerMotion {
 
 export const newFrame = (): PlayerFrame => ({
   x: 0, z: 0, fx: 0, fz: 1, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0,
-  kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1, expression: "neutral",
+  kick: -1, kickKind: "shot", slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1, expression: "neutral",
 });
 
 export interface Appearance {

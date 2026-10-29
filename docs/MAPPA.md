@@ -3,7 +3,7 @@
 Dove sta ogni parte del gioco (Next.js e three.js, `apps/` e `packages/`) e a che punto è. Le fasi sono quelle di
 `docs/PIANO-3D-ONLINE.md`, sezione 5. Il gruppo graphify è il nome con cui la parte compare in
 `graphify-out/GRAPH_REPORT.md`: per esempio `graphify query "Ultimate Team carte"`.
-Aggiornata al 29/10/2026.
+Aggiornata al 29/10/2026 (personaggi: chat 1 dei 10).
 
 | Parte | Dove | Stato |
 |---|---|---|
@@ -11,7 +11,7 @@ Aggiornata al 29/10/2026.
 | IA | `packages/sim/src/ai.ts` | fatta (fase 1) |
 | Skill | `packages/sim/src/skills.ts` | fatta nella simulazione, pose 3D in fase 3 |
 | Tensione e Cometa | `packages/sim/src/match.ts`, `constants.ts` | fatta nella simulazione |
-| Personaggi e animazioni | `apps/web/game/animation/`, `apps/web/game/render/` | in corso (fase 3) |
+| Personaggi e animazioni | `apps/web/game/animation/`, `apps/web/game/render/`, `docs/PERSONAGGI.md` | in corso (fase 3): 1 dei 10 personaggi fatto |
 | Stadio e grafica | `apps/web/game/render/arena.ts`, `apps/web/game/core/loop.ts` | stadio fatto (fase 2), 12 campi a tema da fare |
 | Ultimate Team e carte | `packages/sim/src/data.ts` | dati fatti, schermate in fase 4, server in fase 5 |
 | Interfaccia e menu | `apps/web/app/`, `apps/web/game/ui/` | pagine di prova; menu in fase 4 |
@@ -68,24 +68,32 @@ La barra di squadra a 3 tacche: 1 tacca per il tiro caricato, 3 per il Colpo del
 
 ## Personaggi e animazioni
 
-Come si disegna un calciatore e come si muove.
+Come si disegna un calciatore e come si muove. I 10 personaggi di Tancredi, il loro stato e il
+procedimento con Meshy stanno in `docs/PERSONAGGI.md`.
 
 - **File:**
   - `apps/web/game/animation/`: `appearance.ts` sceglie fra pezzi e modello GLB; `rig.ts` è lo
     scheletro dei calciatori a pezzi con la corsa; `modelAppearance.ts` muove un GLB con le sue clip;
-    `models.ts` elenca i GLB; `useModel.ts` li carica.
+    `models.ts` elenca i GLB, ognuno con la sua tabella delle clip; `useModel.ts` li carica.
   - `apps/web/game/render/`: `parts.ts` (i pezzi del corpo), `body.ts`, `character.ts`, `faces.ts`
-    (facce disegnate), `looks.ts` (stili), `players.ts` (divise).
-  - Modelli: `apps/web/public/models/fulmine.glb` e `golden.glb`, con `?modello=fulmine` o
-    `?modello=golden`. Sorgenti Blender in `art/`.
-- **Animazioni:** il gioco cerca le clip per nome: `idle`, `run`, `kick`. Le nuove si fanno con Meshy;
-  Mixamo si può usare, non è obbligatorio. Dettagli in `docs/SKILL-3D.md` e
-  `docs/STUDIO-PERSONAGGI.md`, sezione 11.
-- **Stato:** in corso (fase 3). Ci sono corsa, tiro e fermo; mancano scivolata, colpo preso,
-  spallata, palla in mano, esultanza e tiro caricato; 22 figure a pezzi.
+    (facce disegnate), `looks.ts` (stili), `players.ts` (divise; tiro o passaggio dalla simulazione).
+  - Modelli: `apps/web/public/models/fulmine.glb`, `golden.glb` e `portiere1.glb`, con
+    `?modello=fulmine`, `?modello=golden` o `?modello=portiere1`. Sorgenti Blender in `art/`; immagini
+    dei 10 personaggi in `art/CH_Portiere1/ref/` … `art/CH_Giocatore10/ref/`.
+  - Script: `apps/web/scripts/meshy.ts` (immagine, rig, clip della libreria e Text to Motion di
+    Meshy), `glb.ts` (unisce le clip in un GLB, riduce texture e triangoli), `clipsheet.ts` (fogli
+    di foto delle clip), `video.ts` (video di una pagina).
+- **Animazioni:** tutte con Meshy, sul rig di Meshy del personaggio, dalla sua libreria (decisione di
+  Tancredi, 29/10/2026); se manca una clip si chiede a Tancredi. La tabella del modello lega le clip
+  agli stati fermo, camminata, corsa, tiro e passaggio; senza tabella il gioco cerca `idle`, `run`,
+  `kick`.
+- **Stato:** in corso (fase 3). `portiere1` ha le 5 animazioni base di Meshy e gioca su
+  `/partita?modello=portiere1`; mancano gli altri 9 personaggi, i colori di squadra sui modelli con
+  la divisa nella texture, e le clip di scivolata, colpo preso, spallata, palla in mano, esultanza e
+  tiro caricato; 22 figure a pezzi.
 - **Gruppi graphify:** «Animazioni · scheletro e pezzi del corpo», «Animazioni · calciatore a pezzi e
   facce», «Personaggi · stili e modelli GLB», «Personaggi · vetrina 3D»,
-  «Modelli 3D · …» (gli script Blender di Fulmine).
+  «Modelli 3D · …» (gli script Blender di Fulmine), GRUPPI_NUOVI.
 
 ## Stadio e grafica
 
@@ -142,6 +150,7 @@ Tastiera e controller (Xbox, PlayStation) con la Gamepad API del browser.
 ## Prove
 
 - `packages/sim/bench/`: situazioni di gioco (`checks.ts`), IA, Tensione, Chromium, velocità.
-- `apps/web/scripts/bench3d.ts`: budget della scena 3D; `pnpm test`: le prove dei pacchetti.
+- `apps/web/scripts/bench3d.ts`: budget della scena 3D (`--modello <id>` con un GLB); `clipsheet.ts` e
+  `video.ts`: fogli di foto delle clip e video di una pagina; `pnpm test`: le prove dei pacchetti.
 - CI in `.github/workflows/ci.yml`, a ogni pull request.
 - **Gruppi graphify:** «Prove · …», «Configurazione · …».

@@ -449,7 +449,9 @@ in piedi, piedi sull'origine, guarda verso +Z, alto in metri qualsiasi (lo porta
 colori della squadra (`maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe`; il resto resta
 com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con nomi delle ossa
 liberi (il gioco non li legge; aggiornato il 29/10/2026, prima chiedeva i nomi di Mixamo) e clip
-chiamate `idle`, `run`, `kick`, i nomi che `apps/web/game/animation/modelAppearance.ts` cerca; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
+con i nomi che hanno, legate agli stati del gioco dalla tabella del modello in
+`apps/web/game/animation/models.ts` (dal 29/10/2026, `docs/PERSONAGGI.md`; senza tabella il gioco
+cerca `idle`, `run`, `kick`); l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
 mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md` nella storia git, 22/10/2026).
 
 ### Punti da implementare nella chat nuova

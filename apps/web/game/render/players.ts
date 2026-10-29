@@ -56,6 +56,9 @@ export function expressionOf(p: Player, m: Match, time: number, i: number): Expr
   return beat < 0.12 ? "blink" : "neutral";
 }
 
+// seconds a pass made on the run is drawn for (the standing pass's clip, CLIP_DURATION.pass)
+const PASS_SHOWN = CLIP_DURATION.pass ?? 0.33;
+
 export interface Actors {
   group: Group;
   players: Appearance;
@@ -105,6 +108,10 @@ export function buildActors(designs: Design[], model?: Object3D, only?: number):
         pose.lookYaw = Math.abs(look) < 1.6 ? look : 0;
         pose.time = time + i * 0.7;
         pose.kick = p.kickT >= 0 && p.kickClip ? Math.min(1, p.kickT / (CLIP_DURATION[p.kickClip] ?? 0.3)) : -1;
+        // a pass on the run: the simulation cuts its clip, the drawing still shows the gesture
+        const since = m.clock - p.kickAt;
+        if (pose.kick < 0 && p.kickKind === "pass" && p.kickAt >= 0 && since < PASS_SHOWN) pose.kick = since / PASS_SHOWN;
+        pose.kickKind = p.kickKind === "shot" ? "shot" : "pass";
         pose.slide = p.slideT >= 0 ? 0.5 * Math.min(1, p.slideT / C.slideTime) : p.slideDownT > 0 ? 0.5 + 0.5 * (1 - p.slideDownT / C.slideDown) : -1;
         pose.react = p.react;
         pose.lunge = p.hitT >= 0;

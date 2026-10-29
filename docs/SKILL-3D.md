@@ -70,8 +70,10 @@ scivolata, colpo preso, spallata, palla in mano, esultanza, tiro caricato
 - Il codice nuovo non presume uno scheletro Mixamo: il gioco cerca le clip per nome (`idle`, `run`,
   `kick`, `apps/web/game/animation/modelAppearance.ts`) e non legge i nomi delle ossa. I due modelli di oggi
   hanno ossa con i nomi di Mixamo (`mixamorig:Hips` ...) e restano così.
-- Obiettivo futuro, non ancora fatto: accettare le clip di Meshy con i loro nomi, senza la
-  nomenclatura Mixamo.
+- Fatto il 29/10/2026: ogni modello ha una tabella che lega le clip di Meshy, con i loro nomi, agli
+  stati del gioco (`apps/web/game/animation/models.ts`). Da quel giorno, per decisione di Tancredi,
+  tutte le animazioni si fanno con Meshy, sul rig di Meshy, dalla sua libreria: niente Mixamo e
+  niente clip a mano. Passi e script: `docs/PERSONAGGI.md`.
 
 ## Come provare a creare un giocatore
 

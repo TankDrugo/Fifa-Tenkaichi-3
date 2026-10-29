@@ -54,7 +54,7 @@ function makePlayer(team: Team, slot: number, card: Card | null | undefined, loo
     sh: -1, shExit: false, shFrom: [0, 0], shLen: 0, shDir: [1, 0],
     reactClip: -1, reactDir: [1, 0], reactSheet: "hit_react",
     slideT: -1, slideDir: [1, 0], slideDownT: 0, slideCool: 0, feintT: -1, feintDir: [0, 1], feintCool: 0,
-    kickClip: null, kickT: -1, kickDir: [1, 0], holdT: 0, rollT: -1,
+    kickClip: null, kickT: -1, kickDir: [1, 0], kickKind: null, kickAt: -1, holdT: 0, rollT: -1,
     charge: -1, passCharge: -1, celebrate: -1, pickupLock: 0, specialPose: -1,
     skill: null, skillCool: 0, fooled: 0, foolDir: [0, 0],
     aiHold: 0, aiAim: NaN, aiChargeTo: NaN, aiSpot: null, aiSpotT: 0, aiSpotFor: undefined, roleCache: null,
@@ -276,7 +276,7 @@ export class Match {
     p.pickupLock = 0.25;
     const sp = len(vx, vz);
     const dir: Vec2 = sp > 0.01 ? [vx / sp, vz / sp] : [p.fx, p.fz];
-    p.kickDir = dir; p.kickT = 0;
+    p.kickDir = dir; p.kickT = 0; p.kickKind = kind; p.kickAt = this.clock;
     const idle = len(p.vx, p.vz) < IDLE_BELOW;
     p.kickClip = p.isKeeper && kind === "roll" ? "keeper_roll" : (idle ? "pass" : (kind === "shot" ? "shot" : null));
     if (!p.kickClip) p.kickT = -1;

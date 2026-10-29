@@ -5,13 +5,15 @@
 // which need a canvas for the faces.
 import { describe, expect, it } from "vitest";
 import {
-  AnimationClip, Bone, Box3, BoxGeometry, Color, Float32BufferAttribute, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial,
+  AnimationClip, Bone, Box3, BoxGeometry, Color, Float32BufferAttribute, Group, Matrix4, Mesh, MeshBasicMaterial, MeshStandardMaterial,
   Skeleton, SkinnedMesh, Uint16BufferAttribute, Vector3, VectorKeyframeTrack,
 } from "three";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import { CLUBS, clubSquad } from "@ft3/sim";
 import { createAppearance, newFrame } from "./appearance";
 import { designFor } from "../render/looks";
 import { trianglesOf } from "./modelAppearance";
+import { MODELS, type ClipTable } from "./models";
 import { CHARACTER_HEIGHT } from "../render/style";
 
 const club = CLUBS[0]!;
@@ -94,6 +96,66 @@ describe("aspetto del giocatore con un modello GLB", () => {
     expect(at({ speed: 0.1, time: 0.4 })).toEqual([0, 0.4, 0]);
     expect(at({ speed: 1.6, phase: 0.5, time: 0.2 })).toEqual([0.25, 0.1, 0]);
     expect(at({ speed: 5, kick: 0.6 })).toEqual([0, 0, 0.6]);
+  });
+  it("la tabella delle clip del modello: nomi di Meshy, camminata e corsa sfasate, tiro e passaggio ognuno col suo pezzo di clip", () => {
+    const bone = new Bone();
+    bone.name = "Hips";
+    const g = model();
+    g.add(bone);
+    // each clip moves the bone along x by its time and puts its own number in y, 1 m per second of clip
+    const track = (id: number, d: number) => new VectorKeyframeTrack("Hips.position", [0, d], [0, id, 0, d, id, 0]);
+    g.animations = [
+      new AnimationClip("Idle_3", 10, [track(1, 10)]), new AnimationClip("Armature|walking_man|baselayer", 1, [track(2, 1)]),
+      new AnimationClip("Armature|running|baselayer", 0.5, [track(3, 0.5)]), new AnimationClip("Kick_a_Soccer_Ball", 2, [track(4, 2)]),
+      new AnimationClip("Side_Foot_Pass", 2, [track(5, 2)]),
+    ];
+    const table: ClipTable = {
+      idle: { clip: "Idle_3" }, walk: { clip: "Armature|walking_man|baselayer", offset: 0.25 }, run: { clip: "Armature|running|baselayer", offset: 0.5 },
+      shot: { clip: "Kick_a_Soccer_Ball", from: 0.5, to: 1.5 }, pass: { clip: "Side_Foot_Pass", from: 1, to: 1.5 },
+    };
+    g.userData.clips = table;
+    const a = createAppearance(designs, g);
+    const at = (f: Partial<ReturnType<typeof newFrame>>) => {
+      a.set(0, Object.assign(newFrame(), f));
+      a.commit(0);
+      return a.object.children[0]!.getObjectByName("Hips")!.position.toArray().slice(0, 2).map((v) => Math.round(v * 1000) / 1000);
+    };
+    expect(at({ speed: 0, time: 3 })).toEqual([3, 1]);
+    // walking: the walk clip a quarter on from the phase
+    expect(at({ speed: 2, phase: 0.5 })).toEqual([0.75, 2]);
+    // running: the run clip half a stride on, 0,5 s long
+    expect(at({ speed: 5, phase: 0.25 })).toEqual([0.375, 3]);
+    // between walk and run, half and half at 2,9 m/s, at the same phase
+    expect(at({ speed: 2.9, phase: 0 })).toEqual([0.125 + 0.125, 2.5]);
+    expect(at({ speed: 5, kick: 0.5, kickKind: "shot" })).toEqual([1, 4]);
+    expect(at({ speed: 0, kick: 0.5, kickKind: "pass" })).toEqual([1.25, 5]);
+  });
+  it("ogni modello dell'elenco ha una clip per fermo, corsa, tiro e passaggio", () => {
+    for (const [id, m] of Object.entries(MODELS)) for (const state of ["idle", "run", "shot", "pass"] as const) expect(m.clips[state]?.clip, `${id} ${state}`).toBeTruthy();
+  });
+  it("un modello di Meshy copiato come lo copia useModel: scheletro in centimetri sotto un nodo in scala 0,01, alto quanto la carta", () => {
+    const geo = new BoxGeometry(0.4, 1.6, 0.3, 1, 4, 1).translate(0, 0.8, 0);
+    const n = geo.getAttribute("position").count;
+    geo.setAttribute("skinIndex", new Uint16BufferAttribute(new Uint16Array(n * 4), 4));
+    geo.setAttribute("skinWeight", new Float32BufferAttribute(new Float32Array(n * 4).map((_, k) => (k % 4 === 0 ? 1 : 0)), 4));
+    const armature = new Group();
+    armature.scale.setScalar(0.01);
+    const hips = new Bone();
+    hips.position.set(0, 63, -4);
+    const mesh = new SkinnedMesh(geo, new MeshBasicMaterial());
+    // the mesh comes before the bones, as in the GLB, and is bound as GLTFLoader binds it: the
+    // file's inverse bind matrices, the world matrices left to compute
+    armature.add(mesh, hips);
+    armature.updateMatrixWorld(true);
+    mesh.bind(new Skeleton([hips], [hips.matrixWorld.clone().invert()]), new Matrix4());
+    armature.traverse((o) => o.matrixWorld.identity());
+    const a = createAppearance(designs, clone(armature));
+    a.set(0, newFrame());
+    a.commit(0);
+    a.object.updateMatrixWorld(true);
+    const box = new Box3().setFromObject(a.object.children[0]!, true);
+    expect(box.min.y).toBeCloseTo(0, 4);
+    expect(box.max.y).toBeCloseTo(CHARACTER_HEIGHT, 4);
   });
   it("un modello con lo scheletro: ogni copia ha le sue ossa", () => {
     const geo = new BoxGeometry(0.4, 1.6, 0.3, 1, 4, 1);

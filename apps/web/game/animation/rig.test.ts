@@ -10,7 +10,7 @@ import { buildParts } from "../render/parts";
 import { BONE, BONES_PER_PLAYER, bonePosition, locomotion, newJoints, skeleton, type PoseInput } from "./rig";
 import { CHARACTER_HEIGHT } from "../render/style";
 
-const pose = (x: number, z: number, fx: number, fz: number): PoseInput => ({ x, z, fx, fz, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 });
+const pose = (x: number, z: number, fx: number, fz: number): PoseInput => ({ x, z, fx, fz, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, kickKind: "shot", slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 });
 
 describe("lo scheletro sta dove lo mette la simulazione", () => {
   const body = makeBody({});
