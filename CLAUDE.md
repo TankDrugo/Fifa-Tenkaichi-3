@@ -60,9 +60,6 @@ project and writes in Italian.
 - Versions are exact in every `package.json` and image tag; the reason for each library is in
   `docs/DETTAGLI.md`, «Gioco nuovo». Docker images run on amd64 and arm64, so a tag must list both
   on Docker Hub.
-- `.claude/settings.json` still runs `tools/style_guard/` as a `Stop` and a `PostToolUse` hook: a
-  reply containing a word from `tools/style_guard/verdict_words.txt` is sent back to be rewritten.
-  A chat cannot edit its own hooks; Tancredi removes them, then the folder can go.
 - Git: only `main` and the chat's branch exist; GitHub deletes a merged branch («Automatically
   delete head branches») because `git push --delete` and tag pushes get 403 from a cloud chat.
 

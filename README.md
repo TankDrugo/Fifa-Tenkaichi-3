@@ -45,7 +45,6 @@ disegna in WebGL senza librerie. La versione Godot è abbandonata e non fa parte
 | `tools/build_web_dist.sh`, `tools/web_launcher/` | zip per itch.io ed exe per Windows (Go): `update.go` scarica l'ultima versione dal sito |
 | `.github/workflows/pages.yml` | a ogni push su `main` che cambia `web/` o questo file: il sito, lo zip per itch.io e `version.json` su GitHub Pages |
 | `tools/make_commentary.py` | registra la telecronaca con Chatterbox (serve il dominio `us.aws.cdn.hf.co`) |
-| `tools/style_guard/`, `.claude/settings.json` | filtro di parole sulle risposte delle chat (hook `Stop` e `PostToolUse`); la regola che serviva è tolta, il filtro si spegne togliendo i due hook e poi la cartella |
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
 | `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
 | `package.json`, `pnpm-workspace.yaml` | workspace pnpm del gioco nuovo; `web/` ne resta fuori |
