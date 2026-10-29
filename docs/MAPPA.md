@@ -93,7 +93,9 @@ procedimento con Meshy stanno in `docs/PERSONAGGI.md`.
   tiro caricato; 22 figure a pezzi.
 - **Gruppi graphify:** «Animazioni · scheletro e pezzi del corpo», «Animazioni · calciatore a pezzi e
   facce», «Personaggi · stili e modelli GLB», «Personaggi · vetrina 3D»,
-  «Modelli 3D · …» (gli script Blender di Fulmine), GRUPPI_NUOVI.
+  «Modelli 3D · …» (gli script Blender di Fulmine), «Animazioni · GLB e tabella delle clip»,
+  «Animazioni · API di Meshy», «Animazioni · GLB di Meshy: clip unite, texture e triangoli»,
+  «Documenti · i 10 personaggi».
 
 ## Stadio e grafica
 
@@ -153,4 +155,5 @@ Tastiera e controller (Xbox, PlayStation) con la Gamepad API del browser.
 - `apps/web/scripts/bench3d.ts`: budget della scena 3D (`--modello <id>` con un GLB); `clipsheet.ts` e
   `video.ts`: fogli di foto delle clip e video di una pagina; `pnpm test`: le prove dei pacchetti.
 - CI in `.github/workflows/ci.yml`, a ogni pull request.
-- **Gruppi graphify:** «Prove · …», «Configurazione · …».
+- **Gruppi graphify:** «Prove · …» (anche «Prove · fogli di foto delle clip» e «Prove · video di una
+  pagina»), «Configurazione · …».

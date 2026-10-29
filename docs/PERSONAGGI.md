@@ -173,7 +173,25 @@ fotogrammi al secondo e chiamate di disegno.
 
 ## I numeri di `portiere1`
 
-NUMERI
+Misure del 29/10/2026 in questa chat: `pnpm build`, `pnpm --filter @ft3/web start`, Chromium senza
+schermo con WebGL in software; chiamate e triangoli da `renderer.info`, il massimo sui fotogrammi,
+ombre e post-elaborazione comprese.
+
+| Misura | Senza modello (pezzi in codice) | `--modello portiere1` |
+|---|---|---|
+| `bench3d.ts`, 6 prove (1280 × 720 e 1920 × 1080, schermo × 1 e × 1,5, dopo 0, 1.800 e 7.200 passi) | 40 chiamate, 222.715 triangoli in tutte | 56-57 chiamate (budget 150), 237.529-245.201 triangoli (budget 300.000): 6 «ok» su 6 |
+| impronta dopo 900 passi, pagina e Node | `f405f43f0a2aff2c` | `f405f43f0a2aff2c` (`kickKind` e `kickAt` non cambiano la partita) |
+| un giocatore | — | 7.672 triangoli, 1 materiale, 24 ossa, 1 chiamata di disegno (più l'ombra) |
+| GLB | — | 1,7 MB (1.652.408 byte), da 23 MB del file di Tancredi |
+| `node packages/sim/bench/checks.ts` | 11 «ok» | — |
+| `pnpm test` | 39 prove, 3 nuove in `apps/web/game/animation/appearance.test.ts` (la tabella delle clip con i nomi di Meshy, sfasamenti e tratti dei calci; ogni modello dell'elenco ha fermo, corsa, tiro e passaggio; un modello di Meshy legato come lo lega `GLTFLoader` è alto quanto la carta) | |
+| crediti Meshy | 1.205 all'inizio | 1.176 alla fine: 24 per `portiere1`, 5 per la prova dell'immagine→modello |
+
+Video (registrati con `scripts/video.ts`, 30 fotogrammi al secondo, solo la tela: il punteggio è
+HTML e non c'è): `docs/personaggi/portiere1/partita.mp4` (12 s dal 30° secondo della partita con
+seme 7, la telecamera del gioco) e `partita_vicina.mp4` (10 s, `span=11&pitch=24`). Vetrina:
+`docs/personaggi/portiere1/vetrina.jpg`. I fotogrammi al secondo li misura Tancredi sul portatile:
+qui il WebGL è in software e non dicono niente.
 
 ## Cosa resta
 
