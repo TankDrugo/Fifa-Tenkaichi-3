@@ -1,0 +1,3 @@
+# The 68 vendored skills (.claude/skills/) are third-party tooling, not the game: without this
+# line they are 2.932 of the graph's 4.739 nodes and answer questions about the game.
+.claude/skills/
