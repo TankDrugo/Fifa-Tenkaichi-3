@@ -45,6 +45,7 @@ disegna in WebGL senza librerie. La versione Godot è abbandonata e non fa parte
 | `tools/build_web_dist.sh`, `tools/web_launcher/` | zip per itch.io ed exe per Windows (Go): `update.go` scarica l'ultima versione dal sito |
 | `.github/workflows/pages.yml` | a ogni push su `main` che cambia `web/` o questo file: il sito, lo zip per itch.io e `version.json` su GitHub Pages |
 | `tools/make_commentary.py` | registra la telecronaca con Chatterbox (serve il dominio `us.aws.cdn.hf.co`) |
+| `docs/MAPPA.md` | mappa delle 12 parti del gioco (partita, IA, skill, Tensione, personaggi e animazioni, stadio, Ultimate Team, interfaccia, comandi, audio, online, prove): file nel gioco nuovo e nel vecchio, stato, gruppi del grafo; in versione da guardare su https://claude.ai/artifact/Q9NV9YFRAeAf37SnTJQM47 |
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
 | `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
 | `package.json`, `pnpm-workspace.yaml` | workspace pnpm del gioco nuovo; `web/` ne resta fuori |

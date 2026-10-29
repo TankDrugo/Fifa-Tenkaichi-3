@@ -1,6 +1,7 @@
 # Fifa Tenkaichi 3 (Strike Legends) — project facts
 
-Technical facts about the repository. `README.md` says what is where, `docs/DETTAGLI.md` why each
+Technical facts about the repository. `docs/MAPPA.md` maps each part of the game (match, AI,
+skills, animations, Ultimate Team, …) to its files and state, `README.md` says what is where, `docs/DETTAGLI.md` why each
 number is what it is, `docs/PIANO-3D-ONLINE.md` the phases of the new game. Tancredi owns the
 project and writes in Italian.
 
@@ -29,6 +30,11 @@ project and writes in Italian.
 - `art/`: Blender sources of the GLB players; `tools/`: checks, benches and distribution of the old
   game; `docs/`: design and measurements.
 - Godot is abandoned; nothing in the repository depends on it.
+- `graphify-out/` maps the project without `.claude/skills/` (`.graphifyignore`). Its communities
+  carry Italian names by game part («Partita · …», «Animazioni · …», «Ultimate Team · …») kept in
+  `graphify-out/.graphify_labels.json` with member signatures in `.graphify_labels.json.sig`; a
+  community that changes after `graphify update .` falls back to a file name until it is named
+  there again and `graphify cluster-only . --no-label` rewrites the report.
 
 ## Running and checking
 
