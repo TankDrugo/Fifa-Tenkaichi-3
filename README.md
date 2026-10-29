@@ -17,7 +17,8 @@ macchina. A schermo si chiama «Fifa Tenkaichi 3»; nel codice e nei salvataggi 
 
 Le scelte, le fonti e le misure di ogni parte stanno in `docs/DETTAGLI.md`; qui c'è quello che
 serve per orientarsi e per continuare. `CLAUDE.md` raccoglie i fatti tecnici per le chat,
-`DIARIO.md` la cronologia delle sessioni fino al 29/10/2026.
+la cronologia delle sessioni fino al 29/10/2026 è `DIARIO.md` nella storia git
+(`git show 0012644:DIARIO.md`).
 
 Il motore è three.js (Next.js con `@react-three/fiber`, in `apps/web`); il gioco vecchio in `web/`
 disegna in WebGL senza librerie. La versione Godot è abbandonata e non fa parte del repository.

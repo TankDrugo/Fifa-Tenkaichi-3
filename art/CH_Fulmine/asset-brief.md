@@ -42,7 +42,7 @@ INFERRED   schiena, fianchi, suole, pianta dei guanti, nuca e retro della cresta
            è accovacciata); la cresta in profondità (spessore 4 cm).
 TARGET     three.js 0.186.1 (GLTFLoader), GLB; in piedi, piedi sull'origine, sguardo verso +Z nel
            GLB (-Y in Blender); 6 materiali al massimo; triangoli: riferimento 5.736 a giocatore
-           (DIARIO.md, 22/10/2026), tetto 12.000; camera di gioco: pitch 29, fov 18, campo largo
+           (DIARIO.md in git, 22/10/2026), tetto 12.000; camera di gioco: pitch 29, fov 18, campo largo
            19,8 m (style.ts:15) -> 0,85 m alti circa 55 px su 1280; vetrina /personaggi da vicino.
 ```
 

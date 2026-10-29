@@ -400,7 +400,7 @@ apertura non erano allegati al 22/10/2026: la sezione 6 resta l'elenco da procur
 | Cycles (Blender, processore) | figura di prova di 4.092 triangoli a 400 × 400 | 1,4-2,4 s; il nodo «Shader to RGB» non esiste in Cycles, quindi niente ombra a gradino | foto da vicino senza toon |
 | Eevee (Blender, OpenGL in software) | stessa figura, dopo `apt-get install libegl1 libegl-mesa0 libgl1-mesa-dri` | 12,7-38,1 s; ombra a 2 toni con «Shader to RGB» e rampa a gradini, contorno Freestyle | fogli del modello e primi piani del passo 7 |
 | Esportazione glTF | stessa figura | file `.glb` di 30.668 byte; Draco e MeshOptimizer mancano nel pacchetto PyPI | il modello arriva al gioco senza compressione, che si aggiunge con `gltf-transform` se serve |
-| three.js 0.186.1, Chromium senza schermo | già in `apps/web` (`DIARIO.md`, fase 2) | WebGL in software: foto sì, fotogrammi al secondo no | resa nel gioco (scafo rovesciato, gradini, contorno a schermo) e foto di confronto |
+| three.js 0.186.1, Chromium senza schermo | già in `apps/web` (`DIARIO.md` nella storia git, fase 2) | WebGL in software: foto sì, fotogrammi al secondo no | resa nel gioco (scafo rovesciato, gradini, contorno a schermo) e foto di confronto |
 | potrace, Inkscape, Krita | `apt-get install --dry-run` | si installano dai pacchetti di Ubuntu 24.04 | potrace trasforma in curve gli schizzi fotografati |
 | Python: scikit-image 0.26, trimesh 5.1 | `pip download` | disponibili | campo di distanza trasformato in mesh (marching cubes), se si prova la strada del codice |
 | Rete | Wikipedia, kanzenshuu, animecorner, PyPI, download.blender.org, apt | rispondono | ricerca e programmi |
@@ -436,7 +436,7 @@ gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
 
 | Tema | Decisione | Appiglio |
 |---|---|---|
-| Libreria 3D | resta three.js 0.186.1 con `@react-three/fiber` 9.8.1; `GLTFLoader` di three per i modelli; drei per `<Outlines>` | sezione 10; la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md`, fase 2) |
+| Libreria 3D | resta three.js 0.186.1 con `@react-three/fiber` 9.8.1; `GLTFLoader` di three per i modelli; drei per `<Outlines>` | sezione 10; la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md` nella storia git, fase 2) |
 | Formato | GLB (glTF 2.0 binario), mai STL | STL ha solo triangoli, senza colori, texture né scheletro (https://en.wikipedia.org/wiki/STL_(file_format)) |
 | Personaggi esistenti | i pezzi in codice restano come riserva per le carte senza GLB, finché ogni figura non ha il suo modello | `packages/sim/src/data.ts:93-105`, 22 figure |
 | Pose tenute | no | sezione 7 |
@@ -450,7 +450,7 @@ colori della squadra (`maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe
 com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con nomi delle ossa
 liberi (il gioco non li legge; aggiornato il 29/10/2026, prima chiedeva i nomi di Mixamo) e clip
 chiamate `idle`, `run`, `kick`, i nomi che `apps/web/game/modelAppearance.ts` cerca; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
-mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md`, 22/10/2026).
+mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md` nella storia git, 22/10/2026).
 
 ### Punti da implementare nella chat nuova
 
@@ -477,8 +477,8 @@ mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md`, 22/10/2026).
    altre clip una alla volta.
 7. **Budget**: `/bench` con 10 modelli GLB: chiamate di disegno, triangoli, tempo di caricamento;
    misura di Tancredi sul portatile.
-8. **Guida in `docs/`** per i modelli (le regole sopra, con i numeri misurati), voce in `DIARIO.md`,
-   pull request unita su `main`.
+8. **Guida in `docs/`** per i modelli (le regole sopra, con i numeri misurati), pull request unita su
+   `main`.
 
 **Ambiente** (sezione 10), se serve Blender per controllare o sistemare un GLB: `pip install
 bpy==5.2.3` in un ambiente a parte (circa 6 minuti, 1 GB); Eevee vuole prima `apt-get update` e
@@ -521,6 +521,170 @@ soft shading, extra fingers, cropped feet.
 ```
 
 Foglio per il modello da immagine (dopo il sì sull'illustrazione):
+
+```
+Character turnaround model sheet of the same character: front, three-quarter, side and back
+views side by side, same scale and aligned at the feet, standing in a relaxed A-pose (arms
+45 degrees away from the body, legs slightly apart), neutral expression, orthographic view,
+even flat lighting, same ink outlines and two-tone cel shading, plain white background,
+no ground shadow, no text.
+```
+
+### 12.1 Prompt per 10 giocatori: Celestini contro rivali (26/10/2026)
+
+Un giocatore per immagine. Ogni prompt si compone di tre parti incollate una dopo l'altra:
+
+1. il **blocco base**, sempre uguale;
+2. il **completo** della squadra;
+3. il blocco del **personaggio**.
+
+Allegati da dare al generatore:
+
+- l'immagine di Fulmine, come riferimento di stile; il suo prompt è più sopra in questa
+  sezione;
+- l'immagine dei Celestini, per la somiglianza dei 5 della squadra A.
+
+I 5 della squadra B sono rivali inventati, perché non c'è un'immagine dell'altra squadra.
+
+**Posa.** In piedi, di fronte e senza prospettiva, perché il modello 3D si costruisce con le
+misure prese dall'immagine. Con l'immagine di Fulmine, accovacciata e in prospettiva, il
+confronto con il modello si è fermato a IoU 0,558 e i piedi risultavano il 10 % più stretti del
+disegno (`docs/DETTAGLI.md`, sezione «CH_Fulmine dal riferimento»). Per la posa accovacciata c'è
+la riga alternativa in fondo.
+
+#### Blocco base
+
+```
+Full-body character illustration of ONE young street-football player for an arcade football
+video game. Style identical to the attached reference image: comic-book line art, bold black
+ink outlines with varying line weight (thick on the outer silhouette, thin on inner details),
+rough hand-inked texture, simple readable shapes, intense detailed eyes. Flat cel shading:
+two tones per colour with hard edges, solid black in the darkest areas, shadows tinted
+blue-violet, never grey. No gradients, no glossy highlights, no airbrush.
+Proportions: lanky teenager about 6 heads tall, long thin arms and legs, slightly oversized
+hands and big chunky football boots.
+Pose and camera: standing facing the viewer, relaxed A-pose with arms 30 degrees away from the
+body, feet shoulder-width apart, straight-on camera at chest height, no perspective
+distortion, whole body visible from the top of the hair to the soles.
+Background: plain flat warm orange (#f08a23), small shadow under the feet only.
+Avoid: more than one person, cropped feet or hair, photorealism, 3D render look, soft
+shading, extra fingers, text, numbers, logos, watermark.
+```
+
+#### Completi
+
+##### Squadra A (Celestini)
+
+```
+Kit: short-sleeved sky-blue jersey (#5cc0ec) with navy (#1f2d5c) collar and cuffs, a small
+invented round crest with a white star on the chest, navy shorts, sky-blue socks with two
+navy stripes below the knee, white and navy football boots.
+```
+
+##### Squadra B (rivali)
+
+```
+Kit: short-sleeved dark green jersey (#1f7a4a) with mustard-yellow (#f2c230) collar and cuffs,
+a small invented crest with a yellow crown on the chest, white shorts, dark green socks with
+one yellow stripe, black and yellow football boots.
+```
+
+#### Squadra A: i Celestini dell'immagine allegata
+
+I ruoli sono i 5 del gioco: portiere, difensore, centrocampista, ala, attaccante.
+
+##### 1. Portiere
+
+```
+GOALKEEPER: tall teenage girl, dark brown skin, long wavy black hair, small round
+blue-tinted glasses on a sport strap, calm kind smile. Goalkeeper version of the kit:
+long-sleeved bright yellow (#ffd23f) jersey with navy trims, white padded goalkeeper gloves.
+```
+
+##### 2. Difensore
+
+```
+DEFENDER: slim teenage boy, olive skin, messy chin-length dark hair with bangs over one eye,
+green eyes, relaxed half-smile; a blue hoodie tied around his waist over the kit.
+```
+
+##### 3. Centrocampista
+
+```
+MIDFIELDER: teenage girl, dark brown skin, long straight black hair with one turquoise streak
+and a turquoise hair clip, brown eyes, friendly open smile.
+```
+
+##### 4. Ala
+
+```
+WINGER: energetic teenage girl, brown skin, bright red-orange hair in two spiky high buns
+tied with turquoise bands, amber eyes, small earring, confident smirk, one hand on her hip.
+```
+
+##### 5. Attaccante
+
+```
+STRIKER: short wiry boy, pale freckled skin, spiky bright orange hair, blue eyes, stubborn
+frown with pouting lips, plasters on one knee.
+```
+
+#### Squadra B: rivali inventati
+
+Hanno silhouette diverse fra loro, così in partita si riconoscono anche a circa 55 px di altezza
+(`art/CH_Fulmine/asset-brief.md`).
+
+##### 6. Portiere
+
+```
+GOALKEEPER: big broad-shouldered boy, light brown skin, shaved head, thick eyebrows,
+gap-toothed grin. Goalkeeper version of the kit: long-sleeved mint (#2ee6a6) jersey with
+black trims, white padded goalkeeper gloves.
+```
+
+##### 7. Difensore
+
+```
+DEFENDER: very tall thin girl, pale skin, one long black braid down to her waist, stern
+narrowed eyes, white sweatband on her forehead.
+```
+
+##### 8. Centrocampista
+
+```
+MIDFIELDER: stocky round-faced boy, dark skin, big curly afro held by a yellow bandana,
+wide cheerful grin.
+```
+
+##### 9. Ala
+
+```
+WINGER: small quick girl, tanned skin, short white-blond bob, sharp grey eyes, plasters on
+both knees, sly smile.
+```
+
+##### 10. Attaccante
+
+```
+STRIKER: cocky teenage boy, light skin, tall slicked-back blue-black pompadour, a small scar
+through one eyebrow, smug half-closed eyes.
+```
+
+#### Varianti
+
+##### Posa accovacciata, come l'immagine di Fulmine
+
+Sostituisce la riga `Pose and camera` del blocco base:
+
+```
+Pose and camera: wide athletic crouch facing the viewer, knees bent outward, weight low,
+arms hanging, ready to sprint, whole body visible including both feet.
+```
+
+##### Foglio per il modello 3D
+
+Si genera dopo aver scelto l'illustrazione, uno per giocatore. Dà le viste di profilo e di
+schiena, che per Fulmine sono state inventate.
 
 ```
 Character turnaround model sheet of the same character: front, three-quarter, side and back

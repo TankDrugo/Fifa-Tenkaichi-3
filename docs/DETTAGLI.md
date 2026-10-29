@@ -669,7 +669,7 @@ Le decisioni delle squadre stanno in `js/ai.js` (prima erano in `match.js`, `thi
 `node tools/ai_bench.js 12 4 <difficoltà>`: 12 partite fra IA da 4 minuti senza browser, le stesse
 coppie di club e gli stessi semi; prima = l'IA del commit `844e66b` (`--root` su quel commit),
 dopo = `js/ai.js`, con le stesse rose e formazioni. Il possesso è della squadra dell'ultimo giocatore
-che ha avuto la palla al piede. A difficoltà normale (le altre due nel diario):
+che ha avuto la palla al piede. A difficoltà normale (le altre due in `DIARIO.md` nella storia git):
 
 | | Prima | Dopo |
 |---|---|---|
@@ -1137,7 +1137,7 @@ Tancredi ha fermato lo stile dei personaggi per uno studio di character design
 | `pnpm test` | 29 prove su 29 |
 
 I movimenti della sezione 4.7 del piano sono nella storia al commit `ac0cd0d` e fuori da `main`
-(`DIARIO.md`, 22/10/2026): non danno ancora i loro numeri.
+(`DIARIO.md` nella storia git, 22/10/2026): non danno ancora i loro numeri.
 
 ## Gioco nuovo · personaggi da modelli GLB (25/10/2026)
 
