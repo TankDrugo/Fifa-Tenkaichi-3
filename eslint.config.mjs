@@ -1,4 +1,4 @@
-// Lint for the new game. web/ and tools/ are the old game and its checks, which stay as they are.
+// Lint for the game.
 // eslint-config-next is not used: three of its plugins (react, import, jsx-a11y) accept ESLint up
 // to 9, which is out of support; its Next.js and React hooks rules are taken directly.
 import js from "@eslint/js";
@@ -8,7 +8,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["web/**", "tools/**", "dist-web/**", "**/dist/**", "**/.next/**", "**/next-env.d.ts"] },
+  { ignores: ["**/dist/**", "**/.next/**", "**/next-env.d.ts"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

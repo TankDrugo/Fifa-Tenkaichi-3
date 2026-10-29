@@ -1,12 +1,12 @@
 // The simulation plays the same match from the same seed and the same commands: twice in a row,
-// on another engine (the chains below are those of Node 22.22 and Chromium 141, bench/browser.ts;
-// CI runs Node 24), and as the old game in web/js/ does (bench/parity.ts plays all 22 matches).
+// and on another engine (the chains below are those of Node 22.22 and Chromium 141,
+// bench/browser.ts; CI runs Node 24).
 // A change that alters the play on purpose changes these chains: the phase that makes it writes
 // the new ones and why in docs/DETTAGLI.md.
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { loadOldGame } from "../bench/old_game.ts";
 import { runScenarios } from "../bench/runs.ts";
-import { play, SCENARIOS } from "../bench/scenarios.ts";
+import { SCENARIOS } from "../bench/scenarios.ts";
 import * as sim from "./index.ts";
 
 const RECORDED: Record<number, { frames: number; score: string; last: string; chain: string }> = {
@@ -26,22 +26,6 @@ describe("stessa partita dagli stessi comandi", () => {
   it("giocata due volte di seguito dà la stessa catena", { timeout: 30_000 }, () => {
     expect(runScenarios([16])).toEqual(runScenarios([16]));
   });
-});
-
-describe("il gioco vecchio (web/js/) gioca la stessa partita", () => {
-  const old = loadOldGame();
-  for (const i of [3, 16, 21]) {
-    const sc = SCENARIOS[i]!;
-    it(sc.name, { timeout: 60_000 }, () => {
-      const prints: string[] = [];
-      play(old, sc, (_m, read) => { old.input.read = (device) => read((device as { k: number }).k); }, (m) => { prints.push(sim.fingerprint(m)); });
-      const mine: string[] = [];
-      play(sim, sc, (m, read) => { m.input = read; }, (m) => { mine.push(sim.fingerprint(m)); });
-      const first = mine.findIndex((p, f) => p !== prints[f]);
-      expect(first).toBe(-1);
-      expect(mine.length).toBe(prints.length);
-    });
-  }
 });
 
 describe("fmath: gli stessi bit in ogni motore", () => {
@@ -65,10 +49,12 @@ describe("fmath: gli stessi bit in ogni motore", () => {
 });
 
 describe("dati", () => {
-  it("le carte sono le stesse del gioco vecchio", () => {
+  it("le 150 carte non cambiano senza volerlo", () => {
     expect(sim.POOL.length).toBe(34 + 30 + 22 + 10 + 12 + 6 * 7);
-    expect(sim.POOL.map((c) => `${c.id}:${c.ovr}:${c.vel}:${c.tir}:${c.pas}:${c.fis}:${c.body}:${c.club}`)).toEqual(
-      (loadOldGame() as unknown as { POOL: sim.Card[] }).POOL.map((c) => `${c.id}:${c.ovr}:${c.vel}:${c.tir}:${c.pas}:${c.fis}:${c.body}:${c.club}`));
+    // the cards as the old browser game had them (removed on 29/10/2026); a change on purpose
+    // writes the new hash here
+    const cards = sim.POOL.map((c) => `${c.id}:${c.ovr}:${c.vel}:${c.tir}:${c.pas}:${c.fis}:${c.body}:${c.club}`).join("|");
+    expect(createHash("sha256").update(cards).digest("hex").slice(0, 16)).toBe("fbf22484619fdc16");
   });
   it("un pacchetto aperto con lo stesso seme dà le stesse carte", () => {
     const open = (seed: number) => sim.openPack(sim.PACKS[2]!, [], sim.rng(seed)).map((p) => p.k);

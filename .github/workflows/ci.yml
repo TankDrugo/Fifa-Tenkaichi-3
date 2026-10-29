@@ -1,5 +1,4 @@
-# Checks of the new game (docs/PIANO-3D-ONLINE.md, section 4.9). The old game in web/ keeps its own
-# checks in tools/ and its publication in pages.yml.
+# Checks of the game (docs/PIANO-3D-ONLINE.md, section 4.9).
 name: Integrazione continua
 
 on:
@@ -39,8 +38,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
-  # packages/sim plays the same match from the same seed and commands as the old game, and the
-  # same in Node and in Chromium (docs/DETTAGLI.md, "Gioco nuovo · fase 1").
+  # packages/sim plays the same match from the same seed and commands in Node and in Chromium (docs/DETTAGLI.md, "Gioco nuovo · fase 1").
   simulation:
     name: Simulazione in Node e in Chromium
     # Playwright 1.56.1, the version of the browsers in the cloud chats, refuses ubuntu-latest
@@ -57,10 +55,6 @@ jobs:
       - run: pnpm --filter @ft3/sim exec playwright install --with-deps --only-shell chromium
       - name: Le funzioni di fmath contro il Math di questo Node
         run: node packages/sim/bench/fmath_check.ts 200000 | tee -a "$GITHUB_STEP_SUMMARY"
-      - name: Gioco vecchio e simulazione nuova, 22 partite
-        run: |
-          node packages/sim/bench/parity.ts | tee parity.txt
-          tail -1 parity.txt >> "$GITHUB_STEP_SUMMARY"
       - name: Stesse partite in Node e in Chromium
         run: |
           node packages/sim/bench/browser.ts | tee browser.txt

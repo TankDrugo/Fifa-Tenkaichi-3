@@ -1,4 +1,4 @@
-// Clubs, lore teams, player cards and packs, carried over from web/js/data.js. Everything here is
+// Clubs, lore teams, player cards and packs, carried over from the old browser game's data.js. Everything here is
 // invented: clubs, players, legends and badges (README.md, "Contenuti originali"). The browser
 // save (localStorage) stays in the old game: the new one keeps the game on the server (phase 5).
 import { rng, type Rng } from "./rng.ts";

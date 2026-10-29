@@ -1,4 +1,4 @@
-// Skill moves, carried over from web/js/skills.js: the right stick's gestures as in EA FC, the
+// Skill moves, carried over from the old browser game's skills.js: the right stick's gestures as in EA FC, the
 // keys 1-9 on the keyboard, what each move does to the ball and to the defenders in front
 // (docs/DETTAGLI.md, "Skill"). The Match class calls these with itself as m.
 import { skillOf } from "./ai.ts";
@@ -130,7 +130,7 @@ export const POSE: Partial<Record<SkillId, (s: SkillState, u: number) => SkillPo
   sombrero: (s, u) => ({ sheet: "shot", t: 0.06 + 0.16 * Math.min(1, u / SOMBRERO_KICK), face: s.f, ball: s.kicked ? null : [0.3, 0, 0] }),
 };
 // Tunnel and heel chop keep the run: the shot's frames are a full kick, and a light touch
-// drawn with them read as a shot in the contact sheets (tools/skill_frames.js).
+// drawn with them read as a shot in the contact sheets (of the old game).
 export function skillBall(p: Player, b: Ball): boolean {
   const s = p.skill!, pose = POSE[s.id] && POSE[s.id]!(s, Math.min(1, s.t / SKILLS[s.id].dur));
   if (!pose || !pose.ball) return false;

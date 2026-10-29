@@ -1,5 +1,5 @@
-// Matches that the old game and packages/sim both play, with the same seed and the same commands:
-// AI against AI on the 12 pairs of tools/ai_bench.js, and people driven by bench/script.ts in
+// Matches that packages/sim plays, with the same seed and the same commands:
+// AI against AI on the 12 pairs of the old AI bench, and people driven by bench/script.ts in
 // every pass assistance, difficulty, two people, two against two, a locked player, the moon's
 // gravity, still opponents, the golden goal, a challenge that starts from a score.
 import type { Card, Club, Command, HumanSpec, Match, MatchOptions, Settings } from "../src/index.ts";

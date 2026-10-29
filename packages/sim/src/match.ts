@@ -1,4 +1,4 @@
-// The match, carried over from web/js/match.js: 60 Hz simulation, players, ball, keeper, the
+// The match, carried over from the old browser game's match.js: 60 Hz simulation, players, ball, keeper, the
 // people's commands. Nothing here draws, plays a sound or reads a pad: commands come in through
 // `input`, sounds and rumble go out through `onCue`, and the same seed with the same commands
 // gives the same match in Node and in the browser (docs/DETTAGLI.md, "Gioco nuovo · fase 1").

@@ -4,8 +4,5 @@
 **/.next
 **/dist
 .git
-web
-tools
 docs
-dist-web
 infra/.env

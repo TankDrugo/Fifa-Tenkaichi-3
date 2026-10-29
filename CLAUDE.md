@@ -1,9 +1,9 @@
 # Fifa Tenkaichi 3 (Strike Legends) — project facts
 
 Technical facts about the repository. `docs/MAPPA.md` maps each part of the game (match, AI,
-skills, animations, Ultimate Team, …) to its files and state, `README.md` says what is where, `docs/DETTAGLI.md` why each
-number is what it is, `docs/PIANO-3D-ONLINE.md` the phases of the new game. Tancredi owns the
-project and writes in Italian.
+skills, animations, Ultimate Team, …) to its files and state, `README.md` says what is where,
+`docs/DETTAGLI.md` why each number is what it is, `docs/PIANO-3D-ONLINE.md` the phases of the
+game. Tancredi owns the project and writes in Italian.
 
 ## The game
 
@@ -17,19 +17,15 @@ project and writes in Italian.
 
 ## Where things are
 
-- `apps/web`: the new game, Next.js 16 + three.js 0.186 with `@react-three/fiber` (pages in `app/`,
+- `apps/web`: the game, Next.js 16 + three.js 0.186 with `@react-three/fiber` (pages in `app/`,
   3D scene in `game/`: `core/` loop, input, options, practice; `animation/` player appearance,
   rig, GLB models and clips; `render/` stadium, code pieces, faces, materials; `ui/` React views);
   `apps/realtime`: matches over WebSocket; `packages/shared`: zod schemas
   shared by client and server; `packages/sim`: simulation, AI, skills, cards; `infra/`: Docker.
-- `web/`: the old game (WebGL sprites, no build step), still published: GitHub Pages rebuilds it
-  from `main` (`.github/workflows/pages.yml`) and the Windows exe downloads it from there at every
-  start (`tools/web_launcher/update.go`). The working link of the old game is
-  https://claude.ai/artifact/P8PppHnpvqoj76uJorB6rE (`Artifact` read, then publish with `url`,
-  `file_path` `web/index.html` and the changed `js/...` files).
-- `art/`: Blender sources of the GLB players; `tools/`: checks, benches and distribution of the old
-  game; `docs/`: design and measurements.
-- Godot is abandoned; nothing in the repository depends on it.
+- `art/`: Blender sources of the GLB players; `docs/`: design and measurements.
+- Only this game is worked on. The old browser game (`web/`, sprites in WebGL) and its tools were
+  removed on 29/10/2026 and stay in git history at commit `53f3868`; `packages/sim` was carried over
+  from it, so comments and `docs/DETTAGLI.md` still name its files. Godot is abandoned too.
 - `graphify-out/` maps the project without `.claude/skills/` (`.graphifyignore`). Its communities
   carry Italian names by game part («Partita · …», «Animazioni · …», «Ultimate Team · …») kept in
   `graphify-out/.graphify_labels.json` with member signatures in `.graphify_labels.json.sig`; a
@@ -40,15 +36,12 @@ project and writes in Italian.
 
 - From the repository root, the same steps as CI (`.github/workflows/ci.yml`):
   `pnpm install --frozen-lockfile`, `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`.
-- Old game: `node tools/web_checks.js` (11 checks), `node tools/ai_bench.js 12 4 1` (12 matches
-  swing by about one goal: compare small differences on 48 or 96), `node tools/tension_bench.js`,
-  `node tools/skill_frames.js`; in the page, `SL.debug` gives the match, the demo, the save, the
-  mode and the session.
-- New game: `packages/sim/bench/*.ts` (parity with the old game, browser, AI, tension, speed),
-  `node apps/web/scripts/bench3d.ts http://localhost:3000` (draw budget), pages `/partita`,
-  `/prova`, `/personaggi`, `/bench`, `/status`.
-- Browser tests: headless Chromium with Playwright (preinstalled in cloud chats), a static server on
-  `web/` or `pnpm --filter @ft3/web dev`, a fake pad by replacing `navigator.getGamepads` with
+- Benches: `node packages/sim/bench/checks.ts` (11 checks), `ai_bench.ts 48 4 1` (12 matches swing
+  by about one goal: compare small differences on 48 or 96), `tension_bench.ts`, `browser.ts` (same
+  fingerprint in Node and Chromium), `speed.ts`; `node apps/web/scripts/bench3d.ts
+  http://localhost:3000` (draw budget); pages `/partita`, `/prova`, `/personaggi`, `/bench`, `/status`.
+- Browser tests: headless Chromium with Playwright (preinstalled in cloud chats; `packages/sim`
+  pins Playwright 1.56.1, whose browser CI installs), `pnpm --filter @ft3/web dev`, a fake pad by replacing `navigator.getGamepads` with
   `page.addInitScript`.
 - Stack: `cd infra && docker compose up --build`, then `node infra/check-status.mjs` (exit 0 = the
   four services and the WebSocket answer) and http://localhost:3000/status. In a cloud chat start

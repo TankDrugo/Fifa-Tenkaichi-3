@@ -1,6 +1,8 @@
 # Strike Legends nel browser — scelte e misure fino al 21/10/2026
 
-> I percorsi `js/` e `assets/` stanno in `web/`. I rimandi a `GDD.md`, `PRODUCTION.md`,
+> Le prime sezioni descrivono il gioco vecchio, tolto dal repository il 29/10/2026: i percorsi
+> `js/`, `assets/` e `tools/` si leggono nella storia git al commit `53f3868` (per esempio
+> `git show 53f3868:web/js/match.js`). I rimandi a `GDD.md`, `PRODUCTION.md`,
 > `PROMPT-WEB*.md`, `game/` e ai diari sono storici: puntano alla versione Godot, abbandonata e
 > fuori da questo repository. Le sezioni hanno i nomi che il codice cita (per esempio
 > `docs/DETTAGLI.md, "Passaggi"`).
