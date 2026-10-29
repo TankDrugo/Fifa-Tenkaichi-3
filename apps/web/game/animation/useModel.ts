@@ -1,4 +1,4 @@
-// A GLB of game/models.ts, loaded once with three's GLTFLoader through @react-three/fiber (the
+// A GLB of game/animation/models.ts, loaded once with three's GLTFLoader through @react-three/fiber (the
 // canvas waits for it with Suspense). The loader's cached scene stays as loaded: the page gets a
 // copy carrying the clips in `animations`, where the player look layer (modelAppearance.ts) reads
 // them; that copy is never drawn either, only the copies made from it.

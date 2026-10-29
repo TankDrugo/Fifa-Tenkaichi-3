@@ -2,14 +2,14 @@
 // the camera's photos pitch (degrees down), fov (vertical, degrees), span (metres across the
 // middle of the screen), aim (metres across the pitch the camera aims at, + toward it), skip (steps
 // played before the first frame), focus (a player 0-9 to look at), paused=1, post=0; style=A or B,
-// the characters' style (game/looks.ts); modello=<id>, every player drawn by that GLB (game/models.ts).
-// /prova takes the same address and plays the practice (game/practice.ts): the camera follows the
+// the characters' style (game/render/looks.ts); modello=<id>, every player drawn by that GLB (game/animation/models.ts).
+// /prova takes the same address and plays the practice (game/core/practice.ts): the camera follows the
 // person's footballer from closer, 9 m across the screen unless span says otherwise.
 import { clubById } from "@ft3/sim";
-import type { Style } from "./looks";
-import { modelUrl } from "./models";
+import type { Style } from "../render/looks";
+import { modelUrl } from "../animation/models";
 import { PRACTICE_PLAYER } from "./practice";
-import { CAMERA, STYLE } from "./style";
+import { CAMERA, STYLE } from "../render/style";
 
 export interface StageOptions {
   home: string;
@@ -26,7 +26,7 @@ export interface StageOptions {
   paused: boolean;
   post: boolean;
   style: Style;
-  // a model of game/models.ts, "" for the pieces in code
+  // a model of game/animation/models.ts, "" for the pieces in code
   model: string;
   // the practice of /prova: one person with one footballer and the ball
   practice: boolean;

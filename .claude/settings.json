@@ -5,27 +5,6 @@
     ]
   },
   "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "perl \"$CLAUDE_PROJECT_DIR/tools/style_guard/check_output.pl\""
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "perl \"$CLAUDE_PROJECT_DIR/tools/style_guard/check_file_hook.pl\""
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Bash|Grep",

@@ -1,7 +1,5 @@
-// The match's numbers, carried over from web/js/match.js unchanged. They come from the Godot
-// version of the game, kept in the archive repository (README.md, "Archivio":
-// game/tuning/tuning_config.gd, game/ai/ai_params.gd, GDD.md): pitch 28 x 16 m, the hit of
-// GDD.md §4.4, the keeper's save reserve of GDD.md §8.4, the special move of PRODUCTION.md §6.0.
+// The match's numbers, carried over from web/js/match.js unchanged: pitch 28 x 16 m, the hit, the
+// keeper's save reserve, the special move. Why each one is what it is: docs/DETTAGLI.md.
 import type { Role, Vec2 } from "./types.ts";
 
 export const DT = 1 / 60;

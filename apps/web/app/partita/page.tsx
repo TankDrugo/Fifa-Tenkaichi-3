@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { MatchView } from "@/game/MatchView";
-import { stageOptions } from "@/game/options";
+import { MatchView } from "@/game/ui/MatchView";
+import { stageOptions } from "@/game/core/options";
 
 export const metadata: Metadata = { title: "Partita · Fifa Tenkaichi 3" };
 

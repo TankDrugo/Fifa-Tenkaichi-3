@@ -15,7 +15,7 @@ import { makeBody, type Body } from "./body";
 import { buildAtlases, EXPRESSIONS, NUMBER_COLUMNS, type Atlases } from "./faces";
 import type { Design } from "./looks";
 import { buildParts, REGION } from "./parts";
-import { BONES_PER_PLAYER } from "./rig";
+import { BONES_PER_PLAYER } from "../animation/rig";
 
 export const MAX_PLAYERS = 16;
 

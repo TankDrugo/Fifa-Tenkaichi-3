@@ -164,7 +164,7 @@ def build(scene, args):
             c.objects.unlink(o)
         col("HIGH").objects.link(o)
     # the player's height for the game without the crest (glTF extras -> three userData.height,
-    # read by apps/web/game/modelAppearance.ts): the top of the hair cap
+    # read by apps/web/game/animation/modelAppearance.ts): the top of the hair cap
     cap = bpy.data.objects["CH_Fulmine_HairCap"]
     arm["height"] = round(max((cap.matrix_world @ vtx.co).z for vtx in cap.data.vertices), 3)
     unweighted = sum(1 for vtx in skin.data.vertices if not vtx.groups)

@@ -3,7 +3,7 @@
 // players into one mesh.
 import { LatheGeometry, Vector2, type BufferGeometry } from "three";
 import type { Body } from "./body";
-import { ANKLE, BONE, ELBOW, HAND, HIP, KNEE, SHOULDER } from "./rig";
+import { ANKLE, BONE, ELBOW, HAND, HIP, KNEE, SHOULDER } from "../animation/rig";
 import { ball, box, bumpy, cone, cylinder, horn, keep, limb, place, ring, slab } from "./shapes";
 import type { Design } from "./looks";
 

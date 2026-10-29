@@ -28,7 +28,7 @@ morbido e lucido; questo studio torna alla strada del piano.
   403 a una lettura diretta); i pezzi dell'equipaggiamento cambiano le statistiche, per esempio il
   Turbo Helmet dà Velocità +2 e Tecnica −2 (https://www.thegamer.com/mario-strikers-battle-league-football-gear-guide/).
   Conseguenza: un personaggio del gioco nuovo si progetta in due strati, il corpo con la sua faccia e
-  l'equipaggiamento della squadra; è la struttura già scritta in `apps/web/game/parts.ts`, da rifare
+  l'equipaggiamento della squadra; è la struttura già scritta in `apps/web/game/render/parts.ts`, da rifare
   con lo stile nuovo.
 - **Il tono è venuto da una scelta esplicita.** Super Mario Strikers (2005) nasceva come gioco di
   calcio più realistico ed è diventato «sopra le righe» dopo i confronti con Nintendo, che voleva
@@ -150,7 +150,7 @@ alto 56 px e uno lontano alto 43 px a 1280 × 720. La testa, a seconda delle pro
 
 La decisione della sezione 1 del piano è «personaggi disegnati nel codice, niente modelli esterni».
 
-- **Le forme.** I prototipi sono sfere e capsule separate (`apps/web/game/parts.ts`): le giunture
+- **Le forme.** I prototipi sono sfere e capsule separate (`apps/web/game/render/parts.ts`): le giunture
   si vedono e il contorno di uno scafo rovesciato disegnerebbe una linea intorno a ogni pezzo, anche
   dentro il corpo. Conseguenza: per un contorno da fumetto il corpo deve essere una superficie unica.
   Nel codice si può fare descrivendo il corpo come campo di distanza (forme fuse con un'unione
@@ -169,7 +169,7 @@ La decisione della sezione 1 del piano è «personaggi disegnati nel codice, nie
   prototipo misura le due strade. three.js 0.186.1 ha già lo scafo rovesciato
   (`three/examples/jsm/effects/OutlineEffect.js`).
 - **Facce ed espressioni**: l'atlante disegnato con canvas, 8 espressioni per giocatore
-  (`apps/web/game/faces.ts`), resta la strada; cambia il disegno: occhi manga con l'iride a
+  (`apps/web/game/render/faces.ts`), resta la strada; cambia il disegno: occhi manga con l'iride a
   disegno, linee spesse e sottili, il segno delle guance.
 - **Animazione a pose tenute**: tenere ogni posa 2 fotogrammi su 60 si fa nel codice dei movimenti
   senza costi. Cambia la sensazione del gioco: è la domanda 3.
@@ -249,39 +249,6 @@ Strikers della fase 2.
 - **Manga di riferimento**: Dragon Ball (Akira Toriyama), Blue Lock (Yusuke Nomura), Dorohedoro (Q
   Hayashida), Naoki Urasawa. La chat nuova ne studia il segno prima del passo 2.
 - **Testi**: Tancredi li manda nella chat nuova.
-
-## 8. Messaggio da incollare nella chat nuova
-
-```
-Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
-poi e docs/STUDIO-PERSONAGGI.md per intero. Parti da main: c'è tutto il lavoro della chat
-precedente; i movimenti a metà sono fuori da main e restano nella storia al commit ac0cd0d
-(DIARIO.md, 22/10/2026), da non toccare in questa chat.
-
-Il compito di questa chat è uno solo: il character design del gioco, fino a un personaggio finito
-e ottimo che fissi lo stile di tutti gli altri. Non fare altri personaggi, movimenti, campi o
-interfaccia.
-
-Mie decisioni del 22/10/2026:
-- stile da fumetto, con i bordi d'inchiostro delle illustrazioni di Mario Strikers: Battle League,
-  e il manga come ispirazione: Dragon Ball (Toriyama), Blue Lock (Nomura), Dorohedoro (Hayashida),
-  Naoki Urasawa; si copia lo stile, mai i personaggi;
-- nessuna regola sullo strumento (codice, Blender o altro): si sceglie quello che dà il personaggio
-  migliore, mettendo a confronto le prove con foto; prima di scegliere dimmi cosa si può usare in
-  questa chat (programmi installabili, rete) e cosa servirebbe da me;
-- i 300.000 triangoli non sono un limite: conta la misura dei fotogrammi sul mio portatile;
-- niente pose tenute (animazione a 30 pose al secondo) per ora.
-
-Prima di cominciare: ricerca sul segno dei quattro manga (linee e spessori, proporzioni, occhi,
-capelli, ombre, corpi in movimento) e sui libri e le slide che ti mando in questa chat; scrivi in
-docs/STUDIO-PERSONAGGI.md cosa prendi da ciascuno, con le fonti. Poi dimmi in poche righe cosa farai
-e fammi le domande ancora aperte: quale personaggio (uno nuovo come volto del gioco o uno che
-esiste già) e chi disegna gli schizzi.
-
-Segui i 9 passi della sezione 4 dello studio: ogni passo finisce con immagini da mostrarmi e si va
-avanti solo con il mio sì. Alla fine: guida di stile e misure in docs/, voce in DIARIO.md, commit,
-pull request e merge su main. Scrivimi sempre in italiano.
-```
 
 ## 9. Il segno dei quattro manga (ricerca del 22/10/2026, chat del character design)
 
@@ -374,7 +341,7 @@ apertura non erano allegati al 22/10/2026: la sezione 6 resta l'elenco da procur
   (https://www.goodsmile.info/en/product/5246/Caiman.html). Conseguenza: per la squadra della
   Cometa Verde e le altre squadre non umane il riconoscimento passa dalla forma della testa; le
   espressioni si fanno cambiando la parte della faccia, che è il nostro atlante di facce
-  (`apps/web/game/faces.ts`).
+  (`apps/web/game/render/faces.ts`).
 - **Dorohedoro in 3D.** L'anime di MAPPA (2020) è il primo lavoro dello studio con una produzione
   basata sul 3D: secondo l'analisi di CGWORLD il 42% delle inquadrature è in 3D con resa a celle, il
   18% disegnato a mano, il 40% le due cose insieme, compresi effetti disegnati sopra i modelli
@@ -433,7 +400,7 @@ apertura non erano allegati al 22/10/2026: la sezione 6 resta l'elenco da procur
 | Cycles (Blender, processore) | figura di prova di 4.092 triangoli a 400 × 400 | 1,4-2,4 s; il nodo «Shader to RGB» non esiste in Cycles, quindi niente ombra a gradino | foto da vicino senza toon |
 | Eevee (Blender, OpenGL in software) | stessa figura, dopo `apt-get install libegl1 libegl-mesa0 libgl1-mesa-dri` | 12,7-38,1 s; ombra a 2 toni con «Shader to RGB» e rampa a gradini, contorno Freestyle | fogli del modello e primi piani del passo 7 |
 | Esportazione glTF | stessa figura | file `.glb` di 30.668 byte; Draco e MeshOptimizer mancano nel pacchetto PyPI | il modello arriva al gioco senza compressione, che si aggiunge con `gltf-transform` se serve |
-| three.js 0.186.1, Chromium senza schermo | già in `apps/web` (`DIARIO.md`, fase 2) | WebGL in software: foto sì, fotogrammi al secondo no | resa nel gioco (scafo rovesciato, gradini, contorno a schermo) e foto di confronto |
+| three.js 0.186.1, Chromium senza schermo | già in `apps/web` (`DIARIO.md` nella storia git, fase 2) | WebGL in software: foto sì, fotogrammi al secondo no | resa nel gioco (scafo rovesciato, gradini, contorno a schermo) e foto di confronto |
 | potrace, Inkscape, Krita | `apt-get install --dry-run` | si installano dai pacchetti di Ubuntu 24.04 | potrace trasforma in curve gli schizzi fotografati |
 | Python: scikit-image 0.26, trimesh 5.1 | `pip download` | disponibili | campo di distanza trasformato in mesh (marching cubes), se si prova la strada del codice |
 | Rete | Wikipedia, kanzenshuu, animecorner, PyPI, download.blender.org, apt | rispondono | ricerca e programmi |
@@ -456,12 +423,12 @@ gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
 
 ### Da dove si parte
 
-- Oggi un personaggio è fatto di pezzi costruiti nel codice (`apps/web/game/parts.ts`, 437 righe),
+- Oggi un personaggio è fatto di pezzi costruiti nel codice (`apps/web/game/render/parts.ts`, 437 righe),
   fusi in un solo `SkinnedMesh` per tutti i giocatori, con uno scheletro proprio di 20 ossa a
-  giocatore (`apps/web/game/character.ts:1-6`, `rig.ts:22`). Corsa e pose sono angoli scritti nel
+  giocatore (`apps/web/game/render/character.ts:1-6`, `rig.ts:22`). Corsa e pose sono angoli scritti nel
   codice (`rig.ts:73`, `locomotion`). Conseguenza: un GLB ha geometria, materiali e scheletro suoi e
   non entra in questa catena; serve uno strato in mezzo fra la simulazione e il modello disegnato.
-- Il materiale è lo standard lucido (`apps/web/game/materials.ts:1-4`, decisione «morbido e lucido»
+- Il materiale è lo standard lucido (`apps/web/game/render/materials.ts:1-4`, decisione «morbido e lucido»
   del 22/10/2026); lo studio porta al toon con contorno (sezione 9). Conseguenza: il materiale si
   sceglie con foto affiancate sui modelli di Tancredi.
 
@@ -469,7 +436,7 @@ gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
 
 | Tema | Decisione | Appiglio |
 |---|---|---|
-| Libreria 3D | resta three.js 0.186.1 con `@react-three/fiber` 9.8.1; `GLTFLoader` di three per i modelli; drei per `<Outlines>` | sezione 10; la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md`, fase 2) |
+| Libreria 3D | resta three.js 0.186.1 con `@react-three/fiber` 9.8.1; `GLTFLoader` di three per i modelli; drei per `<Outlines>` | sezione 10; la scena della fase 2 sta a 65 chiamate e 182.273 triangoli su 150 e 300.000 (`DIARIO.md` nella storia git, fase 2) |
 | Formato | GLB (glTF 2.0 binario), mai STL | STL ha solo triangoli, senza colori, texture né scheletro (https://en.wikipedia.org/wiki/STL_(file_format)) |
 | Personaggi esistenti | i pezzi in codice restano come riserva per le carte senza GLB, finché ogni figura non ha il suo modello | `packages/sim/src/data.ts:93-105`, 22 figure |
 | Pose tenute | no | sezione 7 |
@@ -478,15 +445,14 @@ gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
 
 Glossario per la chat nuova, da scrivere anche in `docs/` per Tancredi: un file per personaggio;
 in piedi, piedi sull'origine, guarda verso +Z, alto in metri qualsiasi (lo porta il gioco a
-`CHARACTER_HEIGHT`, `apps/web/game/style.ts`); materiali con un nome per le parti che prendono i
+`CHARACTER_HEIGHT`, `apps/web/game/render/style.ts`); materiali con un nome per le parti che prendono i
 colori della squadra (`maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe`; il resto resta
-com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con i nomi delle ossa di
-Mixamo se c'è; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
-mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md`, 22/10/2026).
+com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con nomi delle ossa
+liberi (il gioco non li legge; aggiornato il 29/10/2026, prima chiedeva i nomi di Mixamo) e clip
+chiamate `idle`, `run`, `kick`, i nomi che `apps/web/game/animation/modelAppearance.ts` cerca; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
+mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md` nella storia git, 22/10/2026).
 
 ### Punti da implementare nella chat nuova
-
-Ognuno chiuso da foto o numeri e dal sì di Tancredi; misure prima e dopo in `docs/DETTAGLI.md`.
 
 1. **Strato «aspetto del giocatore»**: un'interfaccia sola che il resto del gioco usa (posizione,
    direzione, andatura e azione dalla simulazione in ingresso; disegno in uscita), con due
@@ -511,8 +477,8 @@ Ognuno chiuso da foto o numeri e dal sì di Tancredi; misure prima e dopo in `do
    altre clip una alla volta.
 7. **Budget**: `/bench` con 10 modelli GLB: chiamate di disegno, triangoli, tempo di caricamento;
    misura di Tancredi sul portatile.
-8. **Guida in `docs/`** per i modelli (le regole sopra, con i numeri misurati), voce in `DIARIO.md`,
-   pull request unita su `main`.
+8. **Guida in `docs/`** per i modelli (le regole sopra, con i numeri misurati), pull request unita su
+   `main`.
 
 **Ambiente** (sezione 10), se serve Blender per controllare o sistemare un GLB: `pip install
 bpy==5.2.3` in un ambiente a parte (circa 6 minuti, 1 GB); Eevee vuole prima `apt-get update` e
@@ -564,20 +530,166 @@ even flat lighting, same ink outlines and two-tone cel shading, plain white back
 no ground shadow, no text.
 ```
 
-## 13. Messaggio da incollare nella chat nuova (25/10/2026)
+### 12.1 Prompt per 10 giocatori: Celestini contro rivali (26/10/2026)
+
+Un giocatore per immagine. Ogni prompt si compone di tre parti incollate una dopo l'altra:
+
+1. il **blocco base**, sempre uguale;
+2. il **completo** della squadra;
+3. il blocco del **personaggio**.
+
+Allegati da dare al generatore:
+
+- l'immagine di Fulmine, come riferimento di stile; il suo prompt è più sopra in questa
+  sezione;
+- l'immagine dei Celestini, per la somiglianza dei 5 della squadra A.
+
+I 5 della squadra B sono rivali inventati, perché non c'è un'immagine dell'altra squadra.
+
+**Posa.** In piedi, di fronte e senza prospettiva, perché il modello 3D si costruisce con le
+misure prese dall'immagine. Con l'immagine di Fulmine, accovacciata e in prospettiva, il
+confronto con il modello si è fermato a IoU 0,558 e i piedi risultavano il 10 % più stretti del
+disegno (`docs/DETTAGLI.md`, sezione «CH_Fulmine dal riferimento»). Per la posa accovacciata c'è
+la riga alternativa in fondo.
+
+#### Blocco base
 
 ```
-Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
-poi e docs/STUDIO-PERSONAGGI.md per intero (le sezioni 9-13 sono della chat del 22-25/10). Parti
-da main; i movimenti a metà restano nella storia al commit ac0cd0d e non si toccano.
+Full-body character illustration of ONE young street-football player for an arcade football
+video game. Style identical to the attached reference image: comic-book line art, bold black
+ink outlines with varying line weight (thick on the outer silhouette, thin on inner details),
+rough hand-inked texture, simple readable shapes, intense detailed eyes. Flat cel shading:
+two tones per colour with hard edges, solid black in the darkest areas, shadows tinted
+blue-violet, never grey. No gradients, no glossy highlights, no airbrush.
+Proportions: lanky teenager about 6 heads tall, long thin arms and legs, slightly oversized
+hands and big chunky football boots.
+Pose and camera: standing facing the viewer, relaxed A-pose with arms 30 degrees away from the
+body, feet shoulder-width apart, straight-on camera at chest height, no perspective
+distortion, whole body visible from the top of the hair to the soles.
+Background: plain flat warm orange (#f08a23), small shadow under the feet only.
+Avoid: more than one person, cropped feet or hair, photorealism, 3D render look, soft
+shading, extra fingers, text, numbers, logos, watermark.
+```
 
-Il compito è l'architettura dei personaggi del gioco nuovo: i modelli li passo io in GLB, prima
-senza animazioni, poi, se ci riesco, con animazioni come la corsa. Segui il piano della sezione 11
-dello studio, punto per punto: ogni punto finisce con foto o numeri da mostrarmi e si va avanti
-solo con il mio sì. Comincia dal punto 1, che non ha bisogno dei miei file; quando ti mando un GLB,
-controllalo con le regole della sezione 11 e dimmi cosa manca. Non fare movimenti nuovi, campi o
-interfaccia.
+#### Completi
 
-Alla fine: misure in docs/DETTAGLI.md, guida per i modelli in docs/, voce in DIARIO.md, commit,
-pull request e merge su main. Scrivimi sempre in italiano.
+##### Squadra A (Celestini)
+
+```
+Kit: short-sleeved sky-blue jersey (#5cc0ec) with navy (#1f2d5c) collar and cuffs, a small
+invented round crest with a white star on the chest, navy shorts, sky-blue socks with two
+navy stripes below the knee, white and navy football boots.
+```
+
+##### Squadra B (rivali)
+
+```
+Kit: short-sleeved dark green jersey (#1f7a4a) with mustard-yellow (#f2c230) collar and cuffs,
+a small invented crest with a yellow crown on the chest, white shorts, dark green socks with
+one yellow stripe, black and yellow football boots.
+```
+
+#### Squadra A: i Celestini dell'immagine allegata
+
+I ruoli sono i 5 del gioco: portiere, difensore, centrocampista, ala, attaccante.
+
+##### 1. Portiere
+
+```
+GOALKEEPER: tall teenage girl, dark brown skin, long wavy black hair, small round
+blue-tinted glasses on a sport strap, calm kind smile. Goalkeeper version of the kit:
+long-sleeved bright yellow (#ffd23f) jersey with navy trims, white padded goalkeeper gloves.
+```
+
+##### 2. Difensore
+
+```
+DEFENDER: slim teenage boy, olive skin, messy chin-length dark hair with bangs over one eye,
+green eyes, relaxed half-smile; a blue hoodie tied around his waist over the kit.
+```
+
+##### 3. Centrocampista
+
+```
+MIDFIELDER: teenage girl, dark brown skin, long straight black hair with one turquoise streak
+and a turquoise hair clip, brown eyes, friendly open smile.
+```
+
+##### 4. Ala
+
+```
+WINGER: energetic teenage girl, brown skin, bright red-orange hair in two spiky high buns
+tied with turquoise bands, amber eyes, small earring, confident smirk, one hand on her hip.
+```
+
+##### 5. Attaccante
+
+```
+STRIKER: short wiry boy, pale freckled skin, spiky bright orange hair, blue eyes, stubborn
+frown with pouting lips, plasters on one knee.
+```
+
+#### Squadra B: rivali inventati
+
+Hanno silhouette diverse fra loro, così in partita si riconoscono anche a circa 55 px di altezza
+(`art/CH_Fulmine/asset-brief.md`).
+
+##### 6. Portiere
+
+```
+GOALKEEPER: big broad-shouldered boy, light brown skin, shaved head, thick eyebrows,
+gap-toothed grin. Goalkeeper version of the kit: long-sleeved mint (#2ee6a6) jersey with
+black trims, white padded goalkeeper gloves.
+```
+
+##### 7. Difensore
+
+```
+DEFENDER: very tall thin girl, pale skin, one long black braid down to her waist, stern
+narrowed eyes, white sweatband on her forehead.
+```
+
+##### 8. Centrocampista
+
+```
+MIDFIELDER: stocky round-faced boy, dark skin, big curly afro held by a yellow bandana,
+wide cheerful grin.
+```
+
+##### 9. Ala
+
+```
+WINGER: small quick girl, tanned skin, short white-blond bob, sharp grey eyes, plasters on
+both knees, sly smile.
+```
+
+##### 10. Attaccante
+
+```
+STRIKER: cocky teenage boy, light skin, tall slicked-back blue-black pompadour, a small scar
+through one eyebrow, smug half-closed eyes.
+```
+
+#### Varianti
+
+##### Posa accovacciata, come l'immagine di Fulmine
+
+Sostituisce la riga `Pose and camera` del blocco base:
+
+```
+Pose and camera: wide athletic crouch facing the viewer, knees bent outward, weight low,
+arms hanging, ready to sprint, whole body visible including both feet.
+```
+
+##### Foglio per il modello 3D
+
+Si genera dopo aver scelto l'illustrazione, uno per giocatore. Dà le viste di profilo e di
+schiena, che per Fulmine sono state inventate.
+
+```
+Character turnaround model sheet of the same character: front, three-quarter, side and back
+views side by side, same scale and aligned at the feet, standing in a relaxed A-pose (arms
+45 degrees away from the body, legs slightly apart), neutral expression, orthographic view,
+even flat lighting, same ink outlines and two-tone cel shading, plain white background,
+no ground shadow, no text.
 ```

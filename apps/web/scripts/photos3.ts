@@ -4,7 +4,7 @@
 //          Tancredi to choose the characters' style on (22/10/2026).
 // Chromium draws WebGL in software here: a frame of the showroom takes about 2 s, so the page stops
 // drawing as soon as it is ready and each photo is one frame drawn and read in the same task
-// (game/ShowroomStage.tsx, capture).
+// (game/ui/ShowroomStage.tsx, capture).
 //
 // Run: node apps/web/scripts/photos3.ts [url=http://localhost:3000] [stili] [--teams a,b,c]
 import fs from "node:fs";

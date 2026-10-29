@@ -2,9 +2,9 @@
 // one SkinnedMesh of character.ts, posed by the run and the held states of rig.ts. It stays as
 // the fallback for the cards without a GLB model (docs/STUDIO-PERSONAGGI.md, section 11).
 import type { Appearance, PlayerFrame } from "./appearance";
-import { buildCast } from "./character";
-import { EXPRESSION } from "./faces";
-import type { Design } from "./looks";
+import { buildCast } from "../render/character";
+import { EXPRESSION } from "../render/faces";
+import type { Design } from "../render/looks";
 import { BONES_PER_PLAYER, locomotion, newJoints, skeleton } from "./rig";
 
 export function pieceAppearance(designs: Design[]): Appearance {

@@ -11,7 +11,7 @@ export const CHARACTER_HEIGHT = 0.85;
 // is wide) with a vertical field of view of about 18 degrees (the lines across the pitch meet 883 px
 // above the top of the screen), and puts the near side line at 690 px and the far one at 160 px.
 // On the simulation's pitch the same rows come with 19,8 m across the middle of the screen and the
-// camera aiming 0,35 m beyond the halfway point of the width (game/loop.ts).
+// camera aiming 0,35 m beyond the halfway point of the width (game/core/loop.ts).
 export const CAMERA = { pitchDeg: 29, fovDeg: 18, spanM: 19.8, aimZ: -0.35 };
 
 // Skin and hair for the cards' look 0-13 (packages/sim, Card.look): 0-7 people, 8-13 the lore
@@ -23,7 +23,7 @@ export const LOOK_COLOURS: [skin: string, hair: string][] = [
   ["#b7c4d4", "#3e4c60"], ["#f7fbff", "#cfe3f5"],
 ];
 
-// The characters' style until Tancredi chooses on the photos of each team (game/looks.ts):
+// The characters' style until Tancredi chooses on the photos of each team (game/render/looks.ts):
 // "A" the footballers in the kit, "B" the team's gear and the lore peoples as what they are.
 export const STYLE: "A" | "B" = "B";
 

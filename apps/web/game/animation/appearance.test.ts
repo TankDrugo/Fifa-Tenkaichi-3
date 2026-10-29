@@ -10,9 +10,9 @@ import {
 } from "three";
 import { CLUBS, clubSquad } from "@ft3/sim";
 import { createAppearance, newFrame } from "./appearance";
-import { designFor } from "./looks";
+import { designFor } from "../render/looks";
 import { trianglesOf } from "./modelAppearance";
-import { CHARACTER_HEIGHT } from "./style";
+import { CHARACTER_HEIGHT } from "../render/style";
 
 const club = CLUBS[0]!;
 const kit = { shirt: club.kit, shorts: club.alt, socks: club.kit };

@@ -102,7 +102,7 @@ def srgb(h):
     return tuple(v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in c) + (1.0,)
 
 
-# the team parts get the club's colours in the game (apps/web/game/modelAppearance.ts); these are
+# the team parts get the club's colours in the game (apps/web/game/animation/modelAppearance.ts); these are
 # what a viewer outside the game shows
 MATERIALS = {
     "maglia": "#e23b2e", "pantaloncini": "#f2f0e6", "calzettoni": "#e23b2e", "scarpe": "#1d2433",

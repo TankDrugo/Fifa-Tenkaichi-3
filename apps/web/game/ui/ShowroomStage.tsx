@@ -3,8 +3,8 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo } from "react";
 import type { Object3D, PerspectiveCamera } from "three";
-import { ShowroomLoop, type ShowroomOptions } from "./showroom";
-import { useModel } from "./useModel";
+import { ShowroomLoop, type ShowroomOptions } from "../render/showroom";
+import { useModel } from "../animation/useModel";
 
 declare global {
   interface Window {

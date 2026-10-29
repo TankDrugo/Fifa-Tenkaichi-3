@@ -1,10 +1,7 @@
 # Fifa Tenkaichi 3 — il rifacimento in Next.js, 3D e online
 
-Questo file è il prompt e il piano per le chat che rifanno il gioco. Ogni chat nuova riceve il
-messaggio della sezione 8, legge questo file, cerca in `DIARIO.md` l'ultima fase chiusa e fa la
-fase successiva, una sola (`CLAUDE.md`, «One task per session»). Le decisioni della sezione 1 sono
-di Tancredi e non si rimettono in discussione; se una fase mostra con un numero che una di esse non
-regge, la chat lo scrive e chiede.
+Il piano del gioco nuovo: le decisioni di Tancredi (sezione 1), i requisiti (sezione 4), le fasi
+(sezione 5). Lo stato delle fasi è in `README.md`, «Stato e cose aperte».
 
 ## 1. Decisioni di Tancredi (21/10/2026)
 
@@ -220,7 +217,6 @@ personaggio solo, con il metodo di `docs/STUDIO-PERSONAGGI.md`; i movimenti e le
 
 ## 5. Fasi
 
-Una fase per chat; alla fine: misure, voce in `DIARIO.md`, commit, pull request e merge su `main`.
 Il gioco vecchio continua a essere pubblicato come oggi da `.github/workflows/pages.yml`.
 
 | Fase | Cosa | Finita quando |
@@ -234,24 +230,7 @@ Il gioco vecchio continua a essere pubblicato come oggi da `.github/workflows/pa
 | 6 · Online | `apps/realtime`, 1 contro 1 e 2 contro 2, coda e inviti, anticipo e interpolazione, mercato fra giocatori | prove della sezione 4.8 con 50, 100 e 150 ms di ritardo; partite di prova di Tancredi con un amico sul suo PC |
 | 7 · Messa online | Oracle, dominio, HTTPS, backup, monitoraggio; itch.io e l'exe puntano al sito | il gioco nuovo raggiungibile da fuori con tutte e quattro le parti online funzionanti; il vecchio resta raggiungibile su GitHub Pages |
 
-Una fase che si rivela troppo grande per una chat si divide in sotto-fasi (per esempio 3a, 3b),
-scritte nel diario prima di cominciare.
-
-## 6. Regole di lavoro per le chat del rifacimento
-
-- Valgono le regole di `CLAUDE.md`: lingue, forma delle analisi, misure prima e dopo, voce del
-  diario, niente `git add -A`, chiedere prima di cancellare file o creare servizi fuori dal
-  repository. Dalla fase 0 `CLAUDE.md` ha anche le regole del gioco nuovo, approvate da Tancredi.
-- `web/` non si modifica: è il gioco che i suoi amici usano adesso.
-- Si spediscono solo cose provate: una fase la cui prova non passa resta aperta e il diario dice
-  perché.
-- Nelle chat cloud: avviare Docker con `dockerd &`; le costruzioni che scaricano pacchetti
-  dentro un contenitore possono aver bisogno del proxy e del certificato
-  `/root/.ccr/ca-bundle.crt` (da verificare alla fase 0 e scrivere nel diario); i fotogrammi al
-  secondo veri li misura Tancredi.
-- Servizi a pagamento, domini, account esterni (Oracle, registrar, GitHub Apps): si chiede prima.
-
-## 7. Domande ancora aperte (da fare a Tancredi nella fase indicata)
+## 6. Domande ancora aperte (da fare a Tancredi nella fase indicata)
 
 - **Fase 5 — salvataggi vecchi:** il gioco vecchio salva nel navigatore (`strikelegends.save.v2`)
   su un altro indirizzo, quindi il gioco nuovo non può leggerlo da solo. Le due strade sono un
@@ -266,14 +245,3 @@ scritte nel diario prima di cominciare.
   Tancredi decide il nome del sito e del dominio.
 - **Fase 7 — Oracle:** forma della macchina (core e RAM che la console concede davvero), regione,
   e se passare l'account a consumo per evitare che una macchina ferma venga ripresa.
-
-## 8. Messaggio da incollare nella chat nuova
-
-```
-Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md solo le voci dal
-21/10/2026 in poi. Trova l'ultima fase del piano già chiusa e fai la successiva, solo quella,
-rispettando le decisioni della sezione 1. Prima di cominciare dimmi in poche righe cosa farai e
-cosa misurerai; se una domanda della sezione 7 tocca questa fase, fammela subito. Alla fine:
-misure in docs/DETTAGLI.md, voce in DIARIO.md, commit, pull request e merge su main.
-Scrivimi sempre in italiano.
-```
