@@ -4,8 +4,8 @@
 // sit behind it: the pieces built in code (pieceAppearance.ts, on character.ts and rig.ts) and a
 // GLB model (modelAppearance.ts); players.ts and showroom.ts never see which one draws.
 import type { Object3D } from "three";
-import type { Design } from "./looks";
-import type { Expression } from "./faces";
+import type { Design } from "../render/looks";
+import type { Expression } from "../render/faces";
 import { modelAppearance } from "./modelAppearance";
 import { pieceAppearance } from "./pieceAppearance";
 

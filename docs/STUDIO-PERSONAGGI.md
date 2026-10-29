@@ -28,7 +28,7 @@ morbido e lucido; questo studio torna alla strada del piano.
   403 a una lettura diretta); i pezzi dell'equipaggiamento cambiano le statistiche, per esempio il
   Turbo Helmet dà Velocità +2 e Tecnica −2 (https://www.thegamer.com/mario-strikers-battle-league-football-gear-guide/).
   Conseguenza: un personaggio del gioco nuovo si progetta in due strati, il corpo con la sua faccia e
-  l'equipaggiamento della squadra; è la struttura già scritta in `apps/web/game/parts.ts`, da rifare
+  l'equipaggiamento della squadra; è la struttura già scritta in `apps/web/game/render/parts.ts`, da rifare
   con lo stile nuovo.
 - **Il tono è venuto da una scelta esplicita.** Super Mario Strikers (2005) nasceva come gioco di
   calcio più realistico ed è diventato «sopra le righe» dopo i confronti con Nintendo, che voleva
@@ -150,7 +150,7 @@ alto 56 px e uno lontano alto 43 px a 1280 × 720. La testa, a seconda delle pro
 
 La decisione della sezione 1 del piano è «personaggi disegnati nel codice, niente modelli esterni».
 
-- **Le forme.** I prototipi sono sfere e capsule separate (`apps/web/game/parts.ts`): le giunture
+- **Le forme.** I prototipi sono sfere e capsule separate (`apps/web/game/render/parts.ts`): le giunture
   si vedono e il contorno di uno scafo rovesciato disegnerebbe una linea intorno a ogni pezzo, anche
   dentro il corpo. Conseguenza: per un contorno da fumetto il corpo deve essere una superficie unica.
   Nel codice si può fare descrivendo il corpo come campo di distanza (forme fuse con un'unione
@@ -169,7 +169,7 @@ La decisione della sezione 1 del piano è «personaggi disegnati nel codice, nie
   prototipo misura le due strade. three.js 0.186.1 ha già lo scafo rovesciato
   (`three/examples/jsm/effects/OutlineEffect.js`).
 - **Facce ed espressioni**: l'atlante disegnato con canvas, 8 espressioni per giocatore
-  (`apps/web/game/faces.ts`), resta la strada; cambia il disegno: occhi manga con l'iride a
+  (`apps/web/game/render/faces.ts`), resta la strada; cambia il disegno: occhi manga con l'iride a
   disegno, linee spesse e sottili, il segno delle guance.
 - **Animazione a pose tenute**: tenere ogni posa 2 fotogrammi su 60 si fa nel codice dei movimenti
   senza costi. Cambia la sensazione del gioco: è la domanda 3.
@@ -341,7 +341,7 @@ apertura non erano allegati al 22/10/2026: la sezione 6 resta l'elenco da procur
   (https://www.goodsmile.info/en/product/5246/Caiman.html). Conseguenza: per la squadra della
   Cometa Verde e le altre squadre non umane il riconoscimento passa dalla forma della testa; le
   espressioni si fanno cambiando la parte della faccia, che è il nostro atlante di facce
-  (`apps/web/game/faces.ts`).
+  (`apps/web/game/render/faces.ts`).
 - **Dorohedoro in 3D.** L'anime di MAPPA (2020) è il primo lavoro dello studio con una produzione
   basata sul 3D: secondo l'analisi di CGWORLD il 42% delle inquadrature è in 3D con resa a celle, il
   18% disegnato a mano, il 40% le due cose insieme, compresi effetti disegnati sopra i modelli
@@ -423,12 +423,12 @@ gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
 
 ### Da dove si parte
 
-- Oggi un personaggio è fatto di pezzi costruiti nel codice (`apps/web/game/parts.ts`, 437 righe),
+- Oggi un personaggio è fatto di pezzi costruiti nel codice (`apps/web/game/render/parts.ts`, 437 righe),
   fusi in un solo `SkinnedMesh` per tutti i giocatori, con uno scheletro proprio di 20 ossa a
-  giocatore (`apps/web/game/character.ts:1-6`, `rig.ts:22`). Corsa e pose sono angoli scritti nel
+  giocatore (`apps/web/game/render/character.ts:1-6`, `rig.ts:22`). Corsa e pose sono angoli scritti nel
   codice (`rig.ts:73`, `locomotion`). Conseguenza: un GLB ha geometria, materiali e scheletro suoi e
   non entra in questa catena; serve uno strato in mezzo fra la simulazione e il modello disegnato.
-- Il materiale è lo standard lucido (`apps/web/game/materials.ts:1-4`, decisione «morbido e lucido»
+- Il materiale è lo standard lucido (`apps/web/game/render/materials.ts:1-4`, decisione «morbido e lucido»
   del 22/10/2026); lo studio porta al toon con contorno (sezione 9). Conseguenza: il materiale si
   sceglie con foto affiancate sui modelli di Tancredi.
 
@@ -445,11 +445,11 @@ gradino) e il confronto del passo 8, applicati ai modelli di Tancredi.
 
 Glossario per la chat nuova, da scrivere anche in `docs/` per Tancredi: un file per personaggio;
 in piedi, piedi sull'origine, guarda verso +Z, alto in metri qualsiasi (lo porta il gioco a
-`CHARACTER_HEIGHT`, `apps/web/game/style.ts`); materiali con un nome per le parti che prendono i
+`CHARACTER_HEIGHT`, `apps/web/game/render/style.ts`); materiali con un nome per le parti che prendono i
 colori della squadra (`maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe`; il resto resta
 com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con nomi delle ossa
 liberi (il gioco non li legge; aggiornato il 29/10/2026, prima chiedeva i nomi di Mixamo) e clip
-chiamate `idle`, `run`, `kick`, i nomi che `apps/web/game/modelAppearance.ts` cerca; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
+chiamate `idle`, `run`, `kick`, i nomi che `apps/web/game/animation/modelAppearance.ts` cerca; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
 mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md` nella storia git, 22/10/2026).
 
 ### Punti da implementare nella chat nuova

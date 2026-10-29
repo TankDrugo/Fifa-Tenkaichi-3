@@ -4,11 +4,11 @@
 import { describe, expect, it } from "vitest";
 import { Vector3 } from "three";
 import { CLUBS, clubSquad, FIGURES } from "@ft3/sim";
-import { CLASSIC_HEIGHT, FIGURE_BUILD, hipHeight, makeBody } from "./body";
-import { designFor } from "./looks";
-import { buildParts } from "./parts";
+import { CLASSIC_HEIGHT, FIGURE_BUILD, hipHeight, makeBody } from "../render/body";
+import { designFor } from "../render/looks";
+import { buildParts } from "../render/parts";
 import { BONE, BONES_PER_PLAYER, bonePosition, locomotion, newJoints, skeleton, type PoseInput } from "./rig";
-import { CHARACTER_HEIGHT } from "./style";
+import { CHARACTER_HEIGHT } from "../render/style";
 
 const pose = (x: number, z: number, fx: number, fz: number): PoseInput => ({ x, z, fx, fz, height: 1, speed: 0, gait: "walk", phase: 0, turnRate: 0, lookYaw: 0, time: 0, kick: -1, slide: -1, react: 0, lunge: false, hold: false, celebrate: -1, charge: -1 });
 

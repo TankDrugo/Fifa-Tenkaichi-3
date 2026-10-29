@@ -49,7 +49,7 @@ disegna in WebGL senza librerie. La versione Godot è abbandonata e non fa parte
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
 | `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
 | `package.json`, `pnpm-workspace.yaml` | workspace pnpm del gioco nuovo; `web/` ne resta fuori |
-| `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status`; `/partita` e `/bench`, la partita in 3D (`apps/web/game/`); `/prova`, un calciatore solo con la palla per provare un modello |
+| `apps/web` | gioco nuovo, Next.js: pagine, API, pagina di stato `/status`; `/partita` e `/bench`, la partita in 3D (`apps/web/game/`: `core/` ciclo, comandi, opzioni; `animation/` aspetto dei giocatori, scheletro, modelli GLB e clip; `render/` stadio, pezzi, facce, materiali; `ui/` viste React); `/prova`, un calciatore solo con la palla per provare un modello |
 | `apps/realtime` | gioco nuovo, server delle partite: `/health` e WebSocket `/ws` |
 | `packages/shared` | gioco nuovo, schemi condivisi fra navigatore e server |
 | `packages/sim` | gioco nuovo, la simulazione in TypeScript (partita, IA, skill, carte), la stessa nel navigatore e sul server; `bench/` ha le prove e i banchi di `tools/` portati |
@@ -180,11 +180,11 @@ fotogramma, l'1% dei fotogrammi più lenti, chiamate di disegno e triangoli.
 pagina mostri la partita della simulazione; con `--photos` rifà le foto di `docs/fase2/`.
 
 Joypad: il gioco nuovo legge il controller Xbox (e gli altri) con la Gamepad API del browser
-(`navigator.getGamepads`, `apps/web/game/input.ts`), come il gioco vecchio (`web/js/input.js`).
+(`navigator.getGamepads`, `apps/web/game/core/input.ts`), come il gioco vecchio (`web/js/input.js`).
 
-Personaggi e animazioni: i giocatori sono pezzi costruiti nel codice (`apps/web/game/parts.ts`)
-oppure modelli GLB in `apps/web/public/models/`, scelti con `?modello=<id>` (`apps/web/game/models.ts`).
-Il gioco suona le clip di un GLB per nome: `idle`, `run`, `kick` (`apps/web/game/modelAppearance.ts`);
+Personaggi e animazioni: i giocatori sono pezzi costruiti nel codice (`apps/web/game/render/parts.ts`)
+oppure modelli GLB in `apps/web/public/models/`, scelti con `?modello=<id>` (`apps/web/game/animation/models.ts`).
+Il gioco suona le clip di un GLB per nome: `idle`, `run`, `kick` (`apps/web/game/animation/modelAppearance.ts`);
 non legge i nomi delle ossa. Le animazioni nuove si fanno con Meshy; Mixamo si può usare ma non è
 obbligatorio, e il codice nuovo non presume uno scheletro Mixamo. I due modelli di oggi hanno ossa
 con i nomi di Mixamo (`mixamorig:Hips` …) date dagli script `art/CH_Fulmine/build_hd/16_rig.py` e

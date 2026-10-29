@@ -4,10 +4,10 @@
 // the faces are lit, as on a team's presentation screen.
 import { Group, type Object3D, type PerspectiveCamera, type Scene, type WebGLRenderer } from "three";
 import { clubById, clubSquad, type Club } from "@ft3/sim";
-import { createAppearance, newFrame, type Appearance } from "./appearance";
+import { createAppearance, newFrame, type Appearance } from "../animation/appearance";
 import { buildArena } from "./arena";
 import type { Expression } from "./faces";
-import { createLook, type Look } from "./loop";
+import { createLook, type Look } from "../core/loop";
 import { designFor, type Design, type Style } from "./looks";
 import { teamKits } from "./players";
 
@@ -16,7 +16,7 @@ export interface ShowroomOptions {
   style: Style;
   back: boolean;              // seen from behind: the numbers
   expression: Expression | "";
-  model: string;              // a model of game/models.ts, "" for the pieces in code
+  model: string;              // a model of game/animation/models.ts, "" for the pieces in code
 }
 
 export function teamDesigns(club: Club, style: Style): Design[] {

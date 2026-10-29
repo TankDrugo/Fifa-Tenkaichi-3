@@ -11,7 +11,7 @@ skill's export_delivery.py.
   hd    keeps every material and about a third of the triangles of the big parts.
   game  keeps the five team materials (maglia, maglia2, pantaloncini, calzettoni, scarpe) and
         merges the rest into 'fissi' coloured per vertex, the contract of
-        docs/STUDIO-PERSONAGGI.md section 11 and of apps/web/game/modelAppearance.ts; about 4 % of
+        docs/STUDIO-PERSONAGGI.md section 11 and of apps/web/game/animation/modelAppearance.ts; about 4 % of
         the big parts' triangles.
 """
 import os

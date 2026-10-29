@@ -3,8 +3,8 @@
 // he is doing, not how he looks.
 import { CanvasTexture, Group, Mesh, Quaternion, SphereGeometry, SRGBColorSpace, Vector3, type Object3D } from "three";
 import { C, CLIP_DURATION, clubById, kitsClash, type Match, type Player } from "@ft3/sim";
-import { createAppearance, newFrame, type Appearance } from "./appearance";
-import type { Driver } from "./driver";
+import { createAppearance, newFrame, type Appearance } from "../animation/appearance";
+import type { Driver } from "../core/driver";
 import type { Expression } from "./faces";
 import { designFor, type Design, type Style } from "./looks";
 import { standardMaterial } from "./materials";

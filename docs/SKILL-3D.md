@@ -59,7 +59,7 @@ esportazione). Una fase si rifà da sola: ognuna cancella e ricostruisce solo le
 Il GLB ha già 3 clip fatte nel codice (`idle`, `run`, `kick`, `art/CH_Fulmine/build/08_anim.py`)
 che il gioco muove con la simulazione. Mancano le clip per gli altri stati della simulazione:
 scivolata, colpo preso, spallata, palla in mano, esultanza, tiro caricato
-(`apps/web/game/appearance.ts:22-30`).
+(`apps/web/game/animation/appearance.ts:22-30`).
 
 - **Meshy** (https://docs.meshy.ai/en/api/rigging, https://docs.meshy.ai/en/api/animation) è la
   strada per le animazioni nuove: rig e clip sui modelli umanoidi con texture.
@@ -68,7 +68,7 @@ scivolata, colpo preso, spallata, palla in mano, esultanza, tiro caricato
   `art/CH_Fulmine/exports/CH_Fulmine_mixamo.fbx` (la mesh del gioco, 135.787 triangoli, 2,7 MB, in
   posa A, senza scheletro; si rifà con `build_hd/18_mixamo.py`).
 - Il codice nuovo non presume uno scheletro Mixamo: il gioco cerca le clip per nome (`idle`, `run`,
-  `kick`, `apps/web/game/modelAppearance.ts`) e non legge i nomi delle ossa. I due modelli di oggi
+  `kick`, `apps/web/game/animation/modelAppearance.ts`) e non legge i nomi delle ossa. I due modelli di oggi
   hanno ossa con i nomi di Mixamo (`mixamorig:Hips` ...) e restano così.
 - Obiettivo futuro, non ancora fatto: accettare le clip di Meshy con i loro nomi, senza la
   nomenclatura Mixamo.

@@ -9,7 +9,7 @@ VIEWS      ref/concept_front.webp, 1024 x 1536: concept di fronte, in prospettiv
            i 180 px della testa); il soggetto va da y 19 (punta della cresta) a y 1491 (suole),
            96 % dell'altezza; terra a y 1491. Unica vista: niente lato né schiena.
 SCALE      cranio a 1,78 m (scelta: calciatore adulto 1,75-1,85); il gioco riporta il riquadro a
-           CHARACTER_HEIGHT = 0,85 (apps/web/game/style.ts:8)
+           CHARACTER_HEIGHT = 0,85 (apps/web/game/render/style.ts:8)
 PROPORTIONS misurate sulla maschera dell'immagine (px) e usate come rapporti, non come metri,
            perché la vista è in prospettiva e accovacciata:
            1 testa (capelli-mento) 265 px; cresta 180 px = 0,68 teste, piegata verso la sua sinistra

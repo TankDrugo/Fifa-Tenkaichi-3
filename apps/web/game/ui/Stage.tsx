@@ -11,10 +11,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Group, type Object3D, type PerspectiveCamera } from "three";
-import { StageLoop } from "./loop";
-import { useModel } from "./useModel";
-import type { FrameStats } from "./stats";
-import type { StageOptions } from "./options";
+import { StageLoop } from "../core/loop";
+import { useModel } from "../animation/useModel";
+import type { FrameStats } from "../core/stats";
+import type { StageOptions } from "../core/options";
 
 export function Stage({ options, stats, onLoop }: { options: StageOptions; stats: FrameStats; onLoop?: (l: StageLoop) => void }) {
   return (

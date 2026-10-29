@@ -10,8 +10,8 @@
 // keyed clips layered on top (moves.ts).
 import { Euler, Matrix4, Quaternion, Vector3 } from "three";
 import type { PlayerMotion } from "./appearance";
-import { hipHeight, type Body } from "./body";
-import { CHARACTER_HEIGHT } from "./style";
+import { hipHeight, type Body } from "../render/body";
+import { CHARACTER_HEIGHT } from "../render/style";
 
 export const BONE = {
   root: 0, pelvis: 1, chest: 2, head: 3,

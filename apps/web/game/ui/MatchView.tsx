@@ -6,10 +6,10 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fingerprint } from "@ft3/sim";
-import type { Driver } from "./driver";
-import type { StageLoop } from "./loop";
-import { FrameStats } from "./stats";
-import type { StageOptions } from "./options";
+import type { Driver } from "../core/driver";
+import type { StageLoop } from "../core/loop";
+import { FrameStats } from "../core/stats";
+import type { StageOptions } from "../core/options";
 
 const Stage = dynamic(() => import("./Stage").then((m) => m.Stage), { ssr: false });
 

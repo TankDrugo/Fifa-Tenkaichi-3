@@ -9,15 +9,15 @@ import {
 } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { C } from "@ft3/sim";
-import { buildArena } from "./arena";
+import { buildArena } from "../render/arena";
 import { Driver } from "./driver";
 import { createInput, type Input } from "./input";
-import { crowdTime } from "./materials";
-import { buildActors, matchDesigns, teamKits, type Actors } from "./players";
+import { crowdTime } from "../render/materials";
+import { buildActors, matchDesigns, teamKits, type Actors } from "../render/players";
 import type { StageOptions } from "./options";
 import { PRACTICE_PLAYER, practiceDriver } from "./practice";
 import type { FrameStats } from "./stats";
-import { DAY } from "./style";
+import { DAY } from "../render/style";
 
 // The light and the finish of every 3D page: a sky light, the sun with one shadow map of 2048
 // (docs/PIANO-3D-ONLINE.md, 4.6), reflections from three's own room made once on the graphics card,
@@ -70,7 +70,7 @@ export class StageLoop {
   // the person's keyboard and pad, in the practice of /prova
   private input?: Input;
 
-  // model: the GLB every player is drawn with (game/models.ts), none for the pieces in code
+  // model: the GLB every player is drawn with (game/animation/models.ts), none for the pieces in code
   constructor(gl: WebGLRenderer, scene: Scene, camera: PerspectiveCamera, options: StageOptions, stats: FrameStats, model?: Object3D) {
     this.gl = gl; this.scene = scene; this.camera = camera; this.options = options; this.stats = stats;
     if (options.practice) {

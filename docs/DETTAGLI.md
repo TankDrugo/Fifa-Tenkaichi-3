@@ -999,13 +999,13 @@ repository:
 
 | Osservazione | Misura sulle foto | Conseguenza nel gioco nuovo |
 |---|---|---|
-| Inclinazione della telecamera di partita | il cerchio di centrocampo è alto 0,47 (B) e 0,49 (A) volte la sua larghezza: arcoseno 28,0° e 29,3° | 29° verso il basso (`apps/web/game/style.ts`, `CAMERA`) |
+| Inclinazione della telecamera di partita | il cerchio di centrocampo è alto 0,47 (B) e 0,49 (A) volte la sua larghezza: arcoseno 28,0° e 29,3° | 29° verso il basso (`apps/web/game/render/style.ts`, `CAMERA`) |
 | Obiettivo | in B le linee perpendicolari alla linea laterale si incontrano 883 px sopra il bordo alto, al centro (x 624 su 1280): f·tan(29°) = 1.243 px, f = 2.242 px, campo visivo verticale 18,2° (17,5° con 28°) | 18°: un teleobiettivo da lontano, i giocatori lontani grandi quasi come i vicini |
 | Cosa inquadra | in B la linea laterale vicina è a 690 px e la lontana a 160 px, sopra c'è il pubblico; in lunghezza si vede dalla metà campo alla porta, circa il 60% | 19,8 m a metà schermo e mira 0,35 m oltre la metà della larghezza: le due linee cadono a 690 e 159 px (calcolo con la telecamera di three, `scripts/bench3d.ts`). La telecamera segue la palla solo in lunghezza |
 | Proporzioni del campo | lunghezza / larghezza circa 1,79 in B | la simulazione ha 28 × 16 m, 1,75: stesso campo, nessuna modifica |
 | Grandezza dei personaggi | in B la lunghezza del campo è circa 35 altezze di un personaggio (45-55 px su circa 1.580 px di metà campo per due); al Mushroom Hill la porta è alta circa 2,25 volte il portiere | sul nostro campo da 28 m e porta da 2,2 m, un calciatore di 0,85 m (`CHARACTER_HEIGHT`), testa grande, guanti e scarpe grosse |
 | Bordi del campo | nessuna linea da cui uscire: una recinzione bassa, trasparente, con un disegno che si illumina dal basso | la recinzione sta dove la simulazione fa rimbalzare la palla (`match.ts`, `stepBall`); il disegno è nostro, rombi azzurri |
-| Materiali dei personaggi | ombreggiatura morbida e lucida con riflessi e luce sui bordi, non a bande piatte (schermate dell'equipaggiamento) | materiale standard di three con luce di bordo nello shader (`game/materials.ts`) |
+| Materiali dei personaggi | ombreggiatura morbida e lucida con riflessi e luce sui bordi, non a bande piatte (schermate dell'equipaggiamento) | materiale standard di three con luce di bordo nello shader (`game/render/materials.ts`) |
 | Pubblico | tifosi piccoli e fitti su gradoni, colori vivi; nessun tifoso fra la telecamera e il campo | gradoni su quattro lati, tifosi su tre (sezione «Stadio») |
 | Prestazioni | 1080p e 60 fotogrammi al secondo in partita, pubblico in 3D aggiornato a metà frequenza, nessun anti-aliasing (analisi di Digital Foundry riportata da https://gonintendo.com/contents/4619-mario-strikers-battle-league-s-framerate-resolution-and-more-detailed) | il pubblico si muove a 30 aggiornamenti al secondo nello shader; nessun anti-aliasing, risoluzione fino a 1,5 volte i pixel CSS |
 
@@ -1037,7 +1037,7 @@ e riempie gli ultimi 143 px con il muro della tribuna vicina.
 
 ### Il calciatore
 
-- **Scheletro** (`game/rig.ts`): bacino, petto, collo, testa, spalle, braccia, avambracci, mani,
+- **Scheletro** (`game/animation/rig.ts`): bacino, petto, collo, testa, spalle, braccia, avambracci, mani,
   cosce, gambe, piedi, con le lunghezze di un corpo alto 1, poi 0,85 m per l'altezza della carta
   (0,92-1,07). Sulle ossa: 14 tipi di forme (testa, capelli, occhi, collo, busto, bacino, braccia,
   avambracci, guanti, sfere delle giunture, cosce, pantaloncini, calzettoni, scarpe), ognuno un
@@ -1077,7 +1077,7 @@ e riempie gli ultimi 143 px con il muro della tribuna vicina.
 | La scena mostra la partita della simulazione | impronta dopo 900 passi: `f405f43f0a2aff2c` nella pagina e in Node |
 | Codice 3D scaricato dal navigatore | 986 KB, 259 KB compressi con gzip; solo `/partita` e `/bench` lo caricano |
 | Fotogrammi in software | 17-18 fotogrammi in 8 s: non dicono niente del portatile |
-| `pnpm test` | 26 prove su 26 (21 della fase 1, 5 di `apps/web/game/rig.test.ts`) |
+| `pnpm test` | 26 prove su 26 (21 della fase 1, 5 di `apps/web/game/animation/rig.test.ts`) |
 | `pnpm build` | `/partita` e `/bench` costruite come pagine dinamiche, 20,5 s di compilazione |
 
 ### Versioni e perché
@@ -1097,7 +1097,7 @@ repository: senza, `next dev` lo ricrea a ogni avvio.
 ### Errori trovati nel lavoro
 
 - **Calciatori al doppio della distanza:** la radice dello scheletro era composta con sé stessa come
-  genitore; nella prima foto si vedevano 3 calciatori su 10. Ora `game/rig.test.ts` controlla che
+  genitore; nella prima foto si vedevano 3 calciatori su 10. Ora `game/animation/rig.test.ts` controlla che
   testa e bacino stiano sopra il punto della simulazione: con l'errore rimesso fallisce 5 prove su 5.
 - **Opzioni vuote sul server:** `options.ts` prendeva i valori predefiniti da un modulo con
   `"use client"`, che sul server di Next.js è solo un riferimento; ora stanno in `options.ts`.
@@ -1121,7 +1121,7 @@ repository: senza, `next dev` lo ricrea a ogni avvio.
 Tancredi ha fermato lo stile dei personaggi per uno studio di character design
 (`docs/STUDIO-PERSONAGGI.md`); su `main` restano i prototipi, che servono come base tecnica.
 
-- **Un solo `SkinnedMesh` per tutti i calciatori** (`apps/web/game/character.ts`): 20 ossa a
+- **Un solo `SkinnedMesh` per tutti i calciatori** (`apps/web/game/render/character.ts`): 20 ossa a
   giocatore (`rig.ts`), forme fuse in una geometria con colore, ruvidità, metallo e luce nei vertici;
   faccia (8 espressioni) e numero da atlanti disegnati con canvas (`faces.ts`); motivo della maglia
   nello shader. Corpi dalle 21 figure delle carte (`body.ts`), capelli, barba, naso e occhi estratti
@@ -1132,7 +1132,7 @@ Tancredi ha fermato lo stile dei personaggi per uno studio di character design
 | Misura | Valore |
 |---|---|
 | `renderer.info` (`scripts/bench3d.ts`, Chromium in software, 6 prove come nella fase 2) | **40 chiamate di disegno** (fase 2: 65) e **222.715 triangoli** (fase 2: 182.273) in tutte le prove |
-| Triangoli per giocatore, 14 squadre × 2 stili | da 4.676 a 7.380, mediana 5.736 (`game/rig.test.ts`: al massimo 9.000) |
+| Triangoli per giocatore, 14 squadre × 2 stili | da 4.676 a 7.380, mediana 5.736 (`game/animation/rig.test.ts`: al massimo 9.000) |
 | La scena mostra la partita della simulazione | impronta dopo 900 passi `f405f43f0a2aff2c` nella pagina e in Node, come nella fase 2 |
 | `pnpm test` | 29 prove su 29 |
 
@@ -1146,7 +1146,7 @@ di Tancredi.
 
 ### Punto 1 · strato «aspetto del giocatore»
 
-- **L'interfaccia** (`apps/web/game/appearance.ts`): `Appearance` con `object` (da aggiungere alla
+- **L'interfaccia** (`apps/web/game/animation/appearance.ts`): `Appearance` con `object` (da aggiungere alla
   scena), `count`, `triangles`, `set(i, frame)`, `commit(time)`, `dispose()`. In ingresso un
   `PlayerFrame` a giocatore: posizione, direzione, altezza della carta, velocità, andatura e fase del
   passo, curva, sguardo, gli stati della simulazione (calcio, scivolata, colpo preso, spallata,
@@ -1168,7 +1168,7 @@ di Tancredi.
 | `renderer.info` (`scripts/bench3d.ts`, 6 prove come nella fase 2) | 40 chiamate di disegno, 222.715 triangoli in tutte | uguale: 40 e 222.715 in tutte |
 | Impronta dopo 900 passi, pagina e Node | `f405f43f0a2aff2c` | `f405f43f0a2aff2c` |
 | Foto a tempo fisso (1,25 s), PNG 1280 × 720: `/partita` dopo 900 passi, `/partita` da vicino, `/personaggi` Fulmini Rossi stile B, Lupi stile A di schiena | — | 0 pixel diversi su 921.600 in tutte e 4; due giri sul codice di prima danno anche loro 0 pixel diversi |
-| `pnpm test` | 29 prove | 34 prove: 5 nuove in `game/appearance.test.ts` (una copia a giocatore e i triangoli; piedi a terra, posizione, altezza e verso in 3 punti del campo; ossa proprie per ogni copia di un modello con scheletro) |
+| `pnpm test` | 29 prove | 34 prove: 5 nuove in `game/animation/appearance.test.ts` (una copia a giocatore e i triangoli; piedi a terra, posizione, altezza e verso in 3 punti del campo; ossa proprie per ogni copia di un modello con scheletro) |
 
 Ambiente della chat (25/10/2026): Playwright 1.56.1 cerca Chromium 1194, la chat ha 1243 in
 `/opt/pw-browsers`. Si lancia con `PLAYWRIGHT_BROWSERS_PATH` su una cartella della chat che contiene
@@ -1216,8 +1216,8 @@ i pezzi del gioco che lo caricano. Guida per Tancredi: `docs/SKILL-3D.md`.
 
 ### Il gioco
 
-- **Registro** (`apps/web/game/models.ts`): `fulmine` → `/models/fulmine.glb`; `/partita?modello=fulmine`
-  e `/personaggi?modello=fulmine` disegnano tutti i giocatori con il GLB (`game/useModel.ts`, Suspense
+- **Registro** (`apps/web/game/animation/models.ts`): `fulmine` → `/models/fulmine.glb`; `/partita?modello=fulmine`
+  e `/personaggi?modello=fulmine` disegnano tutti i giocatori con il GLB (`game/animation/useModel.ts`, Suspense
   di `@react-three/fiber`). Il Dockerfile copia `apps/web/public`, che l'uscita `standalone` lascia
   fuori.
 - **Colori di squadra** (`modelAppearance.ts`): i materiali `maglia`, `maglia2`, `pantaloncini`,
@@ -1237,7 +1237,7 @@ i pezzi del gioco che lo caricano. Guida per Tancredi: `docs/SKILL-3D.md`.
 Il piano mette il tetto a 150 chiamate e 300.000 triangoli (sezione 4.6): con il modello
 dettagliato i triangoli sono 8,9 volte il tetto. Tancredi ha detto di non badare al limite; i
 fotogrammi al secondo vanno misurati sul suo portatile. `pnpm test`: 37 prove, 3 nuove in
-`game/appearance.test.ts` (colori di squadra, altezza dagli extras, clip guidate).
+`game/animation/appearance.test.ts` (colori di squadra, altezza dagli extras, clip guidate).
 
 ### Ambiente della chat
 
@@ -1262,7 +1262,7 @@ palla. Foto in `docs/fase3/golden/`.
   lo scheletro. Meshy fa anche il rig, con corsa e camminata a richiesta, sui modelli umanoidi con
   texture (https://docs.meshy.ai/en/api/rigging, e https://docs.meshy.ai/en/api/animation per le
   altre clip): un file così salterebbe i passi 2-5 qui sotto; il gioco cerca le clip per nome,
-  `idle`, `run` e `kick` (`apps/web/game/modelAppearance.ts`).
+  `idle`, `run` e `kick` (`apps/web/game/animation/modelAppearance.ts`).
 
 ### Lo script (`art/CH_GoldenStriker/build/rig.py`)
 
@@ -1289,9 +1289,9 @@ GLB: 613.272 byte, 15.815 triangoli, 6 materiali, 22 ossa che deformano.
 
 ### Il gioco
 
-- **Registro** (`apps/web/game/models.ts`): `golden` → `/models/golden.glb`;
+- **Registro** (`apps/web/game/animation/models.ts`): `golden` → `/models/golden.glb`;
   `/partita?modello=golden` e `/personaggi?modello=golden` disegnano tutti con questo modello.
-- **`/prova`** (`app/prova/page.tsx`, `game/practice.ts`, `game/input.ts`): una persona con un
+- **`/prova`** (`app/prova/page.tsx`, `game/core/practice.ts`, `game/core/input.ts`): una persona con un
   solo calciatore e la palla. La simulazione gioca sempre cinque contro cinque, quindi gli altri
   nove stanno nell'angolo (−13,5; −7,5) a ogni passo, fermi e con `pickupLock` a 1e9 perché non
   prendano la palla, e la scena disegna solo il giocatore 4 (`players.ts`, `only`). Impostazioni
@@ -1313,7 +1313,7 @@ GLB: 613.272 byte, 15.815 triangoli, 6 materiali, 22 ossa che deformano.
 
 Con 10 copie il modello sta sotto le 150 chiamate del piano e a 1,28 volte i 300.000 triangoli
 (sezione 4.6); CH_Fulmine sta a 152 chiamate e 2.679.386 triangoli. `pnpm test`: 39 prove, 2 nuove
-in `game/practice.test.ts` (corsa con la palla e gli altri parcheggiati; tiro, gol e palla di
+in `game/core/practice.test.ts` (corsa con la palla e gli altri parcheggiati; tiro, gol e palla di
 nuovo ai piedi).
 
 - **Prova nel browser** (Chromium senza schermo, tastiera di Playwright): corsa a 4,69 m/s,

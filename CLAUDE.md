@@ -17,7 +17,9 @@ project and writes in Italian.
 ## Where things are
 
 - `apps/web`: the new game, Next.js 16 + three.js 0.186 with `@react-three/fiber` (pages in `app/`,
-  3D scene in `game/`); `apps/realtime`: matches over WebSocket; `packages/shared`: zod schemas
+  3D scene in `game/`: `core/` loop, input, options, practice; `animation/` player appearance,
+  rig, GLB models and clips; `render/` stadium, code pieces, faces, materials; `ui/` React views);
+  `apps/realtime`: matches over WebSocket; `packages/shared`: zod schemas
   shared by client and server; `packages/sim`: simulation, AI, skills, cards; `infra/`: Docker.
 - `web/`: the old game (WebGL sprites, no build step), still published: GitHub Pages rebuilds it
   from `main` (`.github/workflows/pages.yml`) and the Windows exe downloads it from there at every
@@ -66,10 +68,10 @@ project and writes in Italian.
 
 ## Players and animations
 
-- The game draws a player from code pieces (`apps/web/game/parts.ts`) or from a GLB in
-  `apps/web/public/models/` chosen with `?modello=<id>` (`apps/web/game/models.ts`). The GLB
+- The game draws a player from code pieces (`apps/web/game/render/parts.ts`) or from a GLB in
+  `apps/web/public/models/` chosen with `?modello=<id>` (`apps/web/game/animation/models.ts`). The GLB
   contract is in `docs/STUDIO-PERSONAGGI.md`, section 11.
-- A GLB's clips are played by name: `idle`, `run`, `kick` (`apps/web/game/modelAppearance.ts`).
+- A GLB's clips are played by name: `idle`, `run`, `kick` (`apps/web/game/animation/modelAppearance.ts`).
   The code reads no bone names.
 - New animations are made with Meshy; Mixamo is allowed, not required, and new code must not
   assume a Mixamo skeleton. The two current models (CH_Fulmine, Golden Striker) have Mixamo-named

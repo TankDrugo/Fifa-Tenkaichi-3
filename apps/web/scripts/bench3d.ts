@@ -4,7 +4,7 @@
 //     and triangles of renderer.info over the frames, over the whole frame (shadows and
 //     post-processing included), the shadow map's size and the pixel ratio used;
 //   - the scene shows the simulation's match: the page's fingerprint after 900 steps against the
-//     same match played here in Node (game/driver.ts on packages/sim);
+//     same match played here in Node (game/core/driver.ts on packages/sim);
 //   - photos: the camera options at the same moment of the match, with what each shows (where the
 //     side lines fall, how tall a player is near and far), into docs/fase2/ with --photos.
 // Chromium draws WebGL in software here (SwiftShader): the counts are the real ones, the frames a
@@ -16,7 +16,7 @@ import path from "node:path";
 import { chromium, type Page } from "playwright";
 import { PerspectiveCamera, Vector3 } from "three";
 import { fingerprint } from "@ft3/sim";
-import { Driver } from "../game/driver.ts";
+import { Driver } from "../game/core/driver.ts";
 
 const args = process.argv.slice(2);
 const flag = (k: string) => { const i = args.indexOf(k); if (i < 0) return null; const v = args[i + 1]; args.splice(i, 2); return v ?? null; };
@@ -67,7 +67,7 @@ for (const [w, h, dpr, skip] of [[1280, 720, 1, 0], [1280, 720, 1.5, 1800], [192
 
 // ---- camera photos ----------------------------------------------------------------------------
 // What a camera shows on a 1280 x 720 screen: rows of the near and far side lines, and the height
-// in pixels of a 0,85 m player standing on them (game/style.ts, CHARACTER_HEIGHT).
+// in pixels of a 0,85 m player standing on them (game/render/style.ts, CHARACTER_HEIGHT).
 function frame(pitchDeg: number, fovDeg: number, span: number, aim: number) {
   const cam = new PerspectiveCamera(fovDeg, 1280 / 720, 1, 400);
   const v = (fovDeg * Math.PI) / 180, p = (pitchDeg * Math.PI) / 180;

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { clubById } from "@ft3/sim";
-import { EXPRESSIONS, type Expression } from "@/game/faces";
-import { modelUrl } from "@/game/models";
-import { ShowroomView } from "@/game/ShowroomView";
+import { EXPRESSIONS, type Expression } from "@/game/render/faces";
+import { modelUrl } from "@/game/animation/models";
+import { ShowroomView } from "@/game/ui/ShowroomView";
 
 export const metadata: Metadata = { title: "Personaggi · Fifa Tenkaichi 3" };
 
 // A team's five footballers in a line: /personaggi?team=lupi&style=B, &back=1 from behind, &expr=joy
-// for one expression on every face (game/faces.ts), &modello=fulmine for a GLB model
-// (game/models.ts). Tancredi chooses the characters' style on these (docs/PIANO-3D-ONLINE.md,
+// for one expression on every face (game/render/faces.ts), &modello=fulmine for a GLB model
+// (game/animation/models.ts). Tancredi chooses the characters' style on these (docs/PIANO-3D-ONLINE.md,
 // phase 3).
 export default async function Personaggi({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const sp = await searchParams;

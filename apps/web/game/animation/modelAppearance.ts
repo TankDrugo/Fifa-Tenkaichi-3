@@ -11,8 +11,8 @@
 import { AnimationMixer, Box3, Group, LoopOnce, LoopRepeat, type AnimationAction, type Material, type Mesh, type Object3D } from "three";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import type { Appearance, PlayerFrame } from "./appearance";
-import type { Design, Kit } from "./looks";
-import { CHARACTER_HEIGHT } from "./style";
+import type { Design, Kit } from "../render/looks";
+import { CHARACTER_HEIGHT } from "../render/style";
 
 // The triangles of every mesh in an object.
 export function trianglesOf(object: Object3D): number {
