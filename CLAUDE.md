@@ -1,6 +1,7 @@
 # Fifa Tenkaichi 3 (Strike Legends) — project facts
 
-Technical facts about the repository. `README.md` says what is where, `docs/DETTAGLI.md` why each
+Technical facts about the repository. `docs/MAPPA.md` maps each part of the game (match, AI,
+skills, animations, Ultimate Team, …) to its files and state, `README.md` says what is where, `docs/DETTAGLI.md` why each
 number is what it is, `docs/PIANO-3D-ONLINE.md` the phases of the new game. Tancredi owns the
 project and writes in Italian.
 
