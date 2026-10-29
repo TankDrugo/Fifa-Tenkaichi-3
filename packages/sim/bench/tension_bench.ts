@@ -1,4 +1,4 @@
-// tools/tension_bench.js on packages/sim: the tension bar (docs/DETTAGLI.md, "Tensione") in AI
+// The tension bench of the old browser game (removed on 29/10/2026) on packages/sim: the tension bar (docs/DETTAGLI.md, "Tensione") in AI
 // matches: points a team gains, how often the bar fills and when first, comets, comets stopped by
 // a hit, charged shots, full bars that dropped to two notches, goals.
 //

@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // Tests and benches: Node (fs, vm, the old game's files) and Playwright's page.evaluate.
+    // Tests and benches: Node and Playwright's page.evaluate.
     "lib": ["ES2023", "DOM"],
     "types": ["node"]
   },

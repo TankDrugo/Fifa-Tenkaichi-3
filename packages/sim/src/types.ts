@@ -1,5 +1,5 @@
-// The shapes the simulation works on. Field names are the ones of web/js/, so the old game's
-// checks read the same state (docs/DETTAGLI.md, "Gioco nuovo · fase 1").
+// The shapes the simulation works on. Field names are the ones of the old browser game, whose
+// checks were ported onto the same state (docs/DETTAGLI.md, "Gioco nuovo · fase 1").
 
 export type Vec2 = [number, number];
 export type Team = 0 | 1;
@@ -344,7 +344,7 @@ export type MatchEvent =
 
 export type Sound = "kick" | "pass" | "whoosh" | "hit" | "post" | "save" | "goal" | "whistle" | "meter" | "special";
 
-// What the old game sent to the speakers and the pads (web/js/audio.js, input.js rumble); here
+// What the old game sent to the speakers and the pads (audio.js, input.js rumble); here
 // the simulation only says it, and whoever plays the match decides what to do with it.
 export type Cue =
   | { kind: "sound"; sound: Sound; value?: number | boolean }

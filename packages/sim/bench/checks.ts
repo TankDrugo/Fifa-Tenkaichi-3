@@ -1,4 +1,4 @@
-// tools/web_checks.js on packages/sim: the situations of a person with a pad, played without a
+// The checks of the old browser game (tools/web_checks.js, removed on 29/10/2026) on packages/sim: the situations of a person with a pad, played without a
 // browser, each with the number it must give (docs/DETTAGLI.md). Same situations, same seeds,
 // same printed lines, so the two outputs can be compared with diff. A person's pad is replaced
 // by a script of commands, one object per 1/60 s (Match.input).

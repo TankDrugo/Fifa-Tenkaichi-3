@@ -1,4 +1,4 @@
-// The match's numbers, carried over from web/js/match.js unchanged: pitch 28 x 16 m, the hit, the
+// The match's numbers, carried over from the old browser game's match.js unchanged: pitch 28 x 16 m, the hit, the
 // keeper's save reserve, the special move. Why each one is what it is: docs/DETTAGLI.md.
 import type { Role, Vec2 } from "./types.ts";
 
@@ -47,7 +47,7 @@ export const FORMATIONS: Record<FormationId, Formation> = {
 export const formationOf = (id: string): Formation => FORMATIONS[id as FormationId] || FORMATIONS.rombo;
 
 // The clocks of the body's clips, from the sprite sheets the old game draws
-// (web/assets/sprites/sheets.json, speed_mps x cycle_s and duration_s). They decide only what the
+// (its sheets.json, speed_mps x cycle_s and duration_s). They decide only what the
 // body shows; phase 3 replaces them with the lengths of the animations written in code.
 export const GAIT_STRIDE = { walk: 2.1 * 0.575, run: 7 * 0.31667, sprint: 9.45 * 0.29167 };
 export const CLIP_DURATION: Record<string, number> = {

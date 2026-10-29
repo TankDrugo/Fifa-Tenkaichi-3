@@ -1,4 +1,4 @@
-// A small seeded generator (web/js/data.js, SL.rng): the same seed gives the same numbers in
+// A small seeded generator (the old browser game's SL.rng): the same seed gives the same numbers in
 // Node and in the browser, so a match with the same seed and the same commands plays the same.
 export type Rng = () => number;
 

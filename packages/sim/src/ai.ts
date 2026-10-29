@@ -1,4 +1,4 @@
-// The team AI, carried over from web/js/ai.js. What it takes from where (docs/DETTAGLI.md, "IA"):
+// The team AI, carried over from the old browser game's ai.js. What it takes from where (docs/DETTAGLI.md, "IA"):
 //   - shape by ball position: each formation spot moves with the ball, pushed up and widened in
 //     possession, dropped, narrowed and slid to the ball's side without it (the RoboCup 2D
 //     positioning of Akiyama and Noda, there by Delaunay triangulation, here by a linear rule);

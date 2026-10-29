@@ -1,7 +1,7 @@
 // A fingerprint of everything that decides what happens next in a match: the clock, the score,
 // the bars, the ball and every player's place, speed, timers and memory. Two matches with the
-// same fingerprint at a step play on the same from there. It reads the field names that the old
-// game (web/js/match.js) and this package share, so the two can be compared step by step.
+// same fingerprint at a step play on the same from there. It reads the field names this package
+// took from the old browser game; tests and benches compare runs with it (sim.test.ts, bench/browser.ts).
 // FNV-1a over the bytes of each number, in two lanes with different seeds: 16 hex digits.
 
 interface Body {

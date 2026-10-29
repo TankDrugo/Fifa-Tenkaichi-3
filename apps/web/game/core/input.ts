@@ -1,5 +1,5 @@
 // One person's commands for the practice of /prova (practice.ts), from the keyboard and the first
-// pad, with the old game's keys and its "classic" pad layout (web/js/input.js): WASD or the arrows
+// pad, with the old game's keys and its "classic" pad layout (its input.js): WASD or the arrows
 // to run, Shift to sprint, J pass, K shoot, L feint, U modifier, Q switch, Space special; on the
 // pad the left stick or the cross, A pass, X shoot, B feint, Y special, LB modifier, RB switch, RT
 // sprint, the right stick for the skill moves. A key tapped and released between two steps of the

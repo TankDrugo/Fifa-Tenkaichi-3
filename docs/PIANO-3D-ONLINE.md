@@ -12,7 +12,7 @@ Il piano del gioco nuovo: le decisioni di Tancredi (sezione 1), i requisiti (sez
 | Account | Nome utente e password, **nessuna email** | Hash argon2id; password dimenticata: la reimposta Tancredi da un pannello di amministrazione |
 | Dati | **Postgres + Redis** | Postgres su disco per account, carte, crediti, scambi; Redis per sessioni, code delle partite, presenza, classifiche, limiti di frequenza |
 | Online | **Tutto insieme**: UT 1 contro 1 in tempo reale, 2 contro 2 in tempo reale, mercato fra giocatori, salvataggio sul server e classifiche | Le fasi si fanno una alla volta, ma il gioco nuovo va online per gli amici solo quando funzionano tutte e quattro |
-| Gioco attuale | **Resta com'è**: `web/`, GitHub Pages, itch.io, exe e link di lavoro non cambiano | Le correzioni chieste si fanno solo nel gioco nuovo; il gioco nuovo sostituisce il vecchio quando ha almeno le stesse modalità |
+| Gioco attuale | **Tolto il 29/10/2026**: `web/`, i suoi strumenti, il sito su GitHub Pages e l'exe escono dal repository (prima, il 21/10/2026: «resta com'è») | Si lavora solo sul gioco nuovo; il gioco vecchio resta nella storia git al commit `53f3868` |
 | Hardware | **Portatili normali** con la grafica integrata, 60 fotogrammi al secondo | Budget di disegno stretto (sezione 4.6); le chat cloud non hanno una scheda video, quindi i fotogrammi al secondo li misura Tancredi |
 | Server | Oracle non ancora creato; prima **Docker Desktop** sul PC di Tancredi | Tutto parte con `docker compose up`; le immagini si costruiscono anche per Arm (le macchine gratuite di Oracle sono Ampere A1) |
 | Distribuzione | Next.js anche come server | Il gioco nuovo vive solo sul server: la pagina itch.io e l'exe diventano un collegamento al sito (fase 7) |
@@ -217,7 +217,6 @@ personaggio solo, con il metodo di `docs/STUDIO-PERSONAGGI.md`; i movimenti e le
 
 ## 5. Fasi
 
-Il gioco vecchio continua a essere pubblicato come oggi da `.github/workflows/pages.yml`.
 
 | Fase | Cosa | Finita quando |
 |---|---|---|
@@ -232,10 +231,8 @@ Il gioco vecchio continua a essere pubblicato come oggi da `.github/workflows/pa
 
 ## 6. Domande ancora aperte (da fare a Tancredi nella fase indicata)
 
-- **Fase 5 — salvataggi vecchi:** il gioco vecchio salva nel navigatore (`strikelegends.save.v2`)
-  su un altro indirizzo, quindi il gioco nuovo non può leggerlo da solo. Le due strade sono un
-  pulsante «Esporta salvataggio» nel gioco vecchio (che quindi cambierebbe) oppure ripartire da
-  zero con gli account.
+- **Fase 5 — salvataggi vecchi:** risolta il 29/10/2026: il gioco vecchio è tolto, gli account
+  ripartono da zero.
 - **Fase 5 — economia:** gli obiettivi della sezione 4.5 sono una proposta; li fissa Tancredi
   guardando i numeri del banco.
 - **Fase 7 — nome e dominio:** con un server pubblico e gli account il nome diventa più visibile.

@@ -1,4 +1,4 @@
-# The new game (docs/PIANO-3D-ONLINE.md). web/ is the old game and stays outside the workspace.
+# The game (docs/PIANO-3D-ONLINE.md).
 packages:
   - apps/*
   - packages/*

@@ -2,7 +2,7 @@
 // a model run and kick (Tancredi, 26/10/2026). packages/sim always plays five a side, so the
 // other nine are parked in a far corner every step, out of the way and unable to pick the ball up,
 // and the scene draws only the person's footballer (players.ts, `only`). The settings are the old
-// game's free training (web/js/modes.js): opponents still, keeper included, no clock; every kickoff
+// game's free training (its modes.js): opponents still, keeper included, no clock; every kickoff
 // is the person's, so after a goal the ball is at his feet again.
 import { C, type Match } from "@ft3/sim";
 import { Driver } from "./driver";
