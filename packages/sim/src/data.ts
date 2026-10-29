@@ -4,8 +4,8 @@
 import { rng, type Rng } from "./rng.ts";
 import type { Card, CardEffect, Club, Rarity, Role, Settings, Version } from "./types.ts";
 
-// Kits: the primary takes the palette's kit entries (archive game/systems/sprite_sheets.gd, TEAM_PRIMARY);
-// the alternate is worn when two primaries are closer than 90 degrees of hue (archive ART-BIBLE.md §4.2).
+// Kits: the primary takes the palette's kit entries; the alternate is worn when two primaries are
+// closer than 90 degrees of hue.
 // kit2 and pattern draw a second colour on the kit: 1 stripes, 2 hoops, 3 sash, 4 glow, 5 halves, 6 zigzag.
 export const CLUBS: Club[] = [
   { id: "fulmini", formation: "rombo", name: "Fulmini Rossi", short: "FUL", city: "Portoscuro", kit: "#e23b2e", alt: "#f2f0e6", rating: 74, pitch: "notte" },
@@ -192,7 +192,7 @@ export const extraCards: Record<string, Card> = {};
 export const cardById = (id: string): Card | undefined => BY_ID[id] || extraCards[id];
 export const hasVersions = (card: Card | null | undefined): boolean => !!card && card.ovr >= 85 && card.rarity !== "mito";
 
-// What a card changes in a match: small, readable, never a chance (archive GDD.md §4.4).
+// What a card changes in a match: small, readable, never a chance.
 export function cardEffect(card: Card | null | undefined): CardEffect {
   if (!card) return { speed: 1, shot: 1, pass: 1, knock: 1, reserve: 0 };
   return {

@@ -3,6 +3,24 @@
 > File di lavoro: si elimina alla fine (Fase 6.5). Fino alla conferma di Tancredi nessun file del
 > progetto è stato modificato, spostato o eliminato; l'unico file scritto è questo.
 
+## Decisioni di Tancredi (29/10/2026) ed esecuzione
+
+«tutto ciò che trovi di regole è obsoleto, fidati del gioco fatto nuovo; togliamo tutte queste
+regole …; godot lo abbiamo abbandonato, tutto ciò dove c'è godot non serve più».
+
+| Punto del piano | Decisione | Fatto |
+|---|---|---|
+| 7.4 regole (RIMUOVERE e DA DECIDERE) | tutte tolte | `CLAUDE.md` riscritto con soli fatti tecnici; §6 e §8 di `docs/PIANO-3D-ONLINE.md` e §8, §13 di `docs/STUDIO-PERSONAGGI.md` tolti; `README.md` senza «si misura prima e dopo» |
+| controllo di stile (hook `Stop`/`PostToolUse`) | tolto con le regole | **non fatto**: la modifica di `.claude/settings.json` è negata alla chat (protezione della propria configurazione); `tools/style_guard/` resta finché Tancredi non toglie i due hook |
+| D1, D2, D3, 7.2 (Godot e archivio) | non servono | niente tag `godot-finale` nella repo, nessuna sezione copiata; tolti i rimandi all'archivio da `README.md`, `docs/DETTAGLI.md`, commenti di `packages/sim`. `web/js/*.js` conserva 15 commenti «archive»: è il gioco vecchio pubblicato, non toccato |
+| D9 spec | vale il gioco nuovo | 4 + portiere, Tensione a 3 tacche, scritto in `CLAUDE.md` |
+| 7.3 Meshy, Gamepad API | fatto | `README.md`, `CLAUDE.md`, `docs/SKILL-3D.md`, `docs/STUDIO-PERSONAGGI.md` §11 |
+| 2 (`zod`), 8 (cartelle), D8 (`graphify-out/`), `DIARIO.md`, `docs/PROMPT-CELESTINI.md` | non ancora decisi | in attesa |
+
+Prove dopo le modifiche: `pnpm install --frozen-lockfile`, `typecheck`, `lint` senza errori; `pnpm test`
+39 su 39; `pnpm build` riuscito; `node packages/sim/bench/checks.ts` 11 `ok`;
+`node packages/sim/bench/parity.ts` 22 partite su 22 uguali in ogni fotogramma.
+
 ## 0. Premessa: due repository, un solo progetto alla fine
 
 | Osservazione | Appiglio | Conseguenza |

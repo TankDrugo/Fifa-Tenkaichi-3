@@ -250,39 +250,6 @@ Strikers della fase 2.
   Hayashida), Naoki Urasawa. La chat nuova ne studia il segno prima del passo 2.
 - **Testi**: Tancredi li manda nella chat nuova.
 
-## 8. Messaggio da incollare nella chat nuova
-
-```
-Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
-poi e docs/STUDIO-PERSONAGGI.md per intero. Parti da main: c'è tutto il lavoro della chat
-precedente; i movimenti a metà sono fuori da main e restano nella storia al commit ac0cd0d
-(DIARIO.md, 22/10/2026), da non toccare in questa chat.
-
-Il compito di questa chat è uno solo: il character design del gioco, fino a un personaggio finito
-e ottimo che fissi lo stile di tutti gli altri. Non fare altri personaggi, movimenti, campi o
-interfaccia.
-
-Mie decisioni del 22/10/2026:
-- stile da fumetto, con i bordi d'inchiostro delle illustrazioni di Mario Strikers: Battle League,
-  e il manga come ispirazione: Dragon Ball (Toriyama), Blue Lock (Nomura), Dorohedoro (Hayashida),
-  Naoki Urasawa; si copia lo stile, mai i personaggi;
-- nessuna regola sullo strumento (codice, Blender o altro): si sceglie quello che dà il personaggio
-  migliore, mettendo a confronto le prove con foto; prima di scegliere dimmi cosa si può usare in
-  questa chat (programmi installabili, rete) e cosa servirebbe da me;
-- i 300.000 triangoli non sono un limite: conta la misura dei fotogrammi sul mio portatile;
-- niente pose tenute (animazione a 30 pose al secondo) per ora.
-
-Prima di cominciare: ricerca sul segno dei quattro manga (linee e spessori, proporzioni, occhi,
-capelli, ombre, corpi in movimento) e sui libri e le slide che ti mando in questa chat; scrivi in
-docs/STUDIO-PERSONAGGI.md cosa prendi da ciascuno, con le fonti. Poi dimmi in poche righe cosa farai
-e fammi le domande ancora aperte: quale personaggio (uno nuovo come volto del gioco o uno che
-esiste già) e chi disegna gli schizzi.
-
-Segui i 9 passi della sezione 4 dello studio: ogni passo finisce con immagini da mostrarmi e si va
-avanti solo con il mio sì. Alla fine: guida di stile e misure in docs/, voce in DIARIO.md, commit,
-pull request e merge su main. Scrivimi sempre in italiano.
-```
-
 ## 9. Il segno dei quattro manga (ricerca del 22/10/2026, chat del character design)
 
 Fonti lette in questa chat; le pagine di wiki dei fan con le tavole (`*.fandom.com`) e il sito
@@ -480,13 +447,12 @@ Glossario per la chat nuova, da scrivere anche in `docs/` per Tancredi: un file 
 in piedi, piedi sull'origine, guarda verso +Z, alto in metri qualsiasi (lo porta il gioco a
 `CHARACTER_HEIGHT`, `apps/web/game/style.ts`); materiali con un nome per le parti che prendono i
 colori della squadra (`maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe`; il resto resta
-com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con i nomi delle ossa di
-Mixamo se c'è; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
+com'è); texture dentro il file, lato massimo 2048; scheletro facoltativo, con nomi delle ossa
+liberi (il gioco non li legge; aggiornato il 29/10/2026, prima chiedeva i nomi di Mixamo) e clip
+chiamate `idle`, `run`, `kick`, i nomi che `apps/web/game/modelAppearance.ts` cerca; l'origine e la licenza del modello scritte nel messaggio. I triangoli si misurano: la
 mediana dei prototipi di oggi è 5.736 a giocatore (`DIARIO.md`, 22/10/2026).
 
 ### Punti da implementare nella chat nuova
-
-Ognuno chiuso da foto o numeri e dal sì di Tancredi; misure prima e dopo in `docs/DETTAGLI.md`.
 
 1. **Strato «aspetto del giocatore»**: un'interfaccia sola che il resto del gioco usa (posizione,
    direzione, andatura e azione dalla simulazione in ingresso; disegno in uscita), con due
@@ -562,22 +528,4 @@ views side by side, same scale and aligned at the feet, standing in a relaxed A-
 45 degrees away from the body, legs slightly apart), neutral expression, orthographic view,
 even flat lighting, same ink outlines and two-tone cel shading, plain white background,
 no ground shadow, no text.
-```
-
-## 13. Messaggio da incollare nella chat nuova (25/10/2026)
-
-```
-Leggi CLAUDE.md e docs/PIANO-3D-ONLINE.md per intero, poi in DIARIO.md le voci dal 22/10/2026 in
-poi e docs/STUDIO-PERSONAGGI.md per intero (le sezioni 9-13 sono della chat del 22-25/10). Parti
-da main; i movimenti a metà restano nella storia al commit ac0cd0d e non si toccano.
-
-Il compito è l'architettura dei personaggi del gioco nuovo: i modelli li passo io in GLB, prima
-senza animazioni, poi, se ci riesco, con animazioni come la corsa. Segui il piano della sezione 11
-dello studio, punto per punto: ogni punto finisce con foto o numeri da mostrarmi e si va avanti
-solo con il mio sì. Comincia dal punto 1, che non ha bisogno dei miei file; quando ti mando un GLB,
-controllalo con le regole della sezione 11 e dimmi cosa manca. Non fare movimenti nuovi, campi o
-interfaccia.
-
-Alla fine: misure in docs/DETTAGLI.md, guida per i modelli in docs/, voce in DIARIO.md, commit,
-pull request e merge su main. Scrivimi sempre in italiano.
 ```

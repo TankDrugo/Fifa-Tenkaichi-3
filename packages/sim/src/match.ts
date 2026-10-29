@@ -17,7 +17,7 @@ const IDLE_BELOW = 0.3, RUN_ABOVE = 3.2, WALK_BELOW = 2.8, SPRINT_ABOVE = 5.2, S
 // The run and sprint sheets were drawn for 7,0 and 9,45 m/s: at this pace their legs turn
 // a little faster than the ground goes by, or the stride reads as slow motion.
 const CADENCE = 1.3;
-// Hip path of the shoulder clips (archive PRODUCTION.md §3, SP2-SP5), metres every 1/60 s.
+// Hip path of the shoulder clips, metres every 1/60 s.
 const SHOULDER_PATH = [0.0, 0.0305, 0.0610, 0.0914, 0.1219, 0.1669, 0.2698, 0.3726, 0.4755, 0.5784, 0.6813, 0.7841,
   0.8870, 0.9899, 1.0928, 1.1956, 1.2985, 1.3893, 1.4287, 1.4636, 1.4941, 1.5207, 1.5435, 1.5628, 1.5790, 1.5923,
   1.6030, 1.6114, 1.6178, 1.6224, 1.6255, 1.6275, 1.6285, 1.6289, 1.6290, 1.6290, 1.6290];
@@ -393,7 +393,7 @@ export class Match {
     this.ball.chip = !!chip;
   }
 
-  // ---- The hit (archive GDD.md §4.4) ------------------------------------------------------------
+  // ---- The hit ------------------------------------------------------------
   // The keeper is never a target nor a contact, for people and the AI alike: a hit on the
   // keeper holding the ball left the goal empty for the next touch.
   nearestOpponent(p: Player, maxD?: number): Player | null {
@@ -665,7 +665,7 @@ export class Match {
     }
   }
 
-  // The keeper's save reserve (archive GDD.md §8.4): decided on the plane 1,5 m out, paid by the shot's speed.
+  // The keeper's save reserve: decided on the plane 1,5 m out, paid by the shot's speed.
   keeperSaves(): void {
     const b = this.ball;
     for (let t = 0; t < 2; t++) {
@@ -792,7 +792,7 @@ export class Match {
     if (best) this.setHuman(h, best);
   }
 
-  // ---- The special move (archive PRODUCTION.md §6.0) -----------------------------------------
+  // ---- The special move -----------------------------------------
   tryStartSpecial(p: Player): boolean {
     if (this.special || this.mana[p.team] < 100 || this.ball.carrier !== p || p.isKeeper) return false;
     if (p.x * attackSign(p.team) <= 0) { this.say("Mossa speciale: entra nella metà avversaria", 1.2); return false; }
@@ -881,7 +881,7 @@ export class Match {
     const to = best;
     for (const h of this.humans) if (h.team === p.team) this.setHuman(h, to);
   }
-  // The keeper takes the ball from a carrier who walks into his reach (archive GDD.md §8.4, the free claim).
+  // The keeper takes the ball from a carrier who walks into his reach (the free claim).
   aiKeeperClaim(p: Player): void {
     const b = this.ball;
     if (b.carrier && b.carrier.team !== p.team && !(this.special && this.special.shooter === b.carrier)

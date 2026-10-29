@@ -54,18 +54,24 @@ Rifare tutto, dalla cartella `art/CH_Fulmine`, con `B` = percorso di Blender e `
 Il file .blend va prima creato con `init_master.py` della skill (80 s le fasi, 30 s ogni
 esportazione). Una fase si rifà da sola: ognuna cancella e ricostruisce solo le sue parti.
 
-## Animazioni: Mixamo prima di Meshy
+## Animazioni: Meshy, Mixamo facoltativo
 
 Il GLB ha già 3 clip fatte nel codice (`idle`, `run`, `kick`, `art/CH_Fulmine/build/08_anim.py`)
 che il gioco muove con la simulazione. Mancano le clip per gli altri stati della simulazione:
 scivolata, colpo preso, spallata, palla in mano, esultanza, tiro caricato
-(`apps/web/game/appearance.ts:22-30`). Mixamo (https://www.mixamo.com) fa rig automatico e clip
-gratis con un account Adobe; accetta FBX, OBJ o ZIP, non GLB, e per questo c'è
-`art/CH_Fulmine/exports/CH_Fulmine_mixamo.fbx` (la mesh del gioco, 135.787 triangoli, 2,7 MB, in
-posa A, senza scheletro; si rifà con `build_hd/18_mixamo.py`). Le ossa del GLB hanno già i nomi di
-Mixamo (`mixamorig:Hips` ...), quindi le clip scaricate si riportano sul nostro scheletro in
-Blender. Consiglio: provare prima Mixamo, perché non costa nulla; i 10 euro di Meshy servono
-solo se il rig automatico di Mixamo sbaglia su guanti grandi e cresta.
+(`apps/web/game/appearance.ts:22-30`).
+
+- **Meshy** (https://docs.meshy.ai/en/api/rigging, https://docs.meshy.ai/en/api/animation) è la
+  strada per le animazioni nuove: rig e clip sui modelli umanoidi con texture.
+- **Mixamo** (https://www.mixamo.com) si può usare, non è obbligatorio: rig automatico e clip con un
+  account Adobe; accetta FBX, OBJ o ZIP, non GLB, e per questo c'è
+  `art/CH_Fulmine/exports/CH_Fulmine_mixamo.fbx` (la mesh del gioco, 135.787 triangoli, 2,7 MB, in
+  posa A, senza scheletro; si rifà con `build_hd/18_mixamo.py`).
+- Il codice nuovo non presume uno scheletro Mixamo: il gioco cerca le clip per nome (`idle`, `run`,
+  `kick`, `apps/web/game/modelAppearance.ts`) e non legge i nomi delle ossa. I due modelli di oggi
+  hanno ossa con i nomi di Mixamo (`mixamorig:Hips` ...) e restano così.
+- Obiettivo futuro, non ancora fatto: accettare le clip di Meshy con i loro nomi, senza la
+  nomenclatura Mixamo.
 
 ## Come provare a creare un giocatore
 
@@ -77,10 +83,10 @@ Sul PC di Tancredi (Blender installato, Claude Code aperto nella cartella del re
    confronto tra la resa e l'immagine dalla stessa telecamera.
 3. Per aggiungere clip a un GLB che c'è già:
    `usa blender-character-rigging e blender-animation: rig Rigify su <file>.glb, clip run, kick, pass, esporta GLB`.
-4. Da aggiungere alla richiesta, perché il gioco lo legge così (`docs/STUDIO-PERSONAGGI.md:480-485`):
-   piedi sull'origine, sguardo verso +Z; materiali chiamati `maglia`, `maglia2`, `pantaloncini`,
-   `calzettoni`, `scarpe` per i colori di squadra; ossa con i nomi di Mixamo; texture dentro il
-   file, lato massimo 2048. Riferimento per i triangoli: 5.736 a giocatore, mediana dei prototipi.
+4. Da aggiungere alla richiesta, perché il gioco lo legge così (`docs/STUDIO-PERSONAGGI.md`,
+   sezione 11, «Cosa deve avere un GLB di Tancredi»): piedi sull'origine, sguardo verso +Z;
+   materiali chiamati `maglia`, `maglia2`, `pantaloncini`, `calzettoni`, `scarpe` per i colori di
+   squadra; clip chiamate `idle`, `run`, `kick`; texture dentro il file, lato massimo 2048. Riferimento per i triangoli: 5.736 a giocatore, mediana dei prototipi.
 
 In una chat cloud: prima `pip install bpy==5.2.3`, poi la stessa richiesta del punto 2; il tempo di
 installazione si paga a ogni chat nuova.

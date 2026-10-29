@@ -1,9 +1,9 @@
 # Strike Legends nel browser — scelte e misure fino al 21/10/2026
 
-> Questo file era `web/README.md` nel repository di prima, ora archivio (README.md, «Archivio»).
 > I percorsi `js/` e `assets/` stanno in `web/`. I rimandi a `GDD.md`, `PRODUCTION.md`,
-> `PROMPT-WEB*.md`, `game/` e ai diari puntano a file dell'archivio. Le sezioni hanno i nomi
-> che il codice cita (per esempio `docs/DETTAGLI.md, "Passaggi"`).
+> `PROMPT-WEB*.md`, `game/` e ai diari sono storici: puntano alla versione Godot, abbandonata e
+> fuori da questo repository. Le sezioni hanno i nomi che il codice cita (per esempio
+> `docs/DETTAGLI.md, "Passaggi"`).
 
 
 Versione giocabile online del gioco: una pagina HTML con WebGL, senza installazioni.

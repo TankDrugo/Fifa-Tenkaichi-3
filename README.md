@@ -15,9 +15,12 @@ macchina. A schermo si chiama «Fifa Tenkaichi 3»; nel codice e nei salvataggi 
 - **Da dare in giro:** `bash tools/build_web_dist.sh` prepara lo zip per itch.io e l'exe per
   Windows (sezione «Distribuzione»).
 
-Le scelte, le fonti e le misure di ogni parte, fino al 20/10/2026, stanno in `docs/DETTAGLI.md`;
-qui c'è quello che serve per orientarsi e per continuare. Le regole per le chat che ci lavorano
-stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
+Le scelte, le fonti e le misure di ogni parte stanno in `docs/DETTAGLI.md`; qui c'è quello che
+serve per orientarsi e per continuare. `CLAUDE.md` raccoglie i fatti tecnici per le chat,
+`DIARIO.md` la cronologia delle sessioni fino al 29/10/2026.
+
+Il motore è three.js (Next.js con `@react-three/fiber`, in `apps/web`); il gioco vecchio in `web/`
+disegna in WebGL senza librerie. La versione Godot è abbandonata e non fa parte del repository.
 
 ## Struttura
 
@@ -41,7 +44,7 @@ stanno in `CLAUDE.md`, lo stato di ogni sessione in `DIARIO.md`.
 | `tools/build_web_dist.sh`, `tools/web_launcher/` | zip per itch.io ed exe per Windows (Go): `update.go` scarica l'ultima versione dal sito |
 | `.github/workflows/pages.yml` | a ogni push su `main` che cambia `web/` o questo file: il sito, lo zip per itch.io e `version.json` su GitHub Pages |
 | `tools/make_commentary.py` | registra la telecronaca con Chatterbox (serve il dominio `us.aws.cdn.hf.co`) |
-| `tools/style_guard/`, `.claude/settings.json` | il controllo della forma delle risposte delle chat (`CLAUDE.md`) |
+| `tools/style_guard/`, `.claude/settings.json` | filtro di parole sulle risposte delle chat (hook `Stop` e `PostToolUse`); la regola che serviva è tolta, il filtro si spegne togliendo i due hook e poi la cartella |
 | `docs/DETTAGLI.md` | scelte, fonti e misure, sezione per sezione |
 | `docs/PIANO-3D-ONLINE.md` | piano e prompt del rifacimento in Next.js, 3D e online: decisioni, fasi, prove |
 | `package.json`, `pnpm-workspace.yaml` | workspace pnpm del gioco nuovo; `web/` ne resta fuori |
@@ -103,8 +106,6 @@ Il secondo giocatore senza joypad usa frecce e tastierino.
   registrate (`tools/make_commentary.py`).
 
 ## Prove e misure
-
-Ogni modifica che tocca il gioco si misura prima e dopo, e i numeri vanno in `docs/DETTAGLI.md`.
 
 | Comando | Cosa dà oggi |
 |---|---|
@@ -177,6 +178,18 @@ fotogramma, l'1% dei fotogrammi più lenti, chiamate di disegno e triangoli.
 `node apps/web/scripts/bench3d.ts http://localhost:3000` controlla il budget di disegno e che la
 pagina mostri la partita della simulazione; con `--photos` rifà le foto di `docs/fase2/`.
 
+Joypad: il gioco nuovo legge il controller Xbox (e gli altri) con la Gamepad API del browser
+(`navigator.getGamepads`, `apps/web/game/input.ts`), come il gioco vecchio (`web/js/input.js`).
+
+Personaggi e animazioni: i giocatori sono pezzi costruiti nel codice (`apps/web/game/parts.ts`)
+oppure modelli GLB in `apps/web/public/models/`, scelti con `?modello=<id>` (`apps/web/game/models.ts`).
+Il gioco suona le clip di un GLB per nome: `idle`, `run`, `kick` (`apps/web/game/modelAppearance.ts`);
+non legge i nomi delle ossa. Le animazioni nuove si fanno con Meshy; Mixamo si può usare ma non è
+obbligatorio, e il codice nuovo non presume uno scheletro Mixamo. I due modelli di oggi hanno ossa
+con i nomi di Mixamo (`mixamorig:Hips` …) date dagli script `art/CH_Fulmine/build_hd/16_rig.py` e
+`art/CH_GoldenStriker/build/rig.py`, e restano così. Obiettivo futuro: accettare le clip di Meshy
+con i loro nomi, senza la nomenclatura Mixamo.
+
 ## Crediti e licenze
 
 - **player01**, la figura base, il portiere e i 10 corpi che ne derivano: fatto da Tancredi in VRoid
@@ -195,17 +208,18 @@ pagina mostri la partita della simulazione; con `--photos` rifà le foto di `doc
   del gioco nuovo (`packages/sim/src/fmath.ts`), con l'avviso di copyright che la licenza chiede
   di conservare, copiato nel file.
 
-## Archivio
+## Stato e cose aperte
 
-Il repository di prima resta su GitHub come archivio: la versione Godot del gioco (`game/`), il
-progetto IA vista dall'alto (`ai_topdown/`), i documenti di progetto (`GDD.md`, `TDD.md`,
-`PRODUCTION.md`, `ART-BIBLE.md`, `RESEARCH.md`), i sorgenti dei modelli e delle animazioni
-(`assets_raw/`, con le licenze in `assets_raw/SOURCES.md`), la catena di render in Blender
-(`tools/render_*.py`) e i diari delle cinque chat. Il codice cita quei file come «archive».
-
-## Cose aperte
-
-- Rifacimento in Next.js, 3D e online: `docs/PIANO-3D-ONLINE.md`, fase 0 da cominciare.
+- Rifacimento in Next.js, 3D e online (`docs/PIANO-3D-ONLINE.md`): fasi 0 e 1 chiuse; fase 2 chiusa
+  nel codice, manca la misura sul portatile (http://localhost:3000/bench a schermo intero per 30 s:
+  obiettivo 60 fotogrammi al secondo di media, l'1% più lento sotto 25 ms); fase 3 in corso.
+- Fase 3: CH_Fulmine e Golden Striker giocano con `idle`, `run`, `kick`; restano il sì su corsa e
+  tiro, la prova con un pad vero, le clip per scivolata, colpo preso, spallata, palla in mano,
+  esultanza e tiro caricato, il budget di disegno con i modelli (8,9 volte i triangoli, 152
+  chiamate su 150), la resa a fumetto, il cuneo bianco sul fianco e gli orli a dente di sega del
+  Golden Striker (`docs/DETTAGLI.md`).
+- Movimenti fatti a metà (memoria dei passi, cinematica inversa): fermi nella storia al commit
+  `ac0cd0d`, fuori da `main`.
 - itch.io: la copertina `tools/cover/cover.jpg` da caricare a mano (Edit game → «Cover image»).
 - Il sito su GitHub Pages va acceso una volta: Settings → Pages → Source «GitHub Actions».
 - Telecronaca registrata: manca il dominio `us.aws.cdn.hf.co` per i pesi di Chatterbox.
