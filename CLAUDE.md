@@ -67,12 +67,18 @@ game. Tancredi owns the project and writes in Italian.
 - The game draws a player from code pieces (`apps/web/game/render/parts.ts`) or from a GLB in
   `apps/web/public/models/` chosen with `?modello=<id>` (`apps/web/game/animation/models.ts`). The GLB
   contract is in `docs/STUDIO-PERSONAGGI.md`, section 11.
-- A GLB's clips are played by name: `idle`, `run`, `kick` (`apps/web/game/animation/modelAppearance.ts`).
-  The code reads no bone names.
-- New animations are made with Meshy; Mixamo is allowed, not required, and new code must not
-  assume a Mixamo skeleton. The two current models (CH_Fulmine, Golden Striker) have Mixamo-named
-  bones from `art/CH_Fulmine/build_hd/16_rig.py` and `art/CH_GoldenStriker/build/rig.py` and stay as
-  they are. Future goal, not started: accept Meshy clips without Mixamo naming.
+- Each model in `apps/web/game/animation/models.ts` has a table tying the GLB's clip names to the
+  game's states (`idle`, `walk`, `run`, `shot`, `pass`, with stride offsets and the stretch of a kick
+  clip); a model without a table plays clips named `idle`, `run`, `kick`
+  (`apps/web/game/animation/modelAppearance.ts`). The code reads no bone names. The simulation tells
+  shot from pass with `Player.kickKind`, a field only the drawing reads.
+- Every animation is made with Meshy, on the character's Meshy rig, from Meshy's animation library:
+  no Mixamo, no clips made by hand in Blender or in code (Tancredi, 29/10/2026). When the library has
+  no fitting clip, stop and tell Tancredi which is missing with the closest Meshy clips: he decides
+  (for the pass he chose Meshy's Text to Motion). The steps and scripts (`apps/web/scripts/meshy.ts`,
+  `glb.ts`, `clipsheet.ts`, `video.ts`) are in `docs/PERSONAGGI.md`, with the 10 characters
+  (`art/CH_Portiere1` … `art/CH_Giocatore10`, provisional names). The older CH_Fulmine and Golden
+  Striker have Mixamo-named bones and clips made in code, and stay as they are.
 - 68 skills are vendored in `.claude/skills/` (sources: `.claude/skills/SOURCES.md`; usage in
   Italian: `docs/SKILL-3D.md`): `threejs-*` for `apps/web`, `blender-*` for models and clips,
   `lowpoly-humanoid` for a low-poly body without Blender

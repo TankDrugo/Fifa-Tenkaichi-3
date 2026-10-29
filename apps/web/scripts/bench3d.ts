@@ -10,7 +10,8 @@
 // Chromium draws WebGL in software here (SwiftShader): the counts are the real ones, the frames a
 // second are not; those Tancredi measures on /bench on his laptop.
 //
-// Run: node apps/web/scripts/bench3d.ts [url=http://localhost:3000] [--photos] [--seconds 12]
+// Run: node apps/web/scripts/bench3d.ts [url=http://localhost:3000] [--photos] [--seconds 12] [--modello <id>]
+// --modello draws every player with that GLB (game/animation/models.ts) in every page.
 import fs from "node:fs";
 import path from "node:path";
 import { chromium, type Page } from "playwright";
@@ -22,12 +23,14 @@ const args = process.argv.slice(2);
 const flag = (k: string) => { const i = args.indexOf(k); if (i < 0) return null; const v = args[i + 1]; args.splice(i, 2); return v ?? null; };
 const photos = args.includes("--photos"); if (photos) args.splice(args.indexOf("--photos"), 1);
 const seconds = Number(flag("--seconds") ?? 12);
+const model = flag("--modello");
 const base = args[0] ?? "http://localhost:3000";
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 
 const browser = await chromium.launch({ args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 async function open(url: string, width: number, height: number, dpr: number): Promise<Page> {
   const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: dpr });
+  if (model) url += `&modello=${model}`;
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(url, { waitUntil: "networkidle", timeout: 120_000 });

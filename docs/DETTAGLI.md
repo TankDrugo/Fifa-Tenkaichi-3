@@ -1331,3 +1331,42 @@ nuovo ai piedi).
 - Fotogrammi al secondo sul portatile di Tancredi.
 - Un pad vero: il codice legge la mappatura standard dell'API Gamepad, la chat non ha un pad; dentro
   l'artifact il browser può negare l'accesso al pad.
+
+## Gioco nuovo · i 10 personaggi, `portiere1` con le clip di Meshy (29/10/2026)
+
+Il primo dei 10 personaggi di Tancredi nel gioco, con rig e clip dell'API di Meshy, e gli
+strumenti che le chat dei personaggi successivi riusano. Guida, tabella delle clip e numeri:
+`docs/PERSONAGGI.md`.
+
+### Versioni e perché (`apps/web`, solo per gli script)
+
+| Cosa | Versione | Perché |
+|---|---|---|
+| @gltf-transform/core, extensions, functions | 4.5.1 (28/09/2026) | `scripts/glb.ts`: legge e scrive i GLB, sposta le clip di Meshy da un file all'altro per nome delle ossa, toglie i dati non usati |
+| meshoptimizer | 1.3.0 (25/09/2026) | la riduzione dei triangoli di `glb.ts` (`simplify` di gltf-transform), che rispetta pesi delle ossa e cuciture delle UV |
+| sharp | 0.35.5 (27/09/2026) | texture da 4096 PNG a 2048 WebP in `glb.ts`; è la stessa versione che Next.js 16.4.2 porta già con sé |
+
+### Cosa è cambiato nel codice
+
+- `packages/sim`: `Player.kickKind` e `Player.kickAt`, scritti da `Match.kick`, letti solo dal
+  disegno; l'impronta non li legge, e `bench/checks.ts` dà gli stessi 11 «ok».
+- `apps/web/game/animation/models.ts`: ogni modello è `{ url, clips }`, la tabella delle clip.
+  `useModel.ts` mette la tabella in `userData.clips` del modello caricato; `modelAppearance.ts` la
+  legge (senza, cerca `idle`, `run`, `kick`), mescola fermo, camminata e corsa con la velocità e
+  sceglie la clip del calcio con `kickKind`. `PlayerMotion.kickKind` in `appearance.ts`.
+- `apps/web/game/render/players.ts`: un passaggio di corsa si vede per 0,33 s dopo `kickAt`.
+
+### Errori trovati nel lavoro
+
+- **Il modello alto 30 m:** `/partita?modello=portiere1` disegnava giocatori enormi. Il rig di
+  Meshy mette le ossa in centimetri sotto il nodo `Armature` in scala 0,01, e nel file la mesh viene
+  prima delle ossa; la copia di `SkeletonUtils.clone` in `useModel.ts` non ha ancora le matrici del
+  mondo delle ossa, e il riquadro preciso di una mesh con scheletro passa da quelle: l'altezza
+  misurata era sbagliata. `modelAppearance.ts` chiama `updateMatrixWorld(true)` prima del
+  riquadro; la prova in `appearance.test.ts` costruisce un modello legato come lo lega
+  `GLTFLoader` e fallisce senza la correzione.
+- **Video in software:** con l'orologio di Playwright (`page.clock`) le foto della pagina si
+  fermano, perché aspettano fotogrammi che l'orologio trattiene; senza, una foto di `page.screenshot`
+  costa 17 s a 1280 × 720 nel WebGL software della chat. `scripts/video.ts` sostituisce
+  `performance.now` della pagina, la manda avanti di un fotogramma e legge la tela WebGL nello
+  stesso fotogramma in cui la scena la disegna: circa 2 s a fotogramma.

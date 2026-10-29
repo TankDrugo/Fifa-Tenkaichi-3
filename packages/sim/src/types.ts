@@ -220,6 +220,10 @@ export interface Player {
   kickClip: string | null;
   kickT: number;
   kickDir: Vec2;
+  // the last kick, for the drawing only (no rule reads them): what it was and the clock when the
+  // ball left, so a pass on the run, which the clip above cuts, still shows its gesture
+  kickKind: "pass" | "shot" | "roll" | null;
+  kickAt: number;
   holdT: number;
   rollT: number;
   charge: number;
